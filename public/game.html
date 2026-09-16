@@ -234,6 +234,23 @@ canvas{display:block}
   18%{opacity:1;transform:translate(-50%,-50%) scale(1.16) rotate(2deg)}
   32%{transform:translate(-50%,-50%) scale(1) rotate(-1deg)}
   75%{opacity:1}100%{opacity:0;transform:translate(-50%,-76%) scale(1)}}
+#comboHud{position:fixed;top:calc(50px + var(--sat));right:calc(12px + var(--sar));z-index:24;
+  display:flex;flex-direction:column;align-items:center;gap:1px;pointer-events:none;
+  opacity:0;transform:scale(.6) rotate(-8deg);transition:opacity .25s,transform .25s}
+#comboHud.show{opacity:1;transform:scale(1) rotate(0)}
+#comboHud.bump{animation:comboHudBump .35s cubic-bezier(.2,1.6,.4,1)}
+@keyframes comboHudBump{0%{transform:scale(1)}50%{transform:scale(1.22) rotate(3deg)}100%{transform:scale(1)}}
+#comboHud .ch-count{display:flex;align-items:baseline;gap:1px;
+  font-weight:700;font-size:28px;line-height:1;color:#fff;
+  text-shadow:0 2px 0 var(--epic-d),0 4px 8px rgba(0,0,0,.4);
+  -webkit-text-stroke:1.5px rgba(74,36,86,.5)}
+#comboHud .ch-x{font-size:18px;color:#FFE066}
+#comboHud .ch-n{transition:color .2s}
+#comboHud .ch-label{font-size:9px;font-weight:700;letter-spacing:1.5px;color:rgba(255,255,255,.85);
+  text-shadow:0 1px 2px rgba(0,0,0,.5)}
+#comboHud .ch-mult{font-size:12px;font-weight:700;color:#FFE066;
+  background:rgba(106,43,184,.7);padding:1px 8px;border-radius:8px;margin-top:1px;
+  text-shadow:0 1px 0 rgba(0,0,0,.3);box-shadow:0 2px 0 var(--epic-d)}
 #intro{position:fixed;top:calc(60px + var(--sat));left:50%;z-index:25;pointer-events:none;
   transform:translate(-50%,-14px);opacity:0;transition:.35s;background:rgba(255,255,255,.96);
   border-radius:18px;padding:10px 16px;box-shadow:0 6px 0 rgba(90,45,110,.25);
@@ -395,6 +412,13 @@ canvas{display:block}
   background:var(--ink);color:#fff;font-weight:600;font-size:14px;padding:10px 20px;border-radius:13px;
   box-shadow:0 5px 0 rgba(46,20,64,.5);opacity:0;z-index:60;transition:.28s;pointer-events:none;text-align:center}
 #toast.show{opacity:1;transform:translate(-50%,0)}
+/* Reduce Motion: disable non-essential animations */
+body.reduce-motion *{animation-duration:.01ms!important;animation-iteration-count:1!important;
+  transition-duration:.05ms!important;scroll-behavior:auto!important}
+body.reduce-motion #board{transition:none!important}
+body.reduce-motion .pulse,body.reduce-motion .boostBtn.active .bIc,
+body.reduce-motion .mnode.open .dot,body.reduce-motion .icon-btn.hasdot::after,
+body.reduce-motion #btnWheel.hasdot::after{animation:none!important}
 </style>
 </head>
 <body>
@@ -507,6 +531,7 @@ canvas{display:block}
   </div>
   <div id="hScore" class="m-only">0 / 0</div>
   <div id="comboBanner"></div>
+  <div id="comboHud"><div class="ch-count"><span class="ch-x">x</span><span class="ch-n">2</span></div><div class="ch-label" data-i="combo">KOMBO</div><div class="ch-mult">×1.5</div></div>
   <div id="hammerSwing">🔨</div>
   <button id="autoBadge"><span class="dotp"></span><span data-i="demoOn">OTO OYNAT</span></button>
 </section>
@@ -629,6 +654,7 @@ canvas{display:block}
     <div class="set-row"><div class="ic" id="icVoice"></div><div class="lb"><span data-i="voice">Seslendirme</span><small data-i="voiceSub">Sweet! Tasty! Perfect!</small></div><label class="sw"><input type="checkbox" id="swVoice"><i></i></label></div>
     <div class="set-row"><div class="ic" id="icMusic"></div><div class="lb" data-i="music">Müzik</div><label class="sw"><input type="checkbox" id="swMusic"><i></i></label></div>
     <div class="set-row"><div class="ic" id="icVib"></div><div class="lb" data-i="vib">Titreşim</div><label class="sw"><input type="checkbox" id="swVib"><i></i></label></div>
+    <div class="set-row"><div class="ic" id="icMotion"></div><div class="lb"><span data-i="motion">Hareketi Azalt</span><small data-i="motionSub">Animasyonları azaltır</small></div><label class="sw"><input type="checkbox" id="swMotion"><i></i></label></div>
     <div class="set-row"><div class="ic" id="icLang"></div><div class="lb" data-i="lang">Dil</div><select id="langSel" class="langSel"></select></div>
   </div>
   <div class="set-group">
@@ -696,9 +722,33 @@ const WHEEL_I18N={
   it:{wheel:'Ruota',wheelSub:'Un giro gratis al giorno!',spin:'GIRA!',wheelDone:'Girato oggi',streak:'Serie'},
   pt:{wheel:'Roleta',wheelSub:'Uma rodada grátis por dia!',spin:'GIRAR!',wheelDone:'Girado hoje',streak:'Sequência'},
   ru:{wheel:'Колесо',wheelSub:'Бесплатный спин каждый день!',spin:'КРУТИТЬ!',wheelDone:'Сегодня уже',streak:'Серия'}};
+const COMBO_I18N={
+  tr:{combo:'KOMBO'},en:{combo:'COMBO'},de:{combo:'KOMBO'},es:{combo:'COMBO'},
+  fr:{combo:'COMBO'},it:{combo:'COMBO'},pt:{combo:'COMBO'},ru:{combo:'КОМБО'}};
+const QUEST_I18N={
+  tr:{qHammer:'Çekiç kullan',qBigMatch:'Büyük eşleşme (5+) yap',qCascade:'Kombo x4 ulaş'},
+  en:{qHammer:'Use hammer',qBigMatch:'Big match (5+)',qCascade:'Reach combo x4'},
+  de:{qHammer:'Hammer benutzen',qBigMatch:'Großes Match (5+)',qCascade:'Kombo x4 erreichen'},
+  es:{qHammer:'Usar martillo',qBigMatch:'Gran combinación (5+)',qCascade:'Llegar a combo x4'},
+  fr:{qHammer:'Utiliser marteau',qBigMatch:'Gros match (5+)',qCascade:'Atteindre combo x4'},
+  it:{qHammer:'Usa martello',qBigMatch:'Grande abbinata (5+)',qCascade:'Raggiungi combo x4'},
+  pt:{qHammer:'Usar martelo',qBigMatch:'Grande combinação (5+)',qCascade:'Chegar a combo x4'},
+  ru:{qHammer:'Используй молот',qBigMatch:'Большое совпадение (5+)',qCascade:'Дойди до комбо x4'}};
+const MOTION_I18N={
+  tr:{motion:'Hareketi Azalt',motionSub:'Animasyonları azaltır'},
+  en:{motion:'Reduce Motion',motionSub:'Reduces animations'},
+  de:{motion:'Bewegung reduzieren',motionSub:'Animationen reduzieren'},
+  es:{motion:'Reducir movimiento',motionSub:'Reduce animaciones'},
+  fr:{motion:'Réduire les animations',motionSub:'Réduit les animations'},
+  it:{motion:'Riduci animazioni',motionSub:'Riduce le animazioni'},
+  pt:{motion:'Reduzir movimento',motionSub:'Reduz animações'},
+  ru:{motion:'Меньше анимаций',motionSub:'Уменьшает анимации'}};
 Object.keys(I).forEach(l=>{
   I[l].backMenu=BACK_MENU[l]||BACK_MENU.en;
-  Object.assign(I[l],WHEEL_I18N[l]||WHEEL_I18N.en);});
+  Object.assign(I[l],WHEEL_I18N[l]||WHEEL_I18N.en);
+  Object.assign(I[l],COMBO_I18N[l]||COMBO_I18N.en);
+  Object.assign(I[l],QUEST_I18N[l]||QUEST_I18N.en);
+  Object.assign(I[l],MOTION_I18N[l]||MOTION_I18N.en);});
 const t=k=>(I[Save.data.settings.lang]&&I[Save.data.settings.lang][k])||I.en[k]||I.tr[k]||k;
 function applyI18n(){
   document.documentElement.lang=Save.data.settings.lang;
@@ -713,11 +763,11 @@ const Save={
   data:{session:null,user:null,unlocked:1,stars:{},best:{},gold:120,lives:6,livesNext:0,gardenSpent:0,
     items:{hammer:2,shuffle:2,moves:1},
     questDay:'',quests:[],clan:null,seenTut:false,tut:{},wheelDay:'',wheelStreak:0,wheelLastDay:'',
-    settings:{sfx:true,voice:true,music:true,vib:true,lang:'tr',serverUrl:''}},
+    settings:{sfx:true,voice:true,music:true,vib:true,lang:'tr',serverUrl:'',reduceMotion:false}},
   load(){
     try{
       const d=JSON.parse(lsGet('meyve_v2')||'null');
-      if(d){Object.assign(this.data,d);this.data.settings=Object.assign({sfx:true,voice:true,music:true,vib:true,lang:'tr',serverUrl:''},d.settings||{});}
+      if(d){Object.assign(this.data,d);this.data.settings=Object.assign({sfx:true,voice:true,music:true,vib:true,lang:'tr',serverUrl:'',reduceMotion:false},d.settings||{});}
     }catch(e){}
     this.data.best=this.data.best||{};this.data.tut=this.data.tut||{};
     this.data.gold=+this.data.gold||0;
@@ -1162,7 +1212,7 @@ function updateTweens(dt){
 function cancelTweens(){
   for(const tw of tweens){if(tw.from)for(const k in tw.to)tw.obj[k]=tw.to[k];tw.res();}
   tweens.length=0;}
-function shake(amp,dur){shakeAmp=amp;shakeDur=dur;shakeT=dur;}
+function shake(amp,dur){if(Save.data.settings.reduceMotion)return;shakeAmp=amp;shakeDur=dur;shakeT=dur;}
 function juice(x,y,color){
   if(parts.length>380)return;
   for(let i=0;i<8;i++)parts.push({kind:'dot',x:x+rand(-8,8),y:y+rand(-8,8),
@@ -1350,6 +1400,7 @@ async function explodeCells(seedCells,combo,exclude,fast){
     const bonus=Math.round(pops.length*15*(1+combo*.2));
     addScore(bonus);
     floatText(cellPx(cx),cellPy(cy)-S*.5,'+'+bonus+' ⭐');
+    questAdd('qBigMatch',1);
     if(pops.length>=7){Sfx.boom();shake(6,260);showBanner(pops.length>=8?'MEGA!':'BIG MATCH!');}
   }
   addScore(gained);
@@ -1388,6 +1439,21 @@ async function settleBoard(tok){
       bottom=top-1;}}
   if(anims.length)await Promise.all(anims);
   if(tok!==undefined&&tok!==runToken)throw{stale:true};}
+let curCombo=0,comboHudTimer=0;
+function updateComboHud(n){
+  curCombo=n;
+  const hud=$('#comboHud');if(!hud)return;
+  hud.querySelector('.ch-n').textContent=n;
+  const mult=1+(n-1)*.5;
+  hud.querySelector('.ch-mult').textContent='×'+mult.toFixed(1);
+  // Color shift based on combo level
+  const col=n>=6?'#E56BFF':n>=5?'#FF8A65':n>=4?'#FFB020':n>=3?'#FFE066':'#fff';
+  hud.querySelector('.ch-n').style.color=col;
+  hud.classList.add('show');
+  hud.classList.remove('bump');void hud.offsetWidth;hud.classList.add('bump');
+  if(n>=4)questAdd('qCascade',1);
+  clearTimeout(comboHudTimer);
+  comboHudTimer=setTimeout(()=>{hud.classList.remove('show');curCombo=0;},1400);}
 async function resolveBoard(swapCells,tok){
   let combo=0;
   while(true){
@@ -1395,7 +1461,7 @@ async function resolveBoard(swapCells,tok){
     const runs=findRuns();
     if(!runs.length)break;
     combo++;
-    if(combo>=2)showCombo(combo);
+    if(combo>=2){showCombo(combo);updateComboHud(combo);}
     const creations=planSpecials(runs,swapCells);swapCells=null;
     const cellSet=new Map();
     runs.forEach(rn=>rn.cells.forEach(cc=>cellSet.set(cc[0]*COLS+cc[1],{r:cc[0],c:cc[1]})));
@@ -1860,6 +1926,7 @@ async function hammerHit(r,c){
   if(!tl){jellyDec(r,c);hammerMode=false;$('#bHammer').classList.remove('active');return;}
   Save.data.items.hammer=Math.max(0,(Save.data.items.hammer||0)-1);
   Save.write();updateBoostBar();
+  questAdd('qHammer',1);
   hammerMode=false;$('#bHammer').classList.remove('active');
   busy=true;
   playHammerSwing(r,c);
@@ -2328,14 +2395,20 @@ const QDEFS={
   qWin:{icon:'flag',target:3,gold:100},
   qStar:{icon:'star',target:6,gold:90},
   qCombo:{icon:'combo',target:15,gold:70},
-  qScore:{icon:'score',target:15000,gold:120}};
+  qScore:{icon:'score',target:15000,gold:120},
+  qHammer:{icon:'hammer',target:3,gold:75},
+  qBigMatch:{icon:'bigmatch',target:2,gold:85},
+  qCascade:{icon:'cascade',target:1,gold:95}};
 const QICONS={
   jelly:'<svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="4" fill="#E83E6E" opacity=".8"/><rect x="7" y="6.5" width="10" height="4" rx="2" fill="#fff" opacity=".6"/></svg>',
   spark:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.2 5.8L20 10l-5.8 2.2L12 18l-2.2-5.8L4 10l5.8-2.2z"/></svg>',
   flag:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 3v18M6 4h11l-2.5 3.5L17 11H6" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>',
   star:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.2 6.6.8-4.9 4.6 1.3 6.6-5.9-3.3-5.9 3.3 1.3-6.6L2.5 9l6.6-.8z"/></svg>',
   combo:'<svg viewBox="0 0 24 24" fill="none"><path d="M4 15a8 8 0 0114-5.3M20 9a8 8 0 01-14 5.3" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M18 4v4h-4M6 20v-4h4" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-  score:'<svg viewBox="0 0 24 24" fill="none"><path d="M4 19h16M6 16v-5M10 16V7M14 16v-8M18 16V4" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>'};
+  score:'<svg viewBox="0 0 24 24" fill="none"><path d="M4 19h16M6 16v-5M10 16V7M14 16v-8M18 16V4" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>',
+  hammer:'<svg viewBox="0 0 24 24" fill="none"><path d="M14 3l7 7-3 3-7-7z" fill="currentColor"/><path d="M11 6L3 14l4 4 8-8" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linejoin="round"/></svg>',
+  bigmatch:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.2 5.8L20 10l-5.8 2.2L12 18l-2.2-5.8L4 10l5.8-2.2z"/><circle cx="12" cy="10" r="2.5" fill="#fff"/></svg>',
+  cascade:'<svg viewBox="0 0 24 24" fill="none"><path d="M6 4l4 4-4 4M14 12l4 4-4 4M4 20h16" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>'};
 function todayKey(){const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();}
 function questInit(){
   const tk=todayKey();
@@ -2793,7 +2866,8 @@ const ICONS={
   quest:'<svg viewBox="0 0 24 24" fill="none"><rect x="5" y="3.5" width="14" height="17" rx="2.5" stroke="currentColor" stroke-width="2"/><path d="M8.5 8.5h7M8.5 12h7M8.5 15.5h4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
   trophy:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 3h12v2h3v3c0 2.2-1.8 4-4 4h-.35A6 6 0 0113 15.9V18h3v3H8v-3h3v-2.1A6 6 0 017.35 12H7c-2.2 0-4-1.8-4-4V5h3V3z"/></svg>',
   shop:'<svg viewBox="0 0 24 24" fill="none"><path d="M4 8h16l-1.5 12h-13L4 8z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8.5 10V6.5a3.5 3.5 0 017 0V10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
-  flag:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 3v18M6 4h11l-2.5 3.5L17 11H6" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>'};
+  flag:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 3v18M6 4h11l-2.5 3.5L17 11H6" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  motion:'<svg viewBox="0 0 24 24" fill="none"><path d="M3 12h4l2-7 4 14 2-7h6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>'};
 function showScreen(id){
   $$('.screen').forEach(s=>s.classList.toggle('active',s.id===id));
   state=id==='scr-menu'?'menu':id==='scr-map'?'map':id==='scr-game'?'play':'auth';
@@ -2802,6 +2876,8 @@ function showScreen(id){
   $('#autoBadge').classList.toggle('show',autoPlay&&id==='scr-game');
   hammerMode=false;$('#bHammer').classList.remove('active');
   $('#burn').className='';
+  $('#comboHud').classList.remove('show');
+  clearTimeout(comboHudTimer);
   Music.setTension(0);
   updateLifeUI();updateBoostBar();
   if(id==='scr-menu'){setMascot('normal');
@@ -3001,7 +3077,7 @@ function openSettings(from){
     av.appendChild(cn);
   }else $('#setUser').style.display='none';
   $('#swSfx').checked=s.sfx;$('#swVoice').checked=s.voice;
-  $('#swMusic').checked=s.music;$('#swVib').checked=s.vib;$('#swDemo').checked=autoPlay;
+  $('#swMusic').checked=s.music;$('#swVib').checked=s.vib;$('#swMotion').checked=s.reduceMotion;$('#swDemo').checked=autoPlay;
   $('#srvInput').value=s.serverUrl||'';
   $('#srvStatus').textContent=s.serverUrl?'':t('srvLocal');
   $('#ov-set').classList.add('show');}
@@ -3104,6 +3180,7 @@ function wireUI(){
   $('#icVoice').innerHTML=ICONS.voice;
   $('#icMusic').innerHTML=ICONS.music;
   $('#icVib').innerHTML=ICONS.vib;
+  $('#icMotion').innerHTML=ICONS.motion;
   $('#icLang').innerHTML=ICONS.lang;
   $('#icDemo').innerHTML=ICONS.demo;
   $('#icReset').innerHTML=ICONS.reset;
@@ -3175,6 +3252,7 @@ function wireUI(){
   $('#swVoice').addEventListener('change',e=>{Voice.on=e.target.checked;Save.data.settings.voice=Voice.on;Save.write();if(Voice.on)Voice.say('Perfect!');});
   $('#swMusic').addEventListener('change',e=>{Music.on=e.target.checked;Save.data.settings.music=Music.on;Save.write();Music.on?Music.start():Music.stop();});
   $('#swVib').addEventListener('change',e=>{Save.data.settings.vib=e.target.checked;Save.write();vibrate(30);});
+  $('#swMotion').addEventListener('change',e=>{Save.data.settings.reduceMotion=e.target.checked;Save.write();document.body.classList.toggle('reduce-motion',e.target.checked);Sfx.click();});
   $('#langSel').addEventListener('change',e=>{Sfx.click();setLang(e.target.value);});
   $('#langQuick').addEventListener('click',()=>{
     Sfx.click();
@@ -3275,6 +3353,7 @@ function frame(ts){
 /* ============ BAŞLAT ============ */
 (function init(){
   Save.load();
+  if(Save.data.settings.reduceMotion)document.body.classList.add('reduce-motion');
   livesTick();
   questInit();
   buildIcons();
