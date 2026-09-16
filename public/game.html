@@ -1779,6 +1779,22 @@ async function trySwap(r1,c1,r2,c2){
       shake(3,160);
       busy=false;}
   }catch(e){if(!(e&&e.stale))throw e;}}
+// Double-tap detonation: trigger a special candy in place (no swap, no move spent)
+async function detonateSpecial(r,c){
+  if(busy||finished||pausedFlag||state!=='play')return;
+  const tl=board[r][c];
+  if(!tl||!tl.special)return;
+  busy=true;sel=null;hintMove=null;idleT=0;
+  const tok=runToken;
+  Sfx.whoosh();
+  tl.flash=1;
+  try{
+    await explodeCells([{r:r,c:c}],2);
+    await settleBoard(tok);
+    await resolveBoard(null,tok);
+    if(tok===runToken)afterMove(tok);
+  }catch(e){if(!(e&&e.stale))throw e;}
+}
 function findAnyMove(){
   const test=(r1,c1,r2,c2)=>{
     const a=board[r1][c1],b=board[r2][c2];
@@ -2023,7 +2039,8 @@ async function finishWin(){
   // Slight delay so overlay shows first
   setTimeout(()=>requestAnimationFrame(countUp),350);
   updateGold();
-  $('#menuStarNum').textContent=totalStars();}
+  $('#menuStarNum').textContent=totalStars();
+  busy=false;}
 function finishLose(){
   livesTick();
   const hadShield=Save.data.shields>0;
@@ -2048,7 +2065,8 @@ function finishLose(){
     bs.style.display='flex';
     $('#shieldLbl').textContent=t('useShield')+' ('+Save.data.shields+')';
   }else bs.style.display='none';
-  $('#ov-lose').classList.add('show');}
+  $('#ov-lose').classList.add('show');
+  busy=false;}
 function renderTimeUI(){
   const sec=Math.max(0,Math.ceil(levelTime/1000));
   const txt=Math.floor(sec/60)+':'+String(sec%60).padStart(2,'0');
@@ -3498,6 +3516,7 @@ function posToGrid(e){
 const isNb=(a,b)=>Math.abs(a.r-b.r)+Math.abs(a.c-b.c)===1;
 let ptr={down:false,id:null,r:-1,c:-1,x:0,y:0};
 function wireInput(){
+  let lastTapTime=0,lastTapR=-1,lastTapC=-1;
   cv.addEventListener('pointerdown',e=>{
     Sfx.ensure();
     if(state!=='play'||pausedFlag)return;
@@ -3509,6 +3528,13 @@ function wireInput(){
     if(performance.now()<inputLockUntil)return;
     const tl=board[rc.r][rc.c];
     if(!tl||tl.type===-2||tl.locked>0)return;
+    // Double-tap to detonate a special candy
+    const now=performance.now();
+    if(tl.special&&now-lastTapTime<320&&lastTapR===rc.r&&lastTapC===rc.c){
+      sel=null;ptr.down=false;
+      detonateSpecial(rc.r,rc.c);
+      lastTapTime=0;return;}
+    lastTapTime=now;lastTapR=rc.r;lastTapC=rc.c;
     if(sel&&sel.r===rc.r&&sel.c===rc.c){sel=null;Sfx.click();return;}
     if(sel&&isNb(sel,rc)){const s2=sel;sel=null;trySwap(s2.r,s2.c,rc.r,rc.c);return;}
     Sfx.click();sel={r:rc.r,c:rc.c};
