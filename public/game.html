@@ -663,6 +663,7 @@ body.reduce-motion #btnWheel.hasdot::after{animation:none!important}
     <button class="btn b-green big" id="btnResume" style="font-size:19px" data-i="resume">DEVAM</button>
     <div class="row"><button class="btn b-orange" id="btnRestart" data-i="restart">Yeniden</button>
     <button class="btn b-brown" id="btnQuit" data-i="quit">Harita</button></div>
+    <button class="btn b-blue" id="btnPauseHome" style="font-size:15px"><span style="font-size:17px">🏠</span> <span data-i="backMenu">Ana Menüye Dön</span></button>
   </div>
   <div style="display:flex;justify-content:center;margin-top:10px"><button class="icon-btn" id="btnPauseSettings"></button></div>
 </div></div>
@@ -2515,43 +2516,102 @@ function buildBgScene(){
   sceneCv.width=Math.round(innerWidth*dpr);sceneCv.height=Math.round(innerHeight*dpr);
   const c=sceneCv.getContext('2d');c.scale(dpr,dpr);
   const w=innerWidth,h=innerHeight;
+  // Enhanced sky gradient with warmer candy tones
   const sky=c.createLinearGradient(0,0,0,h);
-  sky.addColorStop(0,'#5E2F8F');sky.addColorStop(.45,'#9B5FC9');sky.addColorStop(.75,'#D6A0EE');sky.addColorStop(1,'#F3D2F8');
+  sky.addColorStop(0,'#4A1D7A');sky.addColorStop(.25,'#7B3FB8');sky.addColorStop(.5,'#B069D9');
+  sky.addColorStop(.75,'#E8A5E8');sky.addColorStop(1,'#FFE0F2');
   c.fillStyle=sky;c.fillRect(0,0,w,h);
-  c.fillStyle='rgba(255,240,200,.75)';c.beginPath();c.arc(w*.82,h*.12,44,0,TAU);c.fill();
-  c.fillStyle='rgba(255,255,255,.3)';c.beginPath();c.arc(w*.82,h*.12,64,0,TAU);c.fill();
+  // Soft radial glow overlay (warm sunlight feel)
+  const glow=c.createRadialGradient(w*.3,h*.15,20,w*.3,h*.15,w*.8);
+  glow.addColorStop(0,'rgba(255,230,180,.45)');glow.addColorStop(1,'rgba(255,230,180,0)');
+  c.fillStyle=glow;c.fillRect(0,0,w,h);
+  // Sun with halo
+  const sx=w*.82,sy=h*.12;
+  const sunG=c.createRadialGradient(sx,sy,8,sx,sy,80);
+  sunG.addColorStop(0,'rgba(255,250,220,1)');sunG.addColorStop(.4,'rgba(255,240,200,.6)');sunG.addColorStop(1,'rgba(255,240,200,0)');
+  c.fillStyle=sunG;c.beginPath();c.arc(sx,sy,80,0,TAU);c.fill();
+  c.fillStyle='rgba(255,250,225,.95)';c.beginPath();c.arc(sx,sy,38,0,TAU);c.fill();
+  // Decorative stars/sparkles in sky
+  for(let i=0;i<12;i++){
+    const stx=rand(0,w),sty=rand(0,h*.4),sr=rand(1.5,3.5);
+    c.fillStyle='rgba(255,255,255,'+rand(.3,.7)+')';
+    c.beginPath();c.arc(stx,sty,sr,0,TAU);c.fill();
+    // 4-point star sparkle
+    c.strokeStyle='rgba(255,255,255,'+rand(.2,.5)+')';c.lineWidth=1;
+    c.beginPath();c.moveTo(stx-sr*2,sty);c.lineTo(stx+sr*2,sty);
+    c.moveTo(stx,sty-sr*2);c.lineTo(stx,sty+sr*2);c.stroke();}
+  // Fluffy clouds with soft shadow
   const bigCloud=(x,y,s)=>{
-    c.fillStyle='rgba(255,255,255,.92)';
+    c.save();
+    // Shadow
+    c.fillStyle='rgba(180,100,200,.15)';
+    c.beginPath();
+    c.arc(x+2,y+8,34*s,0,TAU);c.arc(x+40*s,y-4*s,26*s,0,TAU);
+    c.arc(x+74*s,y+8,30*s,0,TAU);c.arc(x+38*s,y+18*s,26*s,0,TAU);c.fill();
+    // Cloud body with gradient
+    const cg=c.createRadialGradient(x+36*s,y-8*s,5,x+36*s,y+5*s,40*s);
+    cg.addColorStop(0,'rgba(255,255,255,1)');cg.addColorStop(1,'rgba(245,225,250,.92)');
+    c.fillStyle=cg;
     c.beginPath();
     c.arc(x,y,34*s,0,TAU);c.arc(x+38*s,y-12*s,26*s,0,TAU);
-    c.arc(x+72*s,y,30*s,0,TAU);c.arc(x+36*s,y+10*s,26*s,0,TAU);c.fill();};
+    c.arc(x+72*s,y,30*s,0,TAU);c.arc(x+36*s,y+10*s,26*s,0,TAU);c.fill();
+    c.restore();};
   bigCloud(w*.14,h*.16,1.2);bigCloud(w*.5,h*.08,.9);bigCloud(w*.68,h*.28,1.05);bigCloud(w*.2,h*.38,.8);
-  c.fillStyle='#F0A8D8';
+  bigCloud(w*.88,h*.42,.7);bigCloud(w*.4,h*.32,.65);
+  // Rolling hills with enhanced gradients
+  const hill1=c.createLinearGradient(0,h*.5,0,h*.7);
+  hill1.addColorStop(0,'#F0A8D8');hill1.addColorStop(1,'#D87AB8');
+  c.fillStyle=hill1;
   c.beginPath();c.moveTo(0,h*.6);
   c.bezierCurveTo(w*.2,h*.46,w*.42,h*.58,w*.6,h*.52);
   c.bezierCurveTo(w*.78,h*.46,w*.92,h*.56,w,h*.52);
   c.lineTo(w,h);c.lineTo(0,h);c.fill();
-  c.fillStyle='#C98FE8';
+  const hill2=c.createLinearGradient(0,h*.65,0,h*.85);
+  hill2.addColorStop(0,'#C98FE8');hill2.addColorStop(1,'#A066CC');
+  c.fillStyle=hill2;
   c.beginPath();c.moveTo(0,h*.72);
   c.bezierCurveTo(w*.25,h*.6,w*.55,h*.76,w*.8,h*.68);
   c.bezierCurveTo(w*.92,h*.64,w,h*.7,w,h*.7);
   c.lineTo(w,h);c.lineTo(0,h);c.fill();
+  // Enhanced lollipops with glow
   const lolli=(x,y,s,col,col2)=>{
-    c.strokeStyle='#FFF';c.lineWidth=5*s;c.lineCap='round';
+    // Stick
+    c.strokeStyle='rgba(255,255,255,.95)';c.lineWidth=5*s;c.lineCap='round';
     c.beginPath();c.moveTo(x,y);c.lineTo(x,y-40*s);c.stroke();
+    // Glow halo
+    const lg=c.createRadialGradient(x,y-40*s,5,x,y-40*s,30*s);
+    lg.addColorStop(0,'rgba(255,255,255,.3)');lg.addColorStop(1,'rgba(255,255,255,0)');
+    c.fillStyle=lg;c.beginPath();c.arc(x,y-40*s,30*s,0,TAU);c.fill();
+    // Candy spiral
     for(let i=0;i<6;i++){
       c.fillStyle=i%2?col:col2;
       c.beginPath();c.moveTo(x,y-40*s);
       c.arc(x,y-40*s,22*s,i*Math.PI/3,(i+1)*Math.PI/3);c.closePath();c.fill();}
-    c.strokeStyle='rgba(255,255,255,.6)';c.lineWidth=2.5*s;
-    c.beginPath();c.arc(x,y-40*s,22*s,0,TAU);c.stroke();};
+    // Rim + highlight
+    c.strokeStyle='rgba(255,255,255,.7)';c.lineWidth=2.5*s;
+    c.beginPath();c.arc(x,y-40*s,22*s,0,TAU);c.stroke();
+    c.fillStyle='rgba(255,255,255,.5)';
+    c.beginPath();c.ellipse(x-8*s,y-46*s,7*s,4*s,-.5,0,TAU);c.fill();};
   lolli(w*.1,h*.76,1.1,'#FF6FB5','#FFE066');
   lolli(w*.9,h*.72,.95,'#7B61E8','#7CE8D5');
   lolli(w*.55,h*.86,.75,'#FF8AC2','#C0F27E');
-  for(let i=0;i<24;i++){
-    c.fillStyle=['#FFD23D','#FF8AC2','#fff','#B8F2E0'][irand(4)];
-    c.beginPath();c.arc(rand(0,w),rand(h*.8,h*.98),rand(2,4.5),0,TAU);c.fill();}
-  bgClouds=[{x:w*.1,y:h*.1,s:1,v:.008},{x:w*.55,y:h*.2,s:.75,v:.012},{x:w*.75,y:h*.05,s:.9,v:.006}];}
+  lolli(w*.75,h*.82,.6,'#FFD23D','#FF6FB5');
+  // Candy sprinkles on ground
+  const sprinkleCols=['#FFD23D','#FF8AC2','#7CE8D5','#B56CE8','#FFB84D','#fff'];
+  for(let i=0;i<35;i++){
+    c.fillStyle=sprinkleCols[irand(sprinkleCols.length)];
+    const sx=rand(0,w),sy=rand(h*.78,h*.98),sw=rand(2,5),sh=rand(3,7),sr=rand(0,TAU);
+    c.save();c.translate(sx,sy);c.rotate(sr);
+    c.fillRect(-sw/2,-sh/2,sw,sh);c.restore();}
+  // Floating fruit decorations (small, scattered)
+  for(let i=0;i<6;i++){
+    const fx=rand(w*.05,w*.95),fy=rand(h*.35,h*.6),fs=rand(16,28);
+    const fcol=['#FF6FB5','#FFD23D','#7CE8D5','#B56CE8'][irand(4)];
+    c.save();c.globalAlpha=.5;
+    c.fillStyle=fcol;c.beginPath();c.arc(fx,fy,fs/2,0,TAU);c.fill();
+    c.fillStyle='rgba(255,255,255,.4)';c.beginPath();c.arc(fx-fs*.15,fy-fs*.15,fs*.18,0,TAU);c.fill();
+    c.restore();}
+  bgClouds=[{x:w*.1,y:h*.1,s:1,v:.008},{x:w*.55,y:h*.2,s:.75,v:.012},{x:w*.75,y:h*.05,s:.9,v:.006},{x:w*.3,y:h*.35,s:.65,v:.01}];}
 function drawCloud(c,x,y,s){
   c.fillStyle='rgba(255,255,255,.9)';
   c.beginPath();
@@ -3764,6 +3824,7 @@ function wireUI(){
     inputLockUntil=performance.now()+350;});
   $('#btnRestart').addEventListener('click',()=>{Sfx.click();startLevel(curLevel.n);});
   $('#btnQuit').addEventListener('click',()=>{Sfx.click();pausedFlag=false;showScreen('scr-map');});
+  $('#btnPauseHome').addEventListener('click',()=>{Sfx.click();pausedFlag=true;$('#ov-pause').classList.remove('show');toast(t('backMenu'));showScreen(Save.data.user?'scr-menu':'scr-auth');});
   $('#btnNext').addEventListener('click',()=>{Sfx.click();startLevel(curLevel.n+1);});
   $('#btnRetryW').addEventListener('click',()=>{Sfx.click();startLevel(curLevel.n);});
   $('#btnMapW').addEventListener('click',()=>{Sfx.click();showScreen('scr-map');});
