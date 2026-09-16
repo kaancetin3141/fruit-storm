@@ -2266,7 +2266,7 @@ function buildCellSprites(){
     c.fillStyle='rgba(255,255,255,.3)';
     rr(c,3,3,S-6,(S-6)*.4,S*.18);c.fill();
     return cn;};
-  cellA=mk('#FFD9F2');cellB=mk('#F6C2E8');}
+  cellA=mk('#E8D0F0');cellB=mk('#D9BFE8');}
 function layout(){
   const area=$('#boardArea');
   if(!area.clientWidth)return;
@@ -2347,15 +2347,21 @@ function renderBoard(dt,now){
   let shx=0,shy=0;
   if(shakeT>0){shakeT-=dt;const a=shakeAmp*Math.max(0,shakeT/shakeDur);shx=rand(-a,a);shy=rand(-a,a);}
   ctx.save();ctx.translate(shx,shy);
+  // Board frame with richer gradient + inner glow
   const fg=ctx.createLinearGradient(0,0,0,w);
-  fg.addColorStop(0,'#F2D7FB');fg.addColorStop(.5,'#D9A6EF');fg.addColorStop(1,'#B97BE0');
+  fg.addColorStop(0,'#E8C5F5');fg.addColorStop(.3,'#D4A0EA');fg.addColorStop(.7,'#C285DD');fg.addColorStop(1,'#A865D0');
   rr(ctx,0,0,w,w,22);ctx.fillStyle=fg;ctx.fill();
-  ctx.strokeStyle='rgba(255,255,255,.8)';ctx.lineWidth=2;
+  // Outer highlight rim
+  ctx.strokeStyle='rgba(255,255,255,.6)';ctx.lineWidth=2;
   rr(ctx,3,3,w-6,w-6,20);ctx.stroke();
+  // Inner board area with soft gradient
   rr(ctx,ox-6,oy-6,COLS*S+12,ROWS*S+12,15);
   const ig=ctx.createLinearGradient(0,oy-6,0,oy+ROWS*S+6);
-  ig.addColorStop(0,'#C98FE8');ig.addColorStop(1,'#A566D4');
+  ig.addColorStop(0,'#B578D8');ig.addColorStop(.5,'#A05EC8');ig.addColorStop(1,'#8A4DB5');
   ctx.fillStyle=ig;ctx.fill();
+  // Inner board highlight
+  ctx.strokeStyle='rgba(255,255,255,.15)';ctx.lineWidth=3;
+  rr(ctx,ox-4,oy-4,COLS*S+8,ROWS*S+8,13);ctx.stroke();
   ctx.save();
   rr(ctx,ox,oy,COLS*S,ROWS*S,11);ctx.clip();
   for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++)
