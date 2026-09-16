@@ -98,10 +98,11 @@ canvas{display:block}
 .liveChip svg{width:18px;height:18px}
 #menuLogo{font-size:clamp(46px,13vw,84px);position:relative}
 .logo-fruit{position:absolute;z-index:1;filter:drop-shadow(0 8px 8px rgba(80,40,110,.35))}
-#lf1{width:100px;left:-58px;top:-28px;animation:bob 3.4s ease-in-out infinite}
-#lf2{width:80px;right:-50px;top:4px;animation:bob 2.9s .5s ease-in-out infinite}
-#lf3{width:88px;left:-40px;bottom:-32px;animation:bob 3.8s .9s ease-in-out infinite}
+#lf1{width:100px;left:-58px;top:-28px;animation:bob 3.4s ease-in-out infinite,fruitGlow 4s ease-in-out infinite}
+#lf2{width:80px;right:-50px;top:4px;animation:bob 2.9s .5s ease-in-out infinite,fruitGlow 4s 1.3s ease-in-out infinite}
+#lf3{width:88px;left:-40px;bottom:-32px;animation:bob 3.8s .9s ease-in-out infinite,fruitGlow 4s 2.6s ease-in-out infinite}
 @keyframes bob{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-12px) rotate(5deg)}}
+@keyframes fruitGlow{0%,100%{filter:drop-shadow(0 8px 8px rgba(80,40,110,.35)) drop-shadow(0 0 0 rgba(255,201,61,0))}50%{filter:drop-shadow(0 8px 8px rgba(80,40,110,.35)) drop-shadow(0 0 14px rgba(255,201,61,.6))}}
 #menuSub{color:#6A3E7E;font-size:14px;font-weight:500;background:rgba(255,255,255,.72);padding:6px 16px;border-radius:20px;text-align:center}
 #menuChips{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
 .mchip{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.9);border-radius:14px;
@@ -370,6 +371,13 @@ canvas{display:block}
 .rrow .rs{display:flex;align-items:center;gap:4px;font-weight:700;color:#C24488}
 .rrow .rs svg{width:14px;height:14px;color:var(--gold)}
 .rrow.you{background:#FFF3D6;outline:2px solid var(--gold)}
+.rank-season{display:flex;align-items:center;justify-content:center;gap:8px;margin:0 0 10px;
+  padding:8px 12px;background:linear-gradient(135deg,#E8F0FF,#F3E8FF);border-radius:14px;
+  box-shadow:0 3px 0 #D0C5E8;font-size:12.5px;font-weight:600;color:#6A4D8C}
+.rank-season .rs-ic{font-size:16px}
+.rank-season .rs-label{color:#8A6DB0}
+.rank-season .rs-time{background:#6A2BB8;color:#fff;padding:2px 10px;border-radius:9px;
+  font-variant-numeric:tabular-nums;font-weight:700;box-shadow:0 2px 0 var(--epic-d)}
 .srow{display:flex;align-items:center;gap:10px;background:#fff;border-radius:15px;padding:9px 11px;margin-bottom:8px;box-shadow:0 2px 0 #EFD5F2}
 .srow .sic{width:44px;height:44px;border-radius:13px;display:flex;align-items:center;justify-content:center;flex:none;font-size:22px}
 .srow .snm{flex:1;font-weight:600;font-size:14px}
@@ -594,6 +602,7 @@ body.reduce-motion #btnWheel.hasdot::after{animation:none!important}
   <div id="loseLives" style="display:flex;justify-content:center;gap:5px;margin-bottom:12px"></div>
   <div class="btns">
     <button class="btn b-green big" id="btnContinue" style="font-size:18px">💛 <span id="contLbl">DEVAM · 250</span></button>
+    <button class="btn b-blue" id="btnShield" style="font-size:15px;display:none">🛡️ <span id="shieldLbl">KALKAN KULLAN</span></button>
     <button class="btn b-orange" id="btnRetryL" data-i="tryAgain">TEKRAR DENE</button>
     <button class="btn b-brown" id="btnMapL" data-i="toMap">Harita</button>
   </div>
@@ -629,6 +638,7 @@ body.reduce-motion #btnWheel.hasdot::after{animation:none!important}
 <div class="overlay" id="ov-rank"><div class="panel">
   <button class="panel-x" data-close="ov-rank"><svg viewBox="0 0 24 24" fill="none"><path d="M5 5l14 14M19 5L5 19" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"/></svg></button>
   <h2 data-i="ranks">Liderlik</h2><div class="sub" data-i="rankSub">Haftalık yıldız sıralaması</div>
+  <div id="rankSeason" class="rank-season"></div>
   <div id="rankList"></div>
 </div></div>
 
@@ -780,13 +790,33 @@ const HINT_I18N={
   it:{hintUsed:'Suggerimento mostrato!',noHints:'Nessun suggerimento!'},
   pt:{hintUsed:'Dica mostrada!',noHints:'Sem dicas!'},
   ru:{hintUsed:'Подсказка показана!',noHints:'Подсказки кончились!'}};
+const SEASON_I18N={
+  tr:{seasonEnds:'Sezon bitişine:'},
+  en:{seasonEnds:'Season ends in:'},
+  de:{seasonEnds:'Saison endet in:'},
+  es:{seasonEnds:'Temporada termina en:'},
+  fr:{seasonEnds:'La saison se termine dans :'},
+  it:{seasonEnds:'Stagione finisce tra:'},
+  pt:{seasonEnds:'Temporada termina em:'},
+  ru:{seasonEnds:'Сезон закончится через:'}};
+const SHIELD_I18N={
+  tr:{useShield:'KALKAN KULLAN',shieldUsed:'Kalkan aktif! +5 hamle'},
+  en:{useShield:'USE SHIELD',shieldUsed:'Shield active! +5 moves'},
+  de:{useShield:'SCHILD NUTZEN',shieldUsed:'Schild aktiv! +5 Züge'},
+  es:{useShield:'USAR ESCUDO',shieldUsed:'¡Escudo activo! +5 movs'},
+  fr:{useShield:'UTILISER BOUCLIER',shieldUsed:'Bouclier actif ! +5 coups'},
+  it:{useShield:'USA SCUDO',shieldUsed:'Scudo attivo! +5 mosse'},
+  pt:{useShield:'USAR ESCUDO',shieldUsed:'Escudo ativo! +5 jogadas'},
+  ru:{useShield:'ИСПОЛЬЗОВАТЬ ЩИТ',shieldUsed:'Щит активен! +5 ходов'}};
 Object.keys(I).forEach(l=>{
   I[l].backMenu=BACK_MENU[l]||BACK_MENU.en;
   Object.assign(I[l],WHEEL_I18N[l]||WHEEL_I18N.en);
   Object.assign(I[l],COMBO_I18N[l]||COMBO_I18N.en);
   Object.assign(I[l],QUEST_I18N[l]||QUEST_I18N.en);
   Object.assign(I[l],MOTION_I18N[l]||MOTION_I18N.en);
-  Object.assign(I[l],HINT_I18N[l]||HINT_I18N.en);});
+  Object.assign(I[l],HINT_I18N[l]||HINT_I18N.en);
+  Object.assign(I[l],SEASON_I18N[l]||SEASON_I18N.en);
+  Object.assign(I[l],SHIELD_I18N[l]||SHIELD_I18N.en);});
 const t=k=>(I[Save.data.settings.lang]&&I[Save.data.settings.lang][k])||I.en[k]||I.tr[k]||k;
 function applyI18n(){
   document.documentElement.lang=Save.data.settings.lang;
@@ -800,6 +830,7 @@ function applyI18n(){
 const Save={
   data:{session:null,user:null,unlocked:1,stars:{},best:{},gold:120,lives:6,livesNext:0,gardenSpent:0,
     items:{hammer:2,shuffle:2,moves:1},
+    shields:1,
     questDay:'',quests:[],clan:null,seenTut:false,tut:{},wheelDay:'',wheelStreak:0,wheelLastDay:'',
     settings:{sfx:true,voice:true,music:true,vib:true,lang:'tr',serverUrl:'',reduceMotion:false}},
   load(){
@@ -1868,7 +1899,8 @@ async function finishWin(){
   $('#menuStarNum').textContent=totalStars();}
 function finishLose(){
   livesTick();
-  if(!autoPlay&&Save.data.lives>0){
+  const hadShield=Save.data.shields>0;
+  if(!autoPlay&&Save.data.lives>0&&!hadShield){
     Save.data.lives--;
     if(Save.data.lives<LIVES_MAX&&!Save.data.livesNext)Save.data.livesNext=Date.now()+REGEN_MS;
     Save.write();}
@@ -1883,6 +1915,12 @@ function finishLose(){
     ll.insertAdjacentHTML('beforeend','<svg viewBox="0 0 24 24" fill="currentColor" style="width:22px;height:22px;color:'+(i<Save.data.lives?'var(--red)':'#EFD9F2')+'"><path d="M12 21s-7.5-4.7-10-9.3C.4 8.6 2.4 5 5.9 5c2 0 3.6 1.1 4.4 2.7C11 6.1 12.6 5 14.6 5 18.1 5 20.1 8.6 22 11.7 19.5 16.3 12 21 12 21z"/></svg>');
   $('#contLbl').textContent=t('continue')+' · 250 · '+(curLevel.mode==='time'?t('contTime'):t('contMoves'));
   $('#btnContinue').style.display=autoPlay?'none':'flex';
+  // Shield: show if available and not autoplay and life was NOT already lost
+  const bs=$('#btnShield');
+  if(hadShield&&!autoPlay){
+    bs.style.display='flex';
+    $('#shieldLbl').textContent=t('useShield')+' ('+Save.data.shields+')';
+  }else bs.style.display='none';
   $('#ov-lose').classList.add('show');}
 function renderTimeUI(){
   const sec=Math.max(0,Math.ceil(levelTime/1000));
@@ -2575,7 +2613,7 @@ const WHEEL_REWARDS=[
   {kind:'gold',amt:100,label:'100💰',color:'#FFD23D'},
   {kind:'item',amt:1,id:'shuffle',label:'🔀 +1',color:'#7B61E8'},
   {kind:'gold',amt:75,label:'75💰',color:'#4CC9A8'},
-  {kind:'item',amt:1,id:'moves',label:'⏱️ +1',color:'#56B9E8'},
+  {kind:'shield',amt:1,label:'🛡️ +1',color:'#56B9E8'},
   {kind:'gold',amt:200,label:'200💰',color:'#FF8A65'},
   {kind:'life',amt:1,label:'💛 +1',color:'#B56CE8'}];
 let wheelRot=0,wheelSpinning=false;
@@ -2666,6 +2704,8 @@ function applyWheelReward(r){
   else if(r.kind==='item'){Save.data.items[r.id]=(Save.data.items[r.id]||0)+r.amt;
     if(bonus>0)Save.data.gold=(Save.data.gold||0)+bonus;}
   else if(r.kind==='life'){Save.data.lives=Math.min(LIVES_MAX,(Save.data.lives||0)+r.amt);
+    if(bonus>0)Save.data.gold=(Save.data.gold||0)+bonus;}
+  else if(r.kind==='shield'){Save.data.shields=(Save.data.shields||0)+r.amt;
     if(bonus>0)Save.data.gold=(Save.data.gold||0)+bonus;}
   if(bonus>0){const res=$('#wheelResult');res.textContent+='  +'+bonus+'💰 🔥';}
   Save.write();updateGold();updateLifeUI();updateBoostBar();}
@@ -2926,6 +2966,15 @@ function renderClan(){
 /* ============ LİDERLİK ============ */
 const BOT_NAMES=['KirazKral','Limonez','Meyveci42','BerryQueen','ElmaŞeker','ÜzümUsta','PortakalX','Vişne_09','ŞeftaliPro','KavunBey','NarEfendi','ErikHanım'];
 function weekSeed(){return Math.floor(Date.now()/604800000);}
+function weekResetCountdown(){
+  // Weeks reset Monday 00:00 UTC. Compute time until next Monday.
+  const now=new Date();
+  const day=now.getUTCDay(); // 0=Sun..6=Sat
+  const daysUntilMonday=((8-day)%7)||7;
+  const next=new Date(Date.UTC(now.getUTCFullYear(),now.getUTCMonth(),now.getUTCDate()+daysUntilMonday));
+  const ms=Math.max(0,next.getTime()-now.getTime());
+  const d=Math.floor(ms/86400000),h=Math.floor(ms%86400000/3600000),m=Math.floor(ms%3600000/60000);
+  return d+'g '+String(h).padStart(2,'0')+'s '+String(m).padStart(2,'0')+'d';}
 function genBots(){
   const rng=mulberry32((weekSeed()*2654435761)>>>0);
   const names=BOT_NAMES.slice();
@@ -2934,6 +2983,9 @@ function genBots(){
   return names.slice(0,12).map(n=>({name:n,stars:8+((rng()*rng()*maxS)|0),av:(rng()*6)|0}));}
 async function buildRanks(){
   const me={name:clanMemberName(),stars:totalStars(),you:true,av:(Save.data.user&&Save.data.user.avatar)||0};
+  // Render season countdown
+  const ss=$('#rankSeason');
+  if(ss)ss.innerHTML='<span class="rs-ic">🏆</span><span class="rs-label">'+t('seasonEnds')+'</span><span class="rs-time">'+weekResetCountdown()+'</span>';
   let list=null;
   if(Api.base){
     const r=await Api.req('scores',{token:Save.data.session,email:Save.data.user&&Save.data.user.email,
@@ -3361,6 +3413,18 @@ function wireUI(){
     setMascot('happy',1800);
     inputLockUntil=performance.now()+350;
     toast(t('continueOk'));});
+  $('#btnShield').addEventListener('click',()=>{
+    if(!curLevel||Save.data.shields<=0)return;
+    Save.data.shields--;Save.write();
+    Sfx.special();vibrate([20,40,60]);
+    if(curLevel.mode==='time'){
+      levelTime+=15000;timeOver=false;lastTimeSec=-1;renderTimeUI();
+    }else{moves+=5;updateMoves();}
+    finished=false;
+    hideOverlays();
+    setMascot('happy',1800);
+    inputLockUntil=performance.now()+350;
+    toast(t('shieldUsed'));});
   $('#btnSettings').addEventListener('click',()=>{Sfx.click();openSettings('menu');});
   $('#btnAuthSettings').addEventListener('click',()=>{Sfx.click();openSettings('auth');});
   $('#profileChip').addEventListener('click',()=>{Sfx.click();openSettings('menu');});
@@ -3403,6 +3467,7 @@ function wireUI(){
     Save.data.unlocked=1;Save.data.stars={};Save.data.best={};Save.data.gold=120;
     Save.data.lives=6;Save.data.livesNext=0;Save.data.gardenSpent=0;
     Save.data.items={hammer:2,shuffle:2,moves:1};
+    Save.data.shields=1;
     Save.data.clan=null;Save.data.questDay='';Save.data.quests=[];Save.data.wheelDay='';Save.data.wheelStreak=0;Save.data.wheelLastDay='';
     Save.write();
     resetArmed=false;updateGold();updateQuestBadges();updateLifeUI();updateWheelBadge();
