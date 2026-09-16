@@ -8,7 +8,7 @@ Bu klasör meyve asset'lerini yönetir. Kendi asset'lerinizi kolayca ekleyebilir
 public/themes/
 ├── config.json          ← Aktif tema + tema listesi
 ├── README.md            ← Bu dosya
-├── default/             ← Varsayılan tema (Sweet Bonanza candy stili, 8 meyve)
+├── default/             ← Varsayılan tema (Sweet Bonanza cartoon stili, 8 meyve + 3 özel şeker)
 │   ├── fr0.png (Kiraz 🍒)
 │   ├── fr1.png (Limon dilim 🍋)
 │   ├── fr2.png (Yabanmürver 🫐)
@@ -16,11 +16,14 @@ public/themes/
 │   ├── fr4.png (Üzüm 🍇)
 │   ├── fr5.png (Portakal dilim 🍊)
 │   ├── fr6.png (Karpuz dilim 🍉)
-│   └── fr7.png (Muz 🍌)
-├── realistic/           ← Gerçekçi stil (alternatif, 6 meyve)
+│   ├── fr7.png (Muz 🍌)
+│   ├── sp_h.png (Çizgili şeker — 4'lü eşleşme)
+│   ├── sp_b.png (Bomb şeker — L/T/Kare eşleşme)
+│   └── sp_r.png (Gökkuşağı lolipop — 5'li eşleşme)
+├── realistic/           ← Gerçekçi stil (alternatif, 6 meyve, özel şeker yok)
 │   └── fr0-5.png
 └── halloween/           ← Cadılar Bayramı etkinlik teması (örnek - boş)
-    └── fr0-7.png        ← Kendi etkinlik asset'lerinizi koyun
+    └── fr0-7.png + sp_h/b/r.png  ← Kendi etkinlik asset'lerinizi koyun
 ```
 
 ## 🎨 Yeni Tema Ekleme
@@ -69,4 +72,11 @@ public/themes/
 | fr6.png | Karpuz (dilim) | Pembe-Kırmızı |
 | fr7.png | Muz | Altın Sarı |
 
-Asset bulunamazsa oyun otomatik olarak prosedürel (çizim) meyvelere düşer.
+### Özel Şekerler (Opsiyonel)
+| Dosya | Şeker | Ne zaman oluşur |
+|-------|-------|------------------|
+| sp_h.png | Çizgili şeker (pembe-beyaz) | 4'lü eşleşme |
+| sp_b.png | Bomb şeker (mor, sprinkles) | L/T/Kare eşleşme |
+| sp_r.png | Gökkuşağı lolipop | 5'li eşleşme |
+
+Asset bulunamazsa oyun otomatik olarak prosedürel (çizim) meyvelere/şekerlere düşer.

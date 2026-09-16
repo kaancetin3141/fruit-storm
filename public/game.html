@@ -1258,8 +1258,14 @@ function loadThemeList(){
       sel.innerHTML=THEME_LIST.map(t=>'<option value="'+t.id+'">'+t.name+'</option>').join('');
       sel.value=Save.data.settings.activeTheme||'default';}
   }).catch(()=>{});}
+// Special candy assets (striped, bomb, rainbow) loaded from theme folder
+let EXT_SPECIALS={h:null,v:null,b:null,r:null};
+function getSpecialPath(name){
+  const theme=Save.data.settings.activeTheme||'default';
+  return 'themes/'+theme+'/'+name+'.png';}
 function tryLoadExtAssets(){
-  let pending=FRUITS.length;
+  let pending=FRUITS.length+3; // 8 fruits + 3 special candies
+  const done=()=>{if(--pending===0)refreshAllSprites();};
   for(let i=0;i<FRUITS.length;i++){
     const img=new Image();
     img.onload=()=>{
@@ -1267,10 +1273,21 @@ function tryLoadExtAssets(){
       const c=cn.getContext('2d');
       const s=Math.min(128/img.width,128/img.height);
       c.drawImage(img,(128-img.width*s)/2,(128-img.height*s)/2,img.width*s,img.height*s);
-      EXT_FRUITS[i]=cn;
-      if(--pending===0)refreshAllSprites();};
-    img.onerror=()=>{if(--pending===0)refreshAllSprites();};
-    img.src=getThemePath(i);}}
+      EXT_FRUITS[i]=cn;done();};
+    img.onerror=done;
+    img.src=getThemePath(i);}
+  // Load special candies: sp_h (striped horizontal), sp_b (bomb), sp_r (rainbow)
+  const spNames=[['h','sp_h'],['b','sp_b'],['r','sp_r']];
+  spNames.forEach(([key,file])=>{
+    const img=new Image();
+    img.onload=()=>{
+      const cn=document.createElement('canvas');cn.width=cn.height=128;
+      const c=cn.getContext('2d');
+      const s=Math.min(128/img.width,128/img.height);
+      c.drawImage(img,(128-img.width*s)/2,(128-img.height*s)/2,img.width*s,img.height*s);
+      EXT_SPECIALS[key]=cn;done();};
+    img.onerror=done;
+    img.src=getSpecialPath(file);});}
 function drawStripes(c,dir){
   c.save();c.globalAlpha=.94;
   for(let i=-1;i<=1;i++){
@@ -1338,13 +1355,15 @@ function buildMasterSprites(){
   MASTER_SPR=FRUITS.map((f,i)=>{
     const base=fruitBase(i);
     const withOv=ov=>{const cn=master128(cc=>{cc.drawImage(base,0,0);ov(cc);});return cn;};
-    return{n:base,h:withOv(c=>drawStripes(c,'h')),v:withOv(c=>drawStripes(c,'v')),
-      b:withOv(c=>{c.clearRect(0,0,128,128);drawWrapper(c);c.save();c.translate(64,64);c.scale(.84,.84);c.translate(-64,-64);
+    return{n:base,
+      h:EXT_SPECIALS.h||withOv(c=>drawStripes(c,'h')),
+      v:EXT_SPECIALS.h||withOv(c=>drawStripes(c,'v')),
+      b:EXT_SPECIALS.b||withOv(c=>{c.clearRect(0,0,128,128);drawWrapper(c);c.save();c.translate(64,64);c.scale(.84,.84);c.translate(-64,-64);
         if(EXT_FRUITS[i])c.drawImage(EXT_FRUITS[i],0,0);else f.draw(c);c.restore();})};});
   // Cache 128x128 versions of stone/lock/rainbow/bonus too
   MASTER_SPR._stone=[master128(c=>drawStoneTile(c,2)),master128(c=>drawStoneTile(c,1))];
   MASTER_SPR._lock=[master128(c=>drawLockTile(c,1)),master128(c=>drawLockTile(c,2))];
-  MASTER_SPR._rainbow=master128(drawRainbowCandy);
+  MASTER_SPR._rainbow=EXT_SPECIALS.r||master128(drawRainbowCandy);
   MASTER_SPR._bonus=master128(drawClockBadge);}
 function master128(fn){const m=document.createElement('canvas');m.width=m.height=128;fn(m.getContext('2d'));return m;}
 function fruitBase(i){return EXT_FRUITS[i]||master128(FRUITS[i].draw);}
@@ -3676,8 +3695,10 @@ function wireUI(){
   $('#themeSel').addEventListener('change',e=>{
     Sfx.click();
     Save.data.settings.activeTheme=e.target.value;Save.write();
-    // Reload fruit assets from new theme
-    for(let i=0;i<6;i++)EXT_FRUITS[i]=null;
+    // Reload fruit + special assets from new theme
+    for(let i=0;i<FRUITS.length;i++)EXT_FRUITS[i]=null;
+    EXT_SPECIALS={h:null,v:null,b:null,r:null};
+    MASTER_SPR=null; // invalidate cache
     tryLoadExtAssets();
     toast(t('themeChanged'),2000);
   });

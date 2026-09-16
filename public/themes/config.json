@@ -4,7 +4,8 @@
     "default": {
       "name": "Klasik (Candy)",
       "folder": "default",
-      "fruits": ["fr0.png", "fr1.png", "fr2.png", "fr3.png", "fr4.png", "fr5.png", "fr6.png", "fr7.png"]
+      "fruits": ["fr0.png", "fr1.png", "fr2.png", "fr3.png", "fr4.png", "fr5.png", "fr6.png", "fr7.png"],
+      "specials": ["sp_h.png", "sp_b.png", "sp_r.png"]
     },
     "realistic": {
       "name": "Gerçekçi",
@@ -14,7 +15,8 @@
     "halloween": {
       "name": "Cadılar Bayramı",
       "folder": "halloween",
-      "fruits": ["fr0.png", "fr1.png", "fr2.png", "fr3.png", "fr4.png", "fr5.png", "fr6.png", "fr7.png"]
+      "fruits": ["fr0.png", "fr1.png", "fr2.png", "fr3.png", "fr4.png", "fr5.png", "fr6.png", "fr7.png"],
+      "specials": ["sp_h.png", "sp_b.png", "sp_r.png"]
     }
   }
 }
