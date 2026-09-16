@@ -419,9 +419,24 @@ body.reduce-motion #board{transition:none!important}
 body.reduce-motion .pulse,body.reduce-motion .boostBtn.active .bIc,
 body.reduce-motion .mnode.open .dot,body.reduce-motion .icon-btn.hasdot::after,
 body.reduce-motion #btnWheel.hasdot::after{animation:none!important}
+#splash{position:fixed;inset:0;z-index:100;background:linear-gradient(180deg,#5E2F8F 0%,#9B5FC9 45%,#D6A0EE 75%,#F3D2F8 100%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;
+  transition:opacity .5s;opacity:1}
+#splash.hide{opacity:0;pointer-events:none}
+#splash .sp-logo{font-weight:700;font-size:clamp(40px,12vw,72px);line-height:.95;letter-spacing:1px;text-align:center}
+#splash .sp-w1{color:#FF5A9E;text-shadow:0 3px 0 #fff,0 6px 0 rgba(122,36,86,.35)}
+#splash .sp-w2{color:#B56CE8;text-shadow:0 3px 0 #fff,0 6px 0 rgba(122,36,86,.35)}
+#splash .sp-fruit{font-size:48px;animation:spBob 1.4s ease-in-out infinite}
+@keyframes spBob{0%,100%{transform:translateY(0) rotate(-8deg)}50%{transform:translateY(-12px) rotate(8deg)}}
+#splash .sp-bar{width:160px;height:8px;background:rgba(255,255,255,.3);border-radius:5px;overflow:hidden}
+#splash .sp-bar i{display:block;width:0%;height:100%;background:linear-gradient(90deg,#FFE066,#FF8A65);
+  border-radius:5px;animation:spLoad 1.6s ease-out forwards}
+@keyframes spLoad{0%{width:0}60%{width:75%}100%{width:100%}}
+#splash .sp-txt{color:rgba(255,255,255,.85);font-size:14px;font-weight:600;letter-spacing:1px}
 </style>
 </head>
 <body>
+<div id="splash"><div class="sp-logo"><span class="sp-w1">MEYVE</span><br><span class="sp-w2">PATLAT!</span></div><div class="sp-fruit">🍒</div><div class="sp-bar"><i></i></div><div class="sp-txt">Yükleniyor…</div></div>
 <canvas id="bg"></canvas>
 <div id="tint"></div>
 <div id="burn"></div>
@@ -1140,23 +1155,36 @@ function makeSprite(fn,size){
   const o=document.createElement('canvas');o.width=o.height=size;
   o.getContext('2d').drawImage(m,0,0,size,size);return o;}
 let SPR=[],RBS=null,BICONS=[],STONE_SPR=[],LOCK_SPR=[],BON_SPR=null;
+// Cached 128x128 master sprites (built once, scaled to any size on demand)
+let MASTER_SPR=null;
+function buildMasterSprites(){
+  if(MASTER_SPR)return; // already cached
+  MASTER_SPR=FRUITS.map((f,i)=>{
+    const base=fruitBase(i);
+    const withOv=ov=>{const cn=master128(cc=>{cc.drawImage(base,0,0);ov(cc);});return cn;};
+    return{n:base,h:withOv(c=>drawStripes(c,'h')),v:withOv(c=>drawStripes(c,'v')),
+      b:withOv(c=>{c.clearRect(0,0,128,128);drawWrapper(c);c.save();c.translate(64,64);c.scale(.84,.84);c.translate(-64,-64);
+        if(EXT_FRUITS[i])c.drawImage(EXT_FRUITS[i],0,0);else f.draw(c);c.restore();})};});
+  // Cache 128x128 versions of stone/lock/rainbow/bonus too
+  MASTER_SPR._stone=[master128(c=>drawStoneTile(c,2)),master128(c=>drawStoneTile(c,1))];
+  MASTER_SPR._lock=[master128(c=>drawLockTile(c,1)),master128(c=>drawLockTile(c,2))];
+  MASTER_SPR._rainbow=master128(drawRainbowCandy);
+  MASTER_SPR._bonus=master128(drawClockBadge);}
 function master128(fn){const m=document.createElement('canvas');m.width=m.height=128;fn(m.getContext('2d'));return m;}
 function fruitBase(i){return EXT_FRUITS[i]||master128(FRUITS[i].draw);}
 function buildFruitSprites(size){
-  SPR=FRUITS.map((f,i)=>{
-    const base=fruitBase(i);
-    const scaled=src=>{const o=document.createElement('canvas');o.width=o.height=size;o.getContext('2d').drawImage(src,0,0,size,size);return o;};
-    const withOv=ov=>{const cn=master128(cc=>{cc.drawImage(base,0,0);ov(cc);});return scaled(cn);};
-    return{n:scaled(base),h:withOv(c=>drawStripes(c,'h')),v:withOv(c=>drawStripes(c,'v')),
-      b:withOv(c=>{c.clearRect(0,0,128,128);drawWrapper(c);c.save();c.translate(64,64);c.scale(.84,.84);c.translate(-64,-64);
-        if(EXT_FRUITS[i])c.drawImage(EXT_FRUITS[i],0,0);else f.draw(c);c.restore();})};});
-  RBS=makeSprite(drawRainbowCandy,size);
-  STONE_SPR=[makeSprite(c=>drawStoneTile(c,2),size),makeSprite(c=>drawStoneTile(c,1),size)];
-  LOCK_SPR=[makeSprite(c=>drawLockTile(c,1),size),makeSprite(c=>drawLockTile(c,2),size)];
-  BON_SPR=makeSprite(drawClockBadge,size);}
+  buildMasterSprites(); // cheap no-op if already cached
+  const scaled=src=>{const o=document.createElement('canvas');o.width=o.height=size;o.getContext('2d').drawImage(src,0,0,128,128,0,0,size,size);return o;};
+  SPR=MASTER_SPR.map(m=>({n:scaled(m.n),h:scaled(m.h),v:scaled(m.v),b:scaled(m.b)}));
+  RBS=scaled(MASTER_SPR._rainbow);
+  STONE_SPR=[scaled(MASTER_SPR._stone[0]),scaled(MASTER_SPR._stone[1])];
+  LOCK_SPR=[scaled(MASTER_SPR._lock[0]),scaled(MASTER_SPR._lock[1])];
+  BON_SPR=scaled(MASTER_SPR._bonus);}
 function buildIcons(){BICONS=FRUITS.map((f,i)=>fruitBase(i));}
 function refreshAllSprites(){
   buildIcons();
+  MASTER_SPR=null; // invalidate cache (EXT_FRUITS may have loaded)
+  buildMasterSprites();
   if(cvW)buildFruitSprites(Math.max(18,Math.floor(S*.94)));
   buildMenuFruits();
   updateProfileUI();}
@@ -2697,6 +2725,51 @@ function drawGardenScene(){
     c.fillRect(sx2-5,h*.74,10,16);
     c.fillStyle='#D6A018';c.fillRect(sx2-9,h*.88,18,4);}
   c.save();c.translate(w*.15,h*.9);c.scale(.5,.5);drawKiraz(c,'happy',false);c.restore();}
+// Ambient animation overlay for garden (clouds, butterflies, sparkles, swaying)
+let gardenAnimRAF=0;
+function drawGardenAnim(now){
+  const cvg=$('#gardenCv');if(!cvg)return;
+  const c=cvg.getContext('2d'),w=cvg.width,h=cvg.height;
+  // Redraw the static scene first, then add animated elements
+  drawGardenScene();
+  c.save();
+  const t=now*.001;
+  // Drifting clouds
+  c.fillStyle='rgba(255,255,255,.7)';
+  for(let i=0;i<3;i++){
+    const cx=((t*8+i*120)%(w+60))-30;
+    const cy=h*.12+i*h*.06;
+    c.beginPath();
+    c.arc(cx,cy,10,0,TAU);c.arc(cx+12,cy-4,8,0,TAU);c.arc(cx+24,cy,9,0,TAU);
+    c.arc(cx+12,cy+4,7,0,TAU);c.fill();}
+  // Floating butterflies
+  const owned=Save.data.gardenSpent;
+  if(owned>=1){
+    for(let i=0;i<2;i++){
+      const bx=w*.5+Math.sin(t*.6+i*2)*w*.35;
+      const by=h*.4+Math.cos(t*.8+i*1.5)*h*.15;
+      const wing=Math.sin(t*8+i)*.4+.6; // wing flap 0.2..1.0
+      c.save();c.translate(bx,by);
+      const col=i?'#FFB84D':'#FF6FB5';
+      c.fillStyle=col;c.globalAlpha=.85;
+      c.beginPath();c.ellipse(-5,-2,6*wing,8,-.3,0,TAU);c.fill();
+      c.beginPath();c.ellipse(5,-2,6*wing,8,.3,0,TAU);c.fill();
+      c.fillStyle='#5A3A00';c.beginPath();c.ellipse(0,0,1.5,5,0,0,TAU);c.fill();
+      c.restore();}}
+  // Twinkling sparkles
+  c.globalCompositeOperation='lighter';
+  for(let i=0;i<6;i++){
+    const sx=w*((i*.17+.05+t*.03)%1);
+    const sy=h*.3+Math.sin(t*1.5+i)*h*.1;
+    const sa=.3+.5*Math.abs(Math.sin(t*3+i*1.2));
+    c.globalAlpha=sa*.6;c.fillStyle='#FFE066';
+    c.beginPath();c.arc(sx,sy,2.5,0,TAU);c.fill();}
+  c.restore();
+  if($('#ov-garden').classList.contains('show'))
+    gardenAnimRAF=requestAnimationFrame(drawGardenAnim);
+  else gardenAnimRAF=0;}
+function startGardenAnim(){cancelAnimationFrame(gardenAnimRAF);gardenAnimRAF=requestAnimationFrame(drawGardenAnim);}
+function stopGardenAnim(){cancelAnimationFrame(gardenAnimRAF);gardenAnimRAF=0;}
 
 /* ============ KLAN ============ */
 const CLAN_SUGS=['Meyve Krallığı','Şeker Ustaları','Jöle Avcıları','Yıldız Ekibi','Bahçe Kahramanları','Patlat Ekibi'];
@@ -3195,7 +3268,7 @@ function wireUI(){
     else toast(t(res.error||'srvFail'));});
   $('#btnPlay').addEventListener('click',()=>{Sfx.ensure();Sfx.click();showScreen('scr-map');});
   $('#btnMapBack').addEventListener('click',()=>{Sfx.click();showScreen('scr-menu');});
-  $('#btnGarden').addEventListener('click',()=>{Sfx.click();renderGarden();$('#ov-garden').classList.add('show');});
+  $('#btnGarden').addEventListener('click',()=>{Sfx.click();renderGarden();$('#ov-garden').classList.add('show');startGardenAnim();});
   $('#btnQuests').addEventListener('click',()=>{Sfx.click();questInit();updateGold();renderQuests();$('#ov-quest').classList.add('show');});
   $('#btnMapQuests').addEventListener('click',()=>{Sfx.click();questInit();updateGold();renderQuests();$('#ov-quest').classList.add('show');});
   $('#btnRanks').addEventListener('click',async()=>{Sfx.click();$('#rankList').innerHTML='';$('#ov-rank').classList.add('show');await buildRanks();});
@@ -3221,6 +3294,7 @@ function wireUI(){
       Sfx.click();
       const ov=document.getElementById(el.dataset.close);
       if(ov)ov.classList.remove('show');
+      if(el.dataset.close==='ov-garden')stopGardenAnim();
       if(el.dataset.close==='ov-wheel'&&state==='menu')
         $('#btnPlay').classList.toggle('pulse',wheelAvailable());});});
   $('#ov-pause .panel-x').addEventListener('click',()=>{
@@ -3376,6 +3450,8 @@ function frame(ts){
   window.addEventListener('orientationchange',()=>setTimeout(layout,220));
   if(window.visualViewport)visualViewport.addEventListener('resize',()=>setTimeout(layout,120));
   if(document.fonts&&document.fonts.load)document.fonts.load('600 15px Fredoka');
+  // Hide splash after a minimum display time (lets the loading bar animate)
+  setTimeout(()=>{const sp=$('#splash');if(sp)sp.classList.add('hide');setTimeout(()=>{if(sp&&sp.parentNode)sp.parentNode.removeChild(sp);},600);},1700);
   if(Save.data.session&&Save.data.user){
     Api.req('load',{token:Save.data.session,email:Save.data.user.email}).then(r=>{
       if(r.ok&&r.progress){
