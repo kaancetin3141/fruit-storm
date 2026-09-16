@@ -364,6 +364,21 @@ canvas{display:block}
 .qclaim{margin-top:8px;width:100%;font-size:13.5px;padding:8px;border-radius:11px}
 .qclaim.ready{animation:pulseDot2 1s infinite}
 .qclaim.claimed{background:#E0F7EF;color:#1E8A6E;box-shadow:0 3px 0 #A8DCC8;pointer-events:none}
+.arow{display:flex;align-items:center;gap:10px;background:#fff;border-radius:14px;padding:8px 11px;margin-bottom:7px;box-shadow:0 3px 0 #EFD5F2;transition:transform .15s}
+.arow.done{background:linear-gradient(135deg,#FFF8E0,#FFE9A8);box-shadow:0 3px 0 var(--orange-d)}
+@media(hover:hover){.arow:hover{transform:translateY(-1px)}}
+.arow .aic{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+  font-size:22px;flex:none;background:#F3E8FF;filter:grayscale(.7);opacity:.6;transition:.2s}
+.arow .aic.on{background:linear-gradient(135deg,#FFE066,#FFB020);filter:none;opacity:1;box-shadow:0 0 12px rgba(255,201,61,.5)}
+.arow .anm{flex:1;font-weight:600;font-size:13.5px;color:#5A3A6E}
+.arow .abar{height:5px;background:#EFD5F2;border-radius:3px;margin-top:4px;overflow:hidden}
+.arow .abar i{display:block;height:100%;background:linear-gradient(90deg,#7B61E8,#B56CE8);border-radius:3px;transition:width .4s}
+.arow.done .abar i{background:linear-gradient(90deg,#FFB020,#FFD23D)}
+.arow .anm small{display:block;font-weight:500;font-size:10.5px;color:#B090C0;margin-top:3px}
+.arow .arg{font-weight:700;font-size:13px;color:var(--orange-d);flex:none;white-space:nowrap}
+#btnAchievements{position:relative}
+#btnAchievements.hasdot::after{content:'';position:absolute;top:-5px;right:-5px;width:16px;height:16px;
+  border-radius:50%;background:var(--gold);border:2.5px solid #fff;animation:pulseDot2 1s ease-in-out infinite}
 .rrow{display:flex;align-items:center;gap:9px;background:#fff;border-radius:13px;padding:7px 11px;margin-bottom:6px;box-shadow:0 2px 0 #EFD5F2}
 .rrow .rk{width:28px;font-weight:700;font-size:14px;color:#A678B8;text-align:center;flex:none}
 .rrow .av{width:33px;height:33px;border-radius:10px;flex:none}
@@ -507,6 +522,7 @@ body.reduce-motion #btnWheel.hasdot::after{animation:none!important}
     <button class="btn b-orange" id="btnShop"><span data-i="shop">Market</span></button>
     <button class="btn b-brown" id="btnClan"><span data-i="clan">Klan</span></button>
     <button class="btn b-orange" id="btnRanks"><span data-i="ranks">Liderlik</span></button>
+    <button class="btn b-blue" id="btnAchievements"><span data-i="achievements">Başarımlar</span></button>
     <button class="btn b-red" id="btnWheel"><span data-i="wheel">Çark</span></button>
   </div>
   <canvas id="mascot" width="184" height="184"></canvas>
@@ -633,6 +649,12 @@ body.reduce-motion #btnWheel.hasdot::after{animation:none!important}
   <h2 data-i="quests">Görevler</h2><div class="sub" data-i="questSub">Her gün 3 yeni görev</div>
   <div id="questGold"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="9" opacity=".25"/><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M12 7.5v9M9.5 9.8c0-1.1 1.1-1.8 2.5-1.8s2.5.7 2.5 1.8c0 2.6-5 1.8-5 4.4 0 1.1 1.1 1.8 2.5 1.8s2.5-.7 2.5-1.8" fill="none" stroke="currentColor" stroke-width="1.8"/></svg><span id="questGoldNum">0</span></div>
   <div id="questList"></div>
+</div></div>
+
+<div class="overlay" id="ov-achievements"><div class="panel">
+  <button class="panel-x" data-close="ov-achievements"><svg viewBox="0 0 24 24" fill="none"><path d="M5 5l14 14M19 5L5 19" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"/></svg></button>
+  <h2 data-i="achievements">Başarımlar</h2><div class="sub" data-i="achSub">Rozet kazan, altın al!</div>
+  <div id="achList"></div>
 </div></div>
 
 <div class="overlay" id="ov-rank"><div class="panel">
@@ -808,6 +830,39 @@ const SHIELD_I18N={
   it:{useShield:'USA SCUDO',shieldUsed:'Scudo attivo! +5 mosse'},
   pt:{useShield:'USAR ESCUDO',shieldUsed:'Escudo ativo! +5 jogadas'},
   ru:{useShield:'ИСПОЛЬЗОВАТЬ ЩИТ',shieldUsed:'Щит активен! +5 ходов'}};
+const ACH_I18N={
+  tr:{achievements:'Başarımlar',achSub:'Rozet kazan, altın al!',achUnlock:'Başarım açıldı!',
+    aFirstWin:'İlk Zafer',aWin10:'Galeri Ustası (10 kazan)',aWin25:'Efsane (25 kazan)',
+    aCombo10:'Kombo Ustası (10 kombo)',aBigMatch5:'Patlama Ustası (5 büyük eşleşme)',
+    aSpecial20:'Şeker Şefi (20 özel)',aStars30:'Yıldız Avcısı (30 yıldız)',aWheel7:'Seri Kralı (7 gün)'},
+  en:{achievements:'Achievements',achSub:'Earn badges, get gold!',achUnlock:'Achievement unlocked!',
+    aFirstWin:'First Victory',aWin10:'Gallery Master (10 wins)',aWin25:'Legend (25 wins)',
+    aCombo10:'Combo Master (10 combos)',aBigMatch5:'Blast Master (5 big matches)',
+    aSpecial20:'Candy Chef (20 specials)',aStars30:'Star Hunter (30 stars)',aWheel7:'Streak King (7 days)'},
+  de:{achievements:'Erfolge',achSub:'Abzeichen sammeln, Gold verdienen!',achUnlock:'Erfolg freigeschaltet!',
+    aFirstWin:'Erster Sieg',aWin10:'Galerie-Meister (10 Siege)',aWin25:'Legende (25 Siege)',
+    aCombo10:'Combo-Meister (10 Combos)',aBigMatch5:'Knall-Meister (5 große Matches)',
+    aSpecial20:'Bonbon-Koch (20 Spezial)',aStars30:'Sternenjäger (30 Sterne)',aWheel7:'Serie-König (7 Tage)'},
+  es:{achievements:'Logros',achSub:'¡Gana insignias, consigue oro!',achUnlock:'¡Logro desbloqueado!',
+    aFirstWin:'Primera Victoria',aWin10:'Maestro Galería (10 victorias)',aWin25:'Leyenda (25 victorias)',
+    aCombo10:'Maestro Combo (10 combos)',aBigMatch5:'Maestro Explosión (5 grandes)',
+    aSpecial20:'Chef Caramelo (20 especiales)',aStars30:'Cazador Estrellas (30)',aWheel7:'Rey Racha (7 días)'},
+  fr:{achievements:'Succès',achSub:'Gagnez des badges, de l\'or !',achUnlock:'Succès débloqué !',
+    aFirstWin:'Première Victoire',aWin10:'Maître Galerie (10 victoires)',aWin25:'Légende (25)',
+    aCombo10:'Maître Combo (10 combos)',aBigMatch5:'Maître Explosion (5 grands)',
+    aSpecial20:'Chef Bonbon (20 spéciaux)',aStars30:'Chasseur Étoiles (30)',aWheel7:'Roi Série (7 jours)'},
+  it:{achievements:'Traguardi',achSub:'Guadagna badge, ricevi oro!',achUnlock:'Traguardo sbloccato!',
+    aFirstWin:'Prima Vittoria',aWin10:'Maestro Galleria (10 vittorie)',aWin25:'Leggenda (25)',
+    aCombo10:'Maestro Combo (10 combo)',aBigMatch5:'Maestro Esplosione (5 grandi)',
+    aSpecial20:'Chef Caramello (20 speciali)',aStars30:'Cacciatore Stelle (30)',aWheel7:'Re Serie (7 giorni)'},
+  pt:{achievements:'Conquistas',achSub:'Ganhe insígnias, ganhe ouro!',achUnlock:'Conquista desbloqueada!',
+    aFirstWin:'Primeira Vitória',aWin10:'Mestre Galeria (10 vitórias)',aWin25:'Lenda (25)',
+    aCombo10:'Mestre Combo (10 combos)',aBigMatch5:'Mestre Explosão (5 grandes)',
+    aSpecial20:'Chef Doce (20 especiais)',aStars30:'Caçador Estrelas (30)',aWheel7:'Rei Sequência (7 dias)'},
+  ru:{achievements:'Достижения',achSub:'Собирай значки, получай золото!',achUnlock:'Достижение разблокировано!',
+    aFirstWin:'Первая победа',aWin10:'Мастер галереи (10 побед)',aWin25:'Легенда (25 побед)',
+    aCombo10:'Мастер комбо (10 комбо)',aBigMatch5:'Мастер взрывов (5 больших)',
+    aSpecial20:'Шеф-конфеты (20 спец.)',aStars30:'Охотник за звёздами (30)',aWheel7:'Король серии (7 дней)'}};
 Object.keys(I).forEach(l=>{
   I[l].backMenu=BACK_MENU[l]||BACK_MENU.en;
   Object.assign(I[l],WHEEL_I18N[l]||WHEEL_I18N.en);
@@ -816,7 +871,8 @@ Object.keys(I).forEach(l=>{
   Object.assign(I[l],MOTION_I18N[l]||MOTION_I18N.en);
   Object.assign(I[l],HINT_I18N[l]||HINT_I18N.en);
   Object.assign(I[l],SEASON_I18N[l]||SEASON_I18N.en);
-  Object.assign(I[l],SHIELD_I18N[l]||SHIELD_I18N.en);});
+  Object.assign(I[l],SHIELD_I18N[l]||SHIELD_I18N.en);
+  Object.assign(I[l],ACH_I18N[l]||ACH_I18N.en);});
 const t=k=>(I[Save.data.settings.lang]&&I[Save.data.settings.lang][k])||I.en[k]||I.tr[k]||k;
 function applyI18n(){
   document.documentElement.lang=Save.data.settings.lang;
@@ -832,6 +888,7 @@ const Save={
     items:{hammer:2,shuffle:2,moves:1},
     shields:1,
     questDay:'',quests:[],clan:null,seenTut:false,tut:{},wheelDay:'',wheelStreak:0,wheelLastDay:'',
+    achievements:{},stats:{levelsWon:0,totalCombos:0,bigMatches:0,specials:0,starsEarned:0},
     settings:{sfx:true,voice:true,music:true,vib:true,lang:'tr',serverUrl:'',reduceMotion:false}},
   load(){
     try{
@@ -1483,6 +1540,8 @@ async function explodeCells(seedCells,combo,exclude,fast){
     addScore(bonus);
     floatText(cellPx(cx),cellPy(cy)-S*.5,'+'+bonus+' ⭐');
     questAdd('qBigMatch',1);
+    Save.data.stats.bigMatches=(Save.data.stats.bigMatches||0)+1;
+    checkAchievements();
     if(pops.length>=7){Sfx.boom();shake(6,260);showBanner(pops.length>=8?'MEGA!':'BIG MATCH!');}
   }
   addScore(gained);
@@ -1534,6 +1593,7 @@ function updateComboHud(n){
   hud.classList.add('show');
   hud.classList.remove('bump');void hud.offsetWidth;hud.classList.add('bump');
   if(n>=4)questAdd('qCascade',1);
+  Save.data.stats.totalCombos=(Save.data.stats.totalCombos||0)+1;
   // Combo milestone gold rewards: x3→+5, x5→+10, x7→+20
   if(n===3||n===5||n===7){
     const reward=n===3?5:n===5?10:20;
@@ -1563,7 +1623,8 @@ async function resolveBoard(swapCells,tok){
       tl.flash=1;tl.scale=.55;
       tween(tl,{scale:1},240,easeOutBack);
       Sfx.special();vibrate(15);
-      questAdd('qSpecial',1);}
+      questAdd('qSpecial',1);
+      Save.data.stats.specials=(Save.data.stats.specials||0)+1;}
     await settleBoard(tok);
     maybeRespawnBonus();}}
 function commitSwap(a,b,r1,c1,r2,c2){board[r2][c2]=a;board[r1][c1]=b;a.r=r2;a.c=c2;b.r=r1;b.c=c1;}
@@ -1857,6 +1918,9 @@ async function finishWin(){
   Api.req('save',{token:Save.data.session,email:Save.data.user&&Save.data.user.email,
     progress:{unlocked:Save.data.unlocked,stars:Save.data.stars,best:Save.data.best,gold:Save.data.gold}});
   questAdd('qWin',1);questAdd('qStar',stars);questAdd('qScore',score);
+  Save.data.stats.levelsWon=(Save.data.stats.levelsWon||0)+1;
+  Save.data.stats.starsEarned=(Save.data.stats.starsEarned||0)+stars;
+  checkAchievements();
   if(curLevel.n%3===0||Math.random()<.25)setTimeout(dropItem,1600);
   Sfx.win();Voice.say('Sweet victory!');
   if(stars===3)setTimeout(()=>Voice.say('Perfect!'),1200);
@@ -2544,6 +2608,59 @@ function claimQuest(id){
   Sfx.coin();vibrate(25);
   toast(t('goldPlus')+' +'+QDEFS[id].gold);
   updateGold();updateQuestBadges();renderQuests();}
+
+/* ============ BAŞARIMLAR ============ */
+const ACHIEVEMENTS={
+  aFirstWin:{icon:'🏆',target:1,stat:'levelsWon',gold:50},
+  aWin10:{icon:'🎯',target:10,stat:'levelsWon',gold:100},
+  aWin25:{icon:'👑',target:25,stat:'levelsWon',gold:200},
+  aCombo10:{icon:'⚡',target:10,stat:'totalCombos',gold:80},
+  aBigMatch5:{icon:'💥',target:5,stat:'bigMatches',gold:100},
+  aSpecial20:{icon:'✨',target:20,stat:'specials',gold:120},
+  aStars30:{icon:'⭐',target:30,stat:'starsEarned',gold:150},
+  aWheel7:{icon:'🔥',target:7,stat:'wheelStreak',gold:100}};
+function checkAchievements(){
+  const st=Save.data.stats||{};
+  let unlocked=[];
+  for(const id in ACHIEVEMENTS){
+    if(Save.data.achievements&&Save.data.achievements[id])continue;
+    const a=ACHIEVEMENTS[id];
+    if((st[a.stat]||0)>=a.target){
+      Save.data.achievements[id]=true;
+      unlocked.push(a);
+    }}
+  if(unlocked.length){
+    Save.data.gold=(Save.data.gold||0)+unlocked.reduce((s,a)=>s+a.gold,0);
+    Save.write();updateGold();
+    unlocked.forEach((a,i)=>setTimeout(()=>{
+      Sfx.special();vibrate([20,40,60]);
+      toast('🏅 '+t('achUnlock')+' '+a.icon+' +'+a.gold+'💰',3000);
+    },i*800));
+  }}
+function renderAchievements(){
+  const list=$('#achList');if(!list)return;
+  const st=Save.data.stats||{};
+  list.innerHTML='';
+  for(const id in ACHIEVEMENTS){
+    const a=ACHIEVEMENTS[id];
+    const cur=Math.min(st[a.stat]||0,a.target);
+    const done=!!(Save.data.achievements&&Save.data.achievements[id]);
+    const pct=Math.round(cur/a.target*100);
+    const row=document.createElement('div');
+    row.className='arow'+(done?' done':'');
+    row.innerHTML='<div class="aic'+(done?' on':'')+'">'+a.icon+'</div>'+
+      '<div class="anm">'+t(id)+'<div class="abar"><i style="width:'+pct+'%"></i></div>'+
+      '<small>'+cur+' / '+a.target+(done?' ✓':'')+'</small></div>'+
+      '<div class="arg">'+a.gold+'💰</div>';
+    list.appendChild(row);}}
+function updateAchievementsBadge(){
+  const st=Save.data.stats||{};
+  let n=0;
+  for(const id in ACHIEVEMENTS){
+    if(Save.data.achievements&&Save.data.achievements[id])continue;
+    const a=ACHIEVEMENTS[id];
+    if((st[a.stat]||0)>=a.target)n++;}
+  $('#btnAchievements').classList.toggle('hasdot',n>0);}
 function updateGold(){
   $('#menuGoldNum').textContent=fmt(Save.data.gold);
   $('#questGoldNum').textContent=fmt(Save.data.gold);
@@ -3368,6 +3485,7 @@ function wireUI(){
   $('#btnMapQuests').addEventListener('click',()=>{Sfx.click();questInit();updateGold();renderQuests();$('#ov-quest').classList.add('show');});
   $('#btnRanks').addEventListener('click',async()=>{Sfx.click();$('#rankList').innerHTML='';$('#ov-rank').classList.add('show');await buildRanks();});
   $('#btnMapRanks').addEventListener('click',async()=>{Sfx.click();$('#rankList').innerHTML='';$('#ov-rank').classList.add('show');await buildRanks();});
+  $('#btnAchievements').addEventListener('click',()=>{Sfx.click();renderAchievements();updateAchievementsBadge();$('#ov-achievements').classList.add('show');});
   $('#btnShop').addEventListener('click',()=>{Sfx.click();updateGold();renderShop();$('#ov-shop').classList.add('show');});
   $('#btnMapShop').addEventListener('click',()=>{Sfx.click();updateGold();renderShop();$('#ov-shop').classList.add('show');});
   $('#btnWheel').addEventListener('click',()=>{Sfx.click();openWheel();});
@@ -3553,7 +3671,7 @@ function frame(ts){
   showScreen('scr-auth');
   setAuthMode('login');
   $('#menuStarNum').textContent=totalStars();
-  updateGold();updateQuestBadges();updateLifeUI();updateBoostBar();updateWheelBadge();
+  updateGold();updateQuestBadges();updateLifeUI();updateBoostBar();updateWheelBadge();updateAchievementsBadge();
   tryLoadExtAssets();
   window.addEventListener('resize',layout);
   window.addEventListener('orientationchange',()=>setTimeout(layout,220));
