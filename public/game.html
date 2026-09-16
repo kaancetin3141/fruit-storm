@@ -72,14 +72,15 @@ canvas{display:block}
 .auth-card{width:min(92vw,380px);max-height:calc(100dvh - var(--sat) - var(--sab) - 20px);overflow-y:auto;
   background:rgba(255,255,255,.94);backdrop-filter:blur(8px);border-radius:28px;padding:24px 22px 20px;
   box-shadow:0 12px 0 rgba(90,45,110,.3),0 24px 40px rgba(80,40,110,.3);display:flex;flex-direction:column;gap:12px}
-.auth-card .logo{font-size:32px}
+.auth-card .logo{font-size:32px;animation:logoBounce 2.4s ease-in-out infinite}
+@keyframes logoBounce{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-4px) rotate(1deg)}}
 .tabs{display:flex;background:#F3DFF5;border-radius:14px;padding:4px;gap:4px}
 .tabs button{flex:1;padding:9px;border-radius:11px;font-weight:600;color:var(--ink2);font-size:15px}
 .tabs button.on{background:#fff;color:var(--ink);box-shadow:0 2px 6px rgba(122,36,86,.18)}
 .field{display:flex;flex-direction:column;gap:5px}
 .field label{font-size:12.5px;font-weight:600;color:#A678B8}
-.field input{border:2px solid #EFD5F2;background:#FFFDFE;border-radius:13px;padding:11px 14px;font-size:15px;outline:none}
-.field input:focus{border-color:var(--gold)}
+.field input{border:2px solid #EFD5F2;background:#FFFDFE;border-radius:13px;padding:11px 14px;font-size:15px;outline:none;transition:border-color .2s,box-shadow .2s}
+.field input:focus{border-color:var(--gold);box-shadow:0 0 0 4px rgba(255,201,61,.25)}
 #regName{display:none}
 #authStatus{min-height:18px;font-size:13px;font-weight:600;color:var(--red);text-align:center}
 .divider{display:flex;align-items:center;gap:10px;color:#C9A8D4;font-size:12px;font-weight:600}
@@ -306,6 +307,10 @@ canvas{display:block}
   box-shadow:0 3px 0 #E8C8F0;z-index:5;border:2px solid #F3DFF5}
 .panel-x:active{transform:translateY(2px)}
 .panel-x svg{width:20px;height:20px}
+.pause-stats{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:0 0 12px}
+.pause-stats .ps-cell{background:rgba(243,223,242,.7);border-radius:12px;padding:7px 10px;text-align:center}
+.pause-stats .ps-cell b{display:block;font-size:17px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
+.pause-stats .ps-cell small{font-size:10px;font-weight:600;color:#A678B8;letter-spacing:.5px;text-transform:uppercase}
 .wheel-panel{width:min(92vw,360px)}
 .wheel-wrap{position:relative;width:280px;height:280px;margin:6px auto 10px}
 .wheel-wrap canvas{width:100%;height:100%;display:block;filter:drop-shadow(0 8px 10px rgba(80,40,110,.35))}
@@ -331,8 +336,9 @@ canvas{display:block}
 .starsRow{display:flex;justify-content:center;gap:10px;margin:8px 0 12px}
 .wstar{width:58px;height:58px;color:#EFD9F2;transform:scale(.6)}
 .wstar:nth-child(2){width:72px;height:72px;margin-top:-8px}
-.wstar.earn{color:var(--gold);animation:starPop .45s cubic-bezier(.34,1.8,.64,1) forwards}
+.wstar.earn{color:var(--gold);animation:starPop .45s cubic-bezier(.34,1.8,.64,1) forwards,starBurst .6s .2s ease-out}
 @keyframes starPop{0%{transform:scale(.2) rotate(-40deg)}100%{transform:scale(1) rotate(0)}}
+@keyframes starBurst{0%{filter:drop-shadow(0 0 0 rgba(255,201,61,0))}30%{filter:drop-shadow(0 0 20px rgba(255,201,61,.95)) drop-shadow(0 0 8px rgba(255,255,255,.8))}100%{filter:drop-shadow(0 0 6px rgba(255,201,61,.6))}}
 #winScore{text-align:center;font-size:33px;font-weight:700;color:#C24488}
 #winScore.counting{animation:winScoreGlow .6s ease-out}
 @keyframes winScoreGlow{0%{text-shadow:none;transform:scale(1)}40%{text-shadow:0 0 18px rgba(194,68,136,.7);transform:scale(1.14)}100%{text-shadow:0 2px 0 rgba(194,68,136,.3);transform:scale(1)}}
@@ -628,6 +634,7 @@ body.reduce-motion #btnWheel.hasdot::after{animation:none!important}
   <button class="panel-x" data-close="ov-pause"><svg viewBox="0 0 24 24" fill="none"><path d="M5 5l14 14M19 5L5 19" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"/></svg></button>
   <h2 data-i="paused">DURAKLADI</h2>
   <div class="sub" id="pauseLvl"></div>
+  <div id="pauseStats" class="pause-stats"></div>
   <div class="btns">
     <button class="btn b-green big" id="btnResume" style="font-size:19px" data-i="resume">DEVAM</button>
     <div class="row"><button class="btn b-orange" id="btnRestart" data-i="restart">Yeniden</button>
@@ -3366,6 +3373,18 @@ function openSettings(from){
   $('#srvInput').value=s.serverUrl||'';
   $('#srvStatus').textContent=s.serverUrl?'':t('srvLocal');
   $('#ov-set').classList.add('show');}
+function renderPauseStats(){
+  const ps=$('#pauseStats');if(!ps||!curLevel)return;
+  const st=Save.data.stats||{};
+  const achCount=Save.data.achievements?Object.keys(Save.data.achievements).length:0;
+  const cells=[
+    [t('score'),fmt(score)],
+    [t('moves'),String(Math.max(0,moves))],
+    [t('gold'),fmt(Save.data.gold)],
+    [t('achievements'),achCount+'/8'],
+    [t('stars'),String(totalStars())],
+    [t('best'),fmt(Save.data.best[curLevel.n]||0)]];
+  ps.innerHTML=cells.map(c=>'<div class="ps-cell"><b>'+c[1]+'</b><small>'+c[0]+'</small></div>').join('');}
 function setLang(l){
   Save.data.settings.lang=l;Save.write();applyI18n();setAuthMode(authMode);
   if(curLevel){
@@ -3600,6 +3619,7 @@ function wireUI(){
     Sfx.click();
     if(state!=='play'||finished)return;
     pausedFlag=true;
+    renderPauseStats();
     $('#ov-pause').classList.add('show');});
   $('#btnResume').addEventListener('click',()=>{
     Sfx.click();pausedFlag=false;
