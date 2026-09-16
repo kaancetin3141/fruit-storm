@@ -44,7 +44,8 @@ canvas{display:block}
   box-shadow:0 5px 0 var(--sh,#333),0 8px 14px rgba(74,36,86,.3);text-shadow:0 2px 0 rgba(0,0,0,.16);
   transition:transform .08s,box-shadow .08s,filter .15s}
 .btn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--sh)}
-@media(hover:hover){.btn:hover{filter:brightness(1.07)}}
+@media(hover:hover){.btn:hover{filter:brightness(1.07)}
+  .panel .btn:hover{transform:translateY(-1px);box-shadow:0 6px 0 var(--sh,#333),0 8px 16px rgba(74,36,86,.25)}}
 .b-green{background:var(--green);--sh:var(--green-d)}
 .b-orange{background:var(--orange);--sh:var(--orange-d);color:#5A3A00;text-shadow:none}
 .b-red{background:var(--red);--sh:var(--red-d)}
@@ -186,6 +187,14 @@ canvas{display:block}
   52%{opacity:1;transform:translate(-50%,-44%) rotate(7deg) scale(1.06)}
   78%{opacity:.9;transform:translate(-50%,-40%) rotate(12deg) scale(1.02)}
   100%{opacity:0;transform:translate(-50%,-32%) rotate(16deg) scale(.96)}}
+.boostBtn.b-hint{background:linear-gradient(#E0F2FF,#B8DDF7);color:#2A6FA0}
+.boostBtn.b-hint .cnt{background:#4CC9A8;box-shadow:0 2px 0 #3AA888}
+.boostBtn.b-hint .cnt.zero{background:#CDB8D8;box-shadow:0 2px 0 #B09BC2}
+.boostBtn.b-hint:active{box-shadow:0 1px 0 #9CC5E0}
+.combo-gold-pop{position:fixed;top:35%;left:50%;transform:translate(-50%,0);z-index:27;
+  font-size:24px;font-weight:700;color:#FFE066;text-shadow:0 2px 0 var(--orange-d),0 4px 6px rgba(0,0,0,.4);
+  pointer-events:none;animation:comboGoldPop 1.2s cubic-bezier(.2,1.5,.4,1) forwards}
+@keyframes comboGoldPop{0%{opacity:0;transform:translate(-50%,20px) scale(.4)}30%{opacity:1;transform:translate(-50%,-15px) scale(1.2)}70%{opacity:1;transform:translate(-50%,-25px) scale(1)}100%{opacity:0;transform:translate(-50%,-50px) scale(.9)}}
 .chips{display:flex;gap:7px;flex-wrap:wrap;justify-content:center}
 .chip{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.94);border-radius:11px;
   padding:3px 9px 3px 4px;font-weight:700;font-size:13px;box-shadow:0 3px 0 #E8C8F0}
@@ -252,11 +261,14 @@ canvas{display:block}
   background:rgba(106,43,184,.7);padding:1px 8px;border-radius:8px;margin-top:1px;
   text-shadow:0 1px 0 rgba(0,0,0,.3);box-shadow:0 2px 0 var(--epic-d)}
 #intro{position:fixed;top:calc(60px + var(--sat));left:50%;z-index:25;pointer-events:none;
-  transform:translate(-50%,-14px);opacity:0;transition:.35s;background:rgba(255,255,255,.96);
-  border-radius:18px;padding:10px 16px;box-shadow:0 6px 0 rgba(90,45,110,.25);
-  display:flex;flex-direction:column;align-items:center;gap:6px;max-width:min(92vw,360px)}
-#intro.show{opacity:1;transform:translate(-50%,0)}
-#intro b{font-size:18px}
+  transform:translate(-50%,-40px) scale(.7);opacity:0;transition:.4s cubic-bezier(.34,1.56,.64,1);
+  background:rgba(255,255,255,.97);border-radius:20px;padding:12px 18px;
+  box-shadow:0 8px 0 rgba(90,45,110,.25),0 12px 28px rgba(80,40,110,.3);
+  display:flex;flex-direction:column;align-items:center;gap:6px;max-width:min(92vw,360px);
+  border:3px solid #F3DFF5}
+#intro.show{opacity:1;transform:translate(-50%,0) scale(1)}
+#intro b{font-size:18px;animation:introBounce .5s .15s both}
+@keyframes introBounce{0%{transform:scale(.5);opacity:0}60%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
 #intro .cond{display:flex;align-items:center;gap:6px;font-weight:700;font-size:14px;color:#1E8A6E;
   background:#E0F7EF;border-radius:11px;padding:5px 12px;text-align:center}
 #intro .tut{font-weight:600;font-size:13.5px;color:#7A4D8C;background:#F8EAFB;border-radius:11px;padding:5px 12px;text-align:center}
@@ -520,6 +532,7 @@ body.reduce-motion #btnWheel.hasdot::after{animation:none!important}
     <button class="boostBtn" id="bHammer"><span class="bIc">🔨</span><span class="cnt" id="cntHammer">0</span></button>
     <button class="boostBtn" id="bShuffle"><span class="bIc">🔀</span><span class="cnt" id="cntShuffle">0</span></button>
     <button class="boostBtn" id="bMoves"><span class="bIc">⏱️</span><span class="cnt" id="cntMoves">0</span></button>
+    <button class="boostBtn b-hint" id="bHint"><span class="bIc">💡</span><span class="cnt" id="cntHint">3</span></button>
   </div>
   <div id="topMission" class="chips m-only"></div>
   <div id="gameBody">
@@ -758,12 +771,22 @@ const MOTION_I18N={
   it:{motion:'Riduci animazioni',motionSub:'Riduce le animazioni'},
   pt:{motion:'Reduzir movimento',motionSub:'Reduz animações'},
   ru:{motion:'Меньше анимаций',motionSub:'Уменьшает анимации'}};
+const HINT_I18N={
+  tr:{hintUsed:'İpucu gösterildi!',noHints:'İpucu hakkın bitti!'},
+  en:{hintUsed:'Hint shown!',noHints:'Out of hints!'},
+  de:{hintUsed:'Tipp gezeigt!',noHints:'Keine Tipps mehr!'},
+  es:{hintUsed:'¡Pista mostrada!',noHints:'¡Sin pistas!'},
+  fr:{hintUsed:'Indice montré !',noHints:'Plus d\'indices !'},
+  it:{hintUsed:'Suggerimento mostrato!',noHints:'Nessun suggerimento!'},
+  pt:{hintUsed:'Dica mostrada!',noHints:'Sem dicas!'},
+  ru:{hintUsed:'Подсказка показана!',noHints:'Подсказки кончились!'}};
 Object.keys(I).forEach(l=>{
   I[l].backMenu=BACK_MENU[l]||BACK_MENU.en;
   Object.assign(I[l],WHEEL_I18N[l]||WHEEL_I18N.en);
   Object.assign(I[l],COMBO_I18N[l]||COMBO_I18N.en);
   Object.assign(I[l],QUEST_I18N[l]||QUEST_I18N.en);
-  Object.assign(I[l],MOTION_I18N[l]||MOTION_I18N.en);});
+  Object.assign(I[l],MOTION_I18N[l]||MOTION_I18N.en);
+  Object.assign(I[l],HINT_I18N[l]||HINT_I18N.en);});
 const t=k=>(I[Save.data.settings.lang]&&I[Save.data.settings.lang][k])||I.en[k]||I.tr[k]||k;
 function applyI18n(){
   document.documentElement.lang=Save.data.settings.lang;
@@ -1217,7 +1240,7 @@ let levelTime=0,lastTimeSec=-1,timeOver=false;
 let sel=null,hintMove=null,idleT=0,starVoiced=[false,false];
 let shakeT=0,shakeDur=1,shakeAmp=0;
 let inputLockUntil=0,runToken=0,needSnap=false;
-let hammerMode=false,hammerHover=null,movesBoostUsed=false;
+let hammerMode=false,hammerHover=null,movesBoostUsed=false,hintsLeft=3;
 let tutPulse=false;
 const tweens=[],parts=[],floaters=[],fxParts=[];
 let bgClouds=[],bgParts=[],bgTimer=0;
@@ -1480,6 +1503,13 @@ function updateComboHud(n){
   hud.classList.add('show');
   hud.classList.remove('bump');void hud.offsetWidth;hud.classList.add('bump');
   if(n>=4)questAdd('qCascade',1);
+  // Combo milestone gold rewards: x3→+5, x5→+10, x7→+20
+  if(n===3||n===5||n===7){
+    const reward=n===3?5:n===5?10:20;
+    Save.data.gold=(Save.data.gold||0)+reward;Save.write();updateGold();
+    floatText(innerWidth/2,innerHeight*.35,'+'+reward+'💰');
+    Sfx.coin();
+    if(n>=5){const b=document.createElement('div');b.className='combo-gold-pop';b.textContent='+'+reward+'💰';document.body.appendChild(b);setTimeout(()=>{if(b.parentNode)b.parentNode.removeChild(b);},1200);}}
   clearTimeout(comboHudTimer);
   comboHudTimer=setTimeout(()=>{hud.classList.remove('show');curCombo=0;},1400);}
 async function resolveBoard(swapCells,tok){
@@ -1891,6 +1921,7 @@ function startLevel(n){
   lastChip={};parts.length=0;floaters.length=0;needSnap=false;
   hammerMode=false;$('#bHammer').classList.remove('active');
   movesBoostUsed=false;
+  hintsLeft=3;
   tutPulse=(n===1&&!Save.data.tut.pulseDone);
   jelly=[];jellyLeft=0;
   for(let r=0;r<ROWS;r++)jelly.push(new Array(COLS).fill(0));
@@ -1987,6 +2018,16 @@ function useMoves(){
   Sfx.special();vibrate(20);
   toast(t('movesUsed'));
   updateBoostBar();}
+function useHint(){
+  if(state!=='play'||busy||finished||pausedFlag)return;
+  if(hintsLeft<=0){toast(t('noHints'));Sfx.bad();return;}
+  const m=bestMove()||findAnyMove();
+  if(!m){toast(t('shuffled'));return;}
+  hintsLeft--;
+  hintMove=m;idleT=0;
+  Sfx.click();vibrate(15);
+  toast(t('hintUsed'),1500);
+  updateBoostBar();}
 function updateBoostBar(){
   const it=Save.data.items;
   [['hammer','#bHammer'],['shuffle','#bShuffle'],['moves','#bMoves']].forEach(p=>{
@@ -1994,7 +2035,9 @@ function updateBoostBar(){
     const n=it[p[0]]||0;
     const c=b.querySelector('.cnt');
     c.textContent=n;
-    c.classList.toggle('zero',n===0);});}
+    c.classList.toggle('zero',n===0);});
+  const hb=$('#bHint');if(hb){
+    const c=hb.querySelector('.cnt');c.textContent=hintsLeft;c.classList.toggle('zero',hintsLeft===0);}}
 function dropItem(){
   const pool=['hammer','shuffle','moves'];
   const id=pool[irand(pool.length)];
@@ -3388,7 +3431,8 @@ function wireUI(){
   $('#btnMapL').addEventListener('click',()=>{Sfx.click();showScreen('scr-map');});
   $('#bHammer').addEventListener('click',useHammerMode);
   $('#bShuffle').addEventListener('click',useShuffle);
-  $('#bMoves').addEventListener('click',useMoves);}
+  $('#bMoves').addEventListener('click',useMoves);
+  $('#bHint').addEventListener('click',useHint);}
 
 /* ============ ANA DÖNGÜ ============ */
 let lastTs=0;
