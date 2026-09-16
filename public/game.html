@@ -758,6 +758,7 @@ body.reduce-motion #btnWheel.hasdot::after{animation:none!important}
   </div>
   <div class="set-group">
     <div class="set-row"><div class="ic" id="icDemo"></div><div class="lb"><span data-i="demo">Demo Modu</span><small data-i="demoSub">Oyun kendi kendine oynar</small></div><label class="sw"><input type="checkbox" id="swDemo"><i></i></label></div>
+    <div class="set-row"><div class="ic" id="icTheme"></div><div class="lb"><span data-i="theme">Tema</span><small data-i="themeSub">Meyve görünümünü değiştir</small></div><select id="themeSel" class="langSel"></select></div>
     <div class="set-row"><div class="ic" id="icReset"></div><div class="lb" data-i="reset">İlerlemeyi Sıfırla</div><button class="btn b-red" id="btnReset" style="font-size:13px;padding:9px 14px" data-i="reset">Sıfırla</button></div>
   </div>
   <div class="set-group">
@@ -845,14 +846,14 @@ const MOTION_I18N={
   pt:{motion:'Reduzir movimento',motionSub:'Reduz animações'},
   ru:{motion:'Меньше анимаций',motionSub:'Уменьшает анимации'}};
 const HINT_I18N={
-  tr:{hintUsed:'İpucu gösterildi!',noHints:'İpucu hakkın bitti!',hintTip:'İpucu göster'},
-  en:{hintUsed:'Hint shown!',noHints:'Out of hints!',hintTip:'Show hint'},
-  de:{hintUsed:'Tipp gezeigt!',noHints:'Keine Tipps mehr!',hintTip:'Tipp zeigen'},
-  es:{hintUsed:'¡Pista mostrada!',noHints:'¡Sin pistas!',hintTip:'Mostrar pista'},
-  fr:{hintUsed:'Indice montré !',noHints:'Plus d\'indices !',hintTip:'Montrer indice'},
-  it:{hintUsed:'Suggerimento mostrato!',noHints:'Nessun suggerimento!',hintTip:'Mostra suggerimento'},
-  pt:{hintUsed:'Dica mostrada!',noHints:'Sem dicas!',hintTip:'Mostrar dica'},
-  ru:{hintUsed:'Подсказка показана!',noHints:'Подсказки кончились!',hintTip:'Показать подсказку'}};
+  tr:{hintUsed:'İpucu gösterildi!',noHints:'İpucu hakkın bitti!',hintTip:'İpucu göster',theme:'Tema',themeSub:'Meyve görünümünü değiştir',themeChanged:'Tema değiştirildi!'},
+  en:{hintUsed:'Hint shown!',noHints:'Out of hints!',hintTip:'Show hint',theme:'Theme',themeSub:'Change fruit appearance',themeChanged:'Theme changed!'},
+  de:{hintUsed:'Tipp gezeigt!',noHints:'Keine Tipps mehr!',hintTip:'Tipp zeigen',theme:'Thema',themeSub:'Fruchtaussehen ändern',themeChanged:'Thema geändert!'},
+  es:{hintUsed:'¡Pista mostrada!',noHints:'¡Sin pistas!',hintTip:'Mostrar pista',theme:'Tema',themeSub:'Cambiar aspecto de frutas',themeChanged:'¡Tema cambiado!'},
+  fr:{hintUsed:'Indice montré !',noHints:'Plus d\'indices !',hintTip:'Montrer indice',theme:'Thème',themeSub:'Changer l\'apparence',themeChanged:'Thème changé !'},
+  it:{hintUsed:'Suggerimento mostrato!',noHints:'Nessun suggerimento!',hintTip:'Mostra suggerimento',theme:'Tema',themeSub:'Cambia aspetto frutti',themeChanged:'Tema cambiato!'},
+  pt:{hintUsed:'Dica mostrada!',noHints:'Sem dicas!',hintTip:'Mostrar dica',theme:'Tema',themeSub:'Mudar aparência das frutas',themeChanged:'Tema alterado!'},
+  ru:{hintUsed:'Подсказка показана!',noHints:'Подсказки кончились!',hintTip:'Показать подсказку',theme:'Тема',themeSub:'Изменить вид фруктов',themeChanged:'Тема изменена!'}};
 const SEASON_I18N={
   tr:{seasonEnds:'Sezon bitişine:'},
   en:{seasonEnds:'Season ends in:'},
@@ -938,11 +939,11 @@ const Save={
     shields:1,
     questDay:'',quests:[],clan:null,seenTut:false,tut:{},wheelDay:'',wheelStreak:0,wheelLastDay:'',
     achievements:{},stats:{levelsWon:0,totalCombos:0,bigMatches:0,specials:0,starsEarned:0},
-    settings:{sfx:true,voice:true,music:true,vib:true,lang:'tr',serverUrl:'',reduceMotion:false}},
+    settings:{sfx:true,voice:true,music:true,vib:true,lang:'tr',serverUrl:'',reduceMotion:false,activeTheme:'default'}},
   load(){
     try{
       const d=JSON.parse(lsGet('meyve_v2')||'null');
-      if(d){Object.assign(this.data,d);this.data.settings=Object.assign({sfx:true,voice:true,music:true,vib:true,lang:'tr',serverUrl:'',reduceMotion:false},d.settings||{});}
+      if(d){Object.assign(this.data,d);this.data.settings=Object.assign({sfx:true,voice:true,music:true,vib:true,lang:'tr',serverUrl:'',reduceMotion:false,activeTheme:'default'},d.settings||{});}
     }catch(e){}
     this.data.best=this.data.best||{};this.data.tut=this.data.tut||{};
     this.data.gold=+this.data.gold||0;
@@ -1242,6 +1243,19 @@ const FRUITS=[
   {name:'Üzüm',color:'#9B4DC6',draw:drawGrape},
   {name:'Portakal',color:'#F5942E',draw:drawOrangeSlice}];
 const EXT_FRUITS=[null,null,null,null,null,null];
+let THEME_LIST=[{id:'default',name:'Klasik'}]; // populated from config.json
+function getThemePath(i){
+  const theme=Save.data.settings.activeTheme||'default';
+  return 'themes/'+theme+'/fr'+i+'.png';}
+function loadThemeList(){
+  fetch('themes/config.json').then(r=>r.json()).then(cfg=>{
+    THEME_LIST=Object.entries(cfg.themes).map(([id,v])=>({id:id,name:v.name||id}));
+    // Populate settings select if it exists
+    const sel=$('#themeSel');
+    if(sel){
+      sel.innerHTML=THEME_LIST.map(t=>'<option value="'+t.id+'">'+t.name+'</option>').join('');
+      sel.value=Save.data.settings.activeTheme||'default';}
+  }).catch(()=>{});}
 function tryLoadExtAssets(){
   let pending=6;
   for(let i=0;i<6;i++){
@@ -1254,7 +1268,7 @@ function tryLoadExtAssets(){
       EXT_FRUITS[i]=cn;
       if(--pending===0)refreshAllSprites();};
     img.onerror=()=>{if(--pending===0)refreshAllSprites();};
-    img.src='assets/fr'+i+'.png';}}
+    img.src=getThemePath(i);}}
 function drawStripes(c,dir){
   c.save();c.globalAlpha=.94;
   for(let i=-1;i<=1;i++){
@@ -3215,7 +3229,8 @@ const ICONS={
   trophy:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 3h12v2h3v3c0 2.2-1.8 4-4 4h-.35A6 6 0 0113 15.9V18h3v3H8v-3h3v-2.1A6 6 0 017.35 12H7c-2.2 0-4-1.8-4-4V5h3V3z"/></svg>',
   shop:'<svg viewBox="0 0 24 24" fill="none"><path d="M4 8h16l-1.5 12h-13L4 8z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8.5 10V6.5a3.5 3.5 0 017 0V10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
   flag:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 3v18M6 4h11l-2.5 3.5L17 11H6" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-  motion:'<svg viewBox="0 0 24 24" fill="none"><path d="M3 12h4l2-7 4 14 2-7h6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>'};
+  motion:'<svg viewBox="0 0 24 24" fill="none"><path d="M3 12h4l2-7 4 14 2-7h6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  theme:'<svg viewBox="0 0 24 24" fill="none"><path d="M12 3v18M3 12h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M12 3a9 9 0 010 18z" fill="currentColor"/></svg>'};
 function showScreen(id){
   $$('.screen').forEach(s=>s.classList.toggle('active',s.id===id));
   state=id==='scr-menu'?'menu':id==='scr-map'?'map':id==='scr-game'?'play':'auth';
@@ -3426,6 +3441,7 @@ function openSettings(from){
   }else $('#setUser').style.display='none';
   $('#swSfx').checked=s.sfx;$('#swVoice').checked=s.voice;
   $('#swMusic').checked=s.music;$('#swVib').checked=s.vib;$('#swMotion').checked=s.reduceMotion;$('#swDemo').checked=autoPlay;
+  const ts=$('#themeSel');if(ts)ts.value=s.activeTheme||'default';
   $('#srvInput').value=s.serverUrl||'';
   $('#srvStatus').textContent=s.serverUrl?'':t('srvLocal');
   $('#ov-set').classList.add('show');}
@@ -3541,6 +3557,7 @@ function wireUI(){
   $('#icMusic').innerHTML=ICONS.music;
   $('#icVib').innerHTML=ICONS.vib;
   $('#icMotion').innerHTML=ICONS.motion;
+  $('#icTheme').innerHTML=ICONS.theme;
   $('#icLang').innerHTML=ICONS.lang;
   $('#icDemo').innerHTML=ICONS.demo;
   $('#icReset').innerHTML=ICONS.reset;
@@ -3628,6 +3645,14 @@ function wireUI(){
   $('#swVib').addEventListener('change',e=>{Save.data.settings.vib=e.target.checked;Save.write();vibrate(30);});
   $('#swMotion').addEventListener('change',e=>{Save.data.settings.reduceMotion=e.target.checked;Save.write();document.body.classList.toggle('reduce-motion',e.target.checked);Sfx.click();});
   $('#langSel').addEventListener('change',e=>{Sfx.click();setLang(e.target.value);});
+  $('#themeSel').addEventListener('change',e=>{
+    Sfx.click();
+    Save.data.settings.activeTheme=e.target.value;Save.write();
+    // Reload fruit assets from new theme
+    for(let i=0;i<6;i++)EXT_FRUITS[i]=null;
+    tryLoadExtAssets();
+    toast(t('themeChanged'),2000);
+  });
   $('#langQuick').addEventListener('click',()=>{
     Sfx.click();
     const keys=Object.keys(LANGS);
@@ -3755,6 +3780,7 @@ function frame(ts){
   setAuthMode('login');
   $('#menuStarNum').textContent=totalStars();
   updateGold();updateQuestBadges();updateLifeUI();updateBoostBar();updateWheelBadge();updateAchievementsBadge();
+  loadThemeList();
   tryLoadExtAssets();
   window.addEventListener('resize',layout);
   window.addEventListener('orientationchange',()=>setTimeout(layout,220));

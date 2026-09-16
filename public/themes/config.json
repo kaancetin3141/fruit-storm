@@ -1,0 +1,20 @@
+{
+  "active": "default",
+  "themes": {
+    "default": {
+      "name": "Klasik (Candy)",
+      "folder": "default",
+      "fruits": ["fr0.png", "fr1.png", "fr2.png", "fr3.png", "fr4.png", "fr5.png"]
+    },
+    "realistic": {
+      "name": "Gerçekçi",
+      "folder": "realistic",
+      "fruits": ["fr0.png", "fr1.png", "fr2.png", "fr3.png", "fr4.png", "fr5.png"]
+    },
+    "halloween": {
+      "name": "Cadılar Bayramı",
+      "folder": "halloween",
+      "fruits": ["fr0.png", "fr1.png", "fr2.png", "fr3.png", "fr4.png", "fr5.png"]
+    }
+  }
+}
