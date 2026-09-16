@@ -1241,8 +1241,10 @@ const FRUITS=[
   {name:'Yabanmürver',color:'#3E8DF0',draw:drawBlueberry},
   {name:'Elma',color:'#7CC538',draw:drawAppleG},
   {name:'Üzüm',color:'#9B4DC6',draw:drawGrape},
-  {name:'Portakal',color:'#F5942E',draw:drawOrangeSlice}];
-const EXT_FRUITS=[null,null,null,null,null,null];
+  {name:'Portakal',color:'#F5942E',draw:drawOrangeSlice},
+  {name:'Karpuz',color:'#FF5A7E',draw:drawOrangeSlice},
+  {name:'Muz',color:'#F0C419',draw:drawLemon}];
+const EXT_FRUITS=[null,null,null,null,null,null,null,null];
 let THEME_LIST=[{id:'default',name:'Klasik'}]; // populated from config.json
 function getThemePath(i){
   const theme=Save.data.settings.activeTheme||'default';
@@ -1257,8 +1259,8 @@ function loadThemeList(){
       sel.value=Save.data.settings.activeTheme||'default';}
   }).catch(()=>{});}
 function tryLoadExtAssets(){
-  let pending=6;
-  for(let i=0;i<6;i++){
+  let pending=FRUITS.length;
+  for(let i=0;i<FRUITS.length;i++){
     const img=new Image();
     img.onload=()=>{
       const cn=document.createElement('canvas');cn.width=cn.height=128;
@@ -1870,7 +1872,7 @@ async function shuffleBoard(){
 /* ============ BÖLÜM TASARIMI ============ */
 function getLevel(n){
   const rng=mulberry32((n*2654435761>>>0)^0x9E3779B9);
-  const kinds=n<4?5:6;
+  const kinds=n<4?5:n<8?6:n<16?7:8;
   const diff=(n%30===0)?'epic':(n%10===0)?'hard':'normal';
   let mode='score';
   if(n>=3){

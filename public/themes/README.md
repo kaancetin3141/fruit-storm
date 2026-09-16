@@ -8,23 +8,25 @@ Bu klasör meyve asset'lerini yönetir. Kendi asset'lerinizi kolayca ekleyebilir
 public/themes/
 ├── config.json          ← Aktif tema + tema listesi
 ├── README.md            ← Bu dosya
-├── default/             ← Varsayılan tema (Sweet Bonanza candy stili)
+├── default/             ← Varsayılan tema (Sweet Bonanza candy stili, 8 meyve)
 │   ├── fr0.png (Kiraz 🍒)
-│   ├── fr1.png (Limon 🍋)
+│   ├── fr1.png (Limon dilim 🍋)
 │   ├── fr2.png (Yabanmürver 🫐)
-│   ├── fr3.png (Elma 🍏)
+│   ├── fr3.png (Elma dilim 🍏)
 │   ├── fr4.png (Üzüm 🍇)
-│   └── fr5.png (Portakal 🍊)
-├── realistic/           ← Gerçekçi stil (alternatif)
+│   ├── fr5.png (Portakal dilim 🍊)
+│   ├── fr6.png (Karpuz dilim 🍉)
+│   └── fr7.png (Muz 🍌)
+├── realistic/           ← Gerçekçi stil (alternatif, 6 meyve)
 │   └── fr0-5.png
 └── halloween/           ← Cadılar Bayramı etkinlik teması (örnek - boş)
-    └── fr0-5.png        ← Kendi etkinlik asset'lerinizi koyun
+    └── fr0-7.png        ← Kendi etkinlik asset'lerinizi koyun
 ```
 
 ## 🎨 Yeni Tema Ekleme
 
 1. `public/themes/` altına yeni klasör aç (örn: `christmas/`)
-2. 6 meyve PNG'sini koy (`fr0.png` ... `fr5.png`)
+2. 8 meyve PNG'sini koy (`fr0.png` ... `fr7.png`)
 3. `config.json`'a tema ekle:
 
 ```json
@@ -59,10 +61,12 @@ public/themes/
 | Dosya | Meyve | Renk |
 |-------|-------|------|
 | fr0.png | Kiraz | Kırmızı |
-| fr1.png | Limon | Sarı |
+| fr1.png | Limon (dilim) | Sarı |
 | fr2.png | Yabanmürver | Mavi |
-| fr3.png | Elma | Yeşil |
+| fr3.png | Elma (dilim) | Yeşil |
 | fr4.png | Üzüm | Mor |
-| fr5.png | Portakal | Turuncu |
+| fr5.png | Portakal (dilim) | Turuncu |
+| fr6.png | Karpuz (dilim) | Pembe-Kırmızı |
+| fr7.png | Muz | Altın Sarı |
 
 Asset bulunamazsa oyun otomatik olarak prosedürel (çizim) meyvelere düşer.
