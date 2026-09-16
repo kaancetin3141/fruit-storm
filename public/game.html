@@ -123,12 +123,15 @@ canvas{display:block}
 #starTotal svg{color:var(--gold)}
 #mapScroll{flex:1;overflow-y:auto;overscroll-behavior:contain}
 #mapList{max-width:420px;margin:0 auto;padding:24px calc(16px + var(--sar)) 60px calc(16px + var(--sal));position:relative;min-height:60vh}
-.mnode{position:relative;height:108px;cursor:pointer}
+.mnode{position:relative;height:108px;cursor:pointer;transition:transform .15s}
+.mnode:active{transform:scale(.95)}
+@media(hover:hover){.mnode:hover .dot{transform:translateX(-50%) scale(1.07)}}
 .mnode .dot{position:absolute;left:var(--x);top:12px;transform:translateX(-50%);width:68px;height:68px;
   border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;
-  font-weight:700;font-size:23px;text-shadow:0 2px 0 rgba(0,0,0,.2);pointer-events:none}
+  font-weight:700;font-size:23px;text-shadow:0 2px 0 rgba(0,0,0,.2);pointer-events:none;
+  transition:transform .18s cubic-bezier(.34,1.6,.64,1)}
 .mnode.done .dot{background:#4CC9A8;box-shadow:0 6px 0 #2FA585}
-.mnode.open .dot{background:#F26BB5;box-shadow:0 6px 0 #C24488;animation:pulseDot 1.6s ease-in-out infinite}
+.mnode.open .dot{background:#F26BB5;box-shadow:0 6px 0 #C24488,0 0 0 4px rgba(255,255,255,.5),0 0 22px rgba(242,107,181,.6);animation:pulseDot 1.6s ease-in-out infinite}
 @keyframes pulseDot{0%,100%{transform:translateX(-50%) scale(1)}50%{transform:translateX(-50%) scale(1.09)}}
 .mnode.locked .dot{background:#D5C4E0;box-shadow:0 6px 0 #B09BC2}
 .mnode.hard .dot{box-shadow:0 6px 0 var(--red-d),0 0 0 3px #fff,0 0 0 6px var(--red)}
@@ -139,8 +142,10 @@ canvas{display:block}
   font-size:9.5px;font-weight:700;color:#fff;padding:3px 8px;border-radius:9px;pointer-events:none}
 .mtag.hard{background:var(--red)}.mtag.epic{background:var(--epic)}
 .mnode .mini-stars{position:absolute;left:var(--x);top:86px;transform:translateX(-50%);display:flex;gap:2px;pointer-events:none}
-.mnode .mini-stars svg{width:15px;height:15px;color:rgba(255,255,255,.6)}
-.mnode .mini-stars svg.on{color:var(--gold)}
+.mnode .mini-stars svg{width:15px;height:15px;color:rgba(255,255,255,.6);transition:transform .2s}
+.mnode .mini-stars svg.on{color:var(--gold);filter:drop-shadow(0 0 3px rgba(255,201,61,.8))}
+.mnode .mini-stars svg.on.justwon{animation:miniStarPop .6s cubic-bezier(.2,1.7,.4,1)}
+@keyframes miniStarPop{0%{transform:scale(0) rotate(-90deg)}60%{transform:scale(1.5) rotate(15deg)}100%{transform:scale(1) rotate(0)}}
 .mnode:not(:last-child)::after{content:'';position:absolute;top:86px;left:var(--x);height:26px;border-left:5px dotted rgba(255,255,255,.75)}
 .mnode .lockIc{width:25px;height:25px}
 #gameTop{display:flex;align-items:center;gap:8px;padding:calc(8px + var(--sat)) calc(10px + var(--sar)) 5px calc(10px + var(--sal))}
@@ -299,6 +304,16 @@ canvas{display:block}
 .wstar.earn{color:var(--gold);animation:starPop .45s cubic-bezier(.34,1.8,.64,1) forwards}
 @keyframes starPop{0%{transform:scale(.2) rotate(-40deg)}100%{transform:scale(1) rotate(0)}}
 #winScore{text-align:center;font-size:33px;font-weight:700;color:#C24488}
+#winScore.counting{animation:winScoreGlow .6s ease-out}
+@keyframes winScoreGlow{0%{text-shadow:none;transform:scale(1)}40%{text-shadow:0 0 18px rgba(194,68,136,.7);transform:scale(1.14)}100%{text-shadow:0 2px 0 rgba(194,68,136,.3);transform:scale(1)}}
+.gold-popup{position:absolute;top:38%;left:50%;transform:translate(-50%,0) scale(.4);opacity:0;
+  background:linear-gradient(#FFE066,#FFB020);color:#5A3A00;font-weight:700;font-size:20px;
+  padding:8px 18px;border-radius:18px;box-shadow:0 4px 0 var(--orange-d),0 8px 14px rgba(0,0,0,.25);
+  display:flex;align-items:center;gap:6px;pointer-events:none;z-index:6;white-space:nowrap}
+.gold-popup .gp-ic{font-size:22px}
+.gold-popup.show{animation:goldPop 1.5s cubic-bezier(.2,1.5,.4,1) forwards}
+.gold-popup.fade{opacity:.6;transition:opacity .6s}
+@keyframes goldPop{0%{opacity:0;transform:translate(-50%,30px) scale(.4)}30%{opacity:1;transform:translate(-50%,-10px) scale(1.15)}60%{transform:translate(-50%,-22px) scale(1)}100%{opacity:1;transform:translate(-50%,-34px) scale(1)}}
 #bestRow{text-align:center;font-size:14px;font-weight:600;color:#A678B8;margin-bottom:12px}
 #newRec{display:none;text-align:center;font-weight:700;color:#fff;background:var(--green);
   border-radius:12px;padding:5px 14px;font-size:13px;margin:6px auto 12px;width:max-content;box-shadow:0 3px 0 var(--green-d)}
@@ -773,8 +788,10 @@ const Sfx={
   pop(step,many){step=step||1;many=many||3;
     const semis=[0,2,4,7,9,12,14,16,19];
     const base=420*Math.pow(2,semis[Math.min(step,8)]/12);
-    this.tone({f:base,f2:base*1.6,dur:.13,vol:Math.min(.28,.13+many*.01)});
-    this.noise({dur:.06,vol:.06,freq:2800});},
+    // Randomized pitch variation ±2% for organic feel
+    const v=1+rand(-.02,.02);
+    this.tone({f:base*v,f2:base*1.6*v,dur:.13,vol:Math.min(.28,.13+many*.01)});
+    this.noise({dur:.06,vol:.06,freq:2800+rand(-300,300)});},
   whoosh(){this.noise({dur:.14,vol:.1,freq:900});},
   bad(){this.tone({f:170,f2:100,type:'square',dur:.18,vol:.08});},
   click(){this.tone({f:740,f2:540,dur:.06,vol:.11});},
@@ -787,6 +804,11 @@ const Sfx={
   ice(){this.noise({dur:.12,vol:.09,freq:3600});this.tone({f:1500,f2:2400,dur:.08,vol:.05});},
   coin(){this.tone({f:988,dur:.09,vol:.12});this.tone({f:1319,dur:.22,vol:.12,delay:.08});},
   sugar(){[523,659,784,1047,1319].forEach((f,i)=>this.tone({f,type:'triangle',dur:.2,vol:.14,delay:i*.06}));},
+  bigMatch(n){
+    // Ascending triumphant chord burst
+    const base=440*Math.pow(1.06,Math.min(6,n-5));
+    [1,1.25,1.5,2].forEach((m,i)=>this.tone({f:base*m,type:'triangle',dur:.3,vol:.12,delay:i*.04}));
+    this.noise({dur:.25,vol:.08,freq:2400});},
   star(i){this.tone({f:660*Math.pow(1.26,i),f2:660*Math.pow(1.26,i)*1.4,type:'triangle',dur:.3,vol:.17});},
   win(){[523,659,784,1047].forEach((f,i)=>this.tone({f,type:'triangle',dur:.32,vol:.15,delay:i*.13}));},
   lose(){this.tone({f:330,f2:250,type:'triangle',dur:.4,vol:.15});this.tone({f:262,f2:200,type:'triangle',dur:.5,vol:.15,delay:.3});}
@@ -1155,11 +1177,40 @@ function debris(x,y,color){
   for(let i=0;i<6;i++)parts.push({kind:'debris',x:x+rand(-6,6),y:y+rand(-6,6),
     vx:rand(-.34,.34),vy:rand(-.52,-.22),g:.0021,size:rand(4,8.5),color:color,
     rot:rand(0,TAU),vr:rand(-.016,.016),life:0,max:rand(820,1250)});}
+function floatGoldPopup(amt){
+  const panel=document.querySelector('#ov-win .panel');if(!panel)return;
+  const el=document.createElement('div');
+  el.className='gold-popup';
+  el.innerHTML='<span class="gp-ic">🪙</span> +'+amt;
+  panel.appendChild(el);
+  void el.offsetWidth;el.classList.add('show');
+  setTimeout(()=>{el.classList.add('fade');},1400);
+  setTimeout(()=>{if(el.parentNode)el.parentNode.removeChild(el);},2200);}
+function bigMatchEffect(x,y,n){
+  if(parts.length>480)return;
+  const cols=['#FFE066','#FF8A65','#FF6FB5','#7CE8D5','#B56CE8'];
+  // Central burst ring (longer-lived shock)
+  parts.push({kind:'shock',x:x,y:y,life:0,max:Math.max(420,300+n*18)});
+  parts.push({kind:'spark',x:x,y:y,size:Math.min(22,10+n),life:0,max:300});
+  // Radial star sparkles
+  const k=Math.min(14,5+Math.floor(n/2));
+  for(let i=0;i<k;i++){
+    const a=i*TAU/k+rand(-.2,.2),sp=rand(.18,.32);
+    parts.push({kind:'star',x:x,y:y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,
+      size:rand(4,8),color:cols[irand(cols.length)],rot:0,vr:rand(-.02,.02),
+      life:0,max:rand(550,900)});}
+  // Outward debris spray
+  for(let i=0;i<Math.min(8,n);i++){
+    const a=rand(0,TAU),sp=rand(.1,.26);
+    parts.push({kind:'debris',x:x,y:y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-.1,
+      g:.0016,size:rand(3,6),color:cols[irand(cols.length)],
+      rot:rand(0,TAU),vr:rand(-.02,.02),life:0,max:rand(700,1000)});}}
 function floatText(x,y,txt){if(floaters.length<40)floaters.push({x:x,y:y,txt:txt,life:0,max:760});}
 function updateParts(dt){
   for(let i=parts.length-1;i>=0;i--){
     const p=parts[i];p.life+=dt;
     if(p.kind==='dot'||p.kind==='drop'||p.kind==='debris'){p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=p.g*dt;}
+    if(p.kind==='star'&&p.vx!==undefined){p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=0.0008*dt;p.rot+=p.vr*dt;}
     if(p.kind==='debris')p.rot+=p.vr*dt;
     if(p.life>=p.max)parts.splice(i,1);}
   if(parts.length>520)parts.splice(0,parts.length-520);
@@ -1289,6 +1340,18 @@ async function explodeCells(seedCells,combo,exclude,fast){
     pops.push(tween(tl,{scale:1.35,alpha:0},fast?110:200,easeInQuad,fast?0:irand(50)));});
   fx.forEach(f=>parts.push(Object.assign({life:0,max:340},f)));
   if(pops.length){Sfx.pop(combo,pops.length);if(pops.length>=6)shake(4,200);}
+  // Big Match celebration: 5+ tiles in one explosion
+  if(pops.length>=5&&!fast){
+    const dArr=Array.from(destroyed);
+    const cx=dArr.reduce((a,k)=>a+(k%COLS),0)/Math.max(1,dArr.length);
+    const cy=dArr.reduce((a,k)=>a+((k/COLS)|0),0)/Math.max(1,dArr.length);
+    bigMatchEffect(cellPx(cx),cellPy(cy),pops.length);
+    Sfx.bigMatch(pops.length);vibrate([15,30,45]);
+    const bonus=Math.round(pops.length*15*(1+combo*.2));
+    addScore(bonus);
+    floatText(cellPx(cx),cellPy(cy)-S*.5,'+'+bonus+' ⭐');
+    if(pops.length>=7){Sfx.boom();shake(6,260);showBanner(pops.length>=8?'MEGA!':'BIG MATCH!');}
+  }
   addScore(gained);
   updateMissionUI();
   if(pops.length)await Promise.all(pops);
@@ -1633,7 +1696,8 @@ async function finishWin(){
   if(newRec)Save.data.best[curLevel.n]=score;
   Save.data.stars[curLevel.n]=Math.max(Save.data.stars[curLevel.n]||0,stars);
   Save.data.unlocked=Math.max(Save.data.unlocked,curLevel.n+1);
-  Save.data.gold+=20+stars*15;
+  const goldGain=20+stars*15;
+  Save.data.gold+=goldGain;
   Save.write();
   Api.req('save',{token:Save.data.session,email:Save.data.user&&Save.data.user.email,
     progress:{unlocked:Save.data.unlocked,stars:Save.data.stars,best:Save.data.best,gold:Save.data.gold}});
@@ -1641,16 +1705,41 @@ async function finishWin(){
   if(curLevel.n%3===0||Math.random()<.25)setTimeout(dropItem,1600);
   Sfx.win();Voice.say('Sweet victory!');
   if(stars===3)setTimeout(()=>Voice.say('Perfect!'),1200);
-  confettiBurst();
   setMascot('happy',2600);
   $('#winTitle').textContent=t('levels')+' '+curLevel.n+' — OK!';
-  $('#winScore').textContent=fmt(score);
   $('#bestVal').textContent=fmt(Save.data.best[curLevel.n]||score);
   $('#newRec').style.display=newRec?'block':'none';
   const sv=$$('#ov-win .wstar');
   sv.forEach(s=>s.classList.remove('earn'));
+  // Reset score display, then show overlay
+  const wsEl=$('#winScore');
+  wsEl.textContent='0';
+  wsEl.classList.remove('counting');
   $('#ov-win').classList.add('show');
-  for(let i=0;i<stars;i++)setTimeout(function(k){return function(){sv[k].classList.add('earn');Sfx.star(k);};}(i),450+i*420);
+  // Animated score count-up
+  let dispW=0;const tStart=performance.now();const durW=1100;
+  function countUp(ts){
+    const p=Math.min(1,(ts-tStart)/durW);
+    const e=1-Math.pow(1-p,3); // easeOutCubic
+    dispW=Math.round(score*e);
+    wsEl.textContent=fmt(dispW);
+    // Pitch tick at milestones
+    if(!countUp._l||dispW-countUp._l>score*.18){
+      if(countUp._l!==undefined)Sfx.tick();
+      countUp._l=dispW;}
+    if(p<1)requestAnimationFrame(countUp);
+    else{
+      wsEl.textContent=fmt(score);
+      wsEl.classList.add('counting');
+      confettiBurst();
+      Sfx.coin();
+      // Reveal stars with stagger
+      for(let i=0;i<stars;i++)setTimeout(function(k){return function(){sv[k].classList.add('earn');Sfx.star(k);confettiBurst();};}(i),200+i*420);
+      // Gold popup
+      setTimeout(()=>{floatGoldPopup(goldGain);},300);}
+  }
+  // Slight delay so overlay shows first
+  setTimeout(()=>requestAnimationFrame(countUp),350);
   updateGold();
   $('#menuStarNum').textContent=totalStars();}
 function finishLose(){
@@ -2045,6 +2134,26 @@ function renderBoard(dt,now){
       ctx.fillStyle=p.color;rr(ctx,-s/2,-s/2,s,s,s*.3);ctx.fill();
       ctx.strokeStyle='rgba(255,255,255,.55)';ctx.lineWidth=1.4;rr(ctx,-s/2,-s/2,s,s,s*.3);ctx.stroke();
       ctx.fillStyle='rgba(255,255,255,.6)';rr(ctx,-s*.35,-s*.35,s*.4,s*.32,s*.16);ctx.fill();
+      ctx.restore();}
+    else if(p.kind==='star'&&p.color){
+      const a=Math.max(0,1-k);
+      ctx.save();ctx.globalCompositeOperation='lighter';
+      ctx.globalAlpha=a;
+      ctx.translate(p.x,p.y);ctx.rotate(p.rot);
+      const s=p.size*(1-k*.25);
+      // 5-point star sparkle
+      ctx.fillStyle=p.color;
+      ctx.beginPath();
+      for(let i=0;i<5;i++){
+        const ang=i*TAU/5-Math.PI/2;
+        const r1=s,r2=s*.42;
+        ctx.lineTo(Math.cos(ang)*r1,Math.sin(ang)*r1);
+        const ang2=ang+TAU/10;
+        ctx.lineTo(Math.cos(ang2)*r2,Math.sin(ang2)*r2);}
+      ctx.closePath();ctx.fill();
+      // White core glow
+      ctx.globalAlpha=a*.8;ctx.fillStyle='#fff';
+      ctx.beginPath();ctx.arc(0,0,s*.28,0,TAU);ctx.fill();
       ctx.restore();}
     ctx.globalAlpha=1;}
   ctx.textAlign='center';
@@ -2804,10 +2913,14 @@ function renderMap(){
   const list=$('#mapList');list.innerHTML='';
   const total=Math.max(12,Save.data.unlocked+3);
   const xs=['32%','50%','68%'];
+  // Track which levels gained a star since last render
+  if(!renderMap._prev)renderMap._prev={};
+  const cur={};
   for(let i=1;i<=total;i++){
     const lv=getLevel(i);
     const st=i<Save.data.unlocked?'done':i===Save.data.unlocked?'open':'locked';
     const stars=Save.data.stars[i]||0;
+    cur[i]=stars;
     const div=document.createElement('div');
     div.className='mnode '+st+(lv.diff!=='normal'?' '+lv.diff:'');
     div.style.setProperty('--x',xs[(i-1)%3]);
@@ -2816,8 +2929,9 @@ function renderMap(){
       :'<span>'+i+'</span>')+'</div>';
     if(lv.diff!=='normal'&&st!=='locked')
       html+='<span class="mtag '+lv.diff+'">'+t(lv.diff)+'</span>';
+    const gained=stars>(renderMap._prev[i]||0);
     html+='<span class="mini-stars">'+[0,1,2].map(k=>
-      '<svg viewBox="0 0 24 24" fill="currentColor" class="'+(k<stars?'on':'')+'"><path d="M12 2l2.9 6.2 6.6.8-4.9 4.6 1.3 6.6-5.9-3.3-5.9 3.3 1.3-6.6L2.5 9l6.6-.8z"/></svg>').join('')+'</span>';
+      '<svg viewBox="0 0 24 24" fill="currentColor" class="'+(k<stars?'on'+(gained&&k===(stars-1)?' justwon':''):'')+'"><path d="M12 2l2.9 6.2 6.6.8-4.9 4.6 1.3 6.6-5.9-3.3-5.9 3.3 1.3-6.6L2.5 9l6.6-.8z"/></svg>').join('')+'</span>';
     div.innerHTML=html;
     (function(idx,sts){
       div.addEventListener('click',()=>{
@@ -2825,6 +2939,7 @@ function renderMap(){
         Sfx.click();startLevel(idx);});
     })(i,st);
     list.appendChild(div);}
+  renderMap._prev=cur;
   $('#starTotalNum').textContent=totalStars();
   updateQuestBadges();
   $('#mapScroll').scrollTop=0;
