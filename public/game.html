@@ -87,30 +87,37 @@ canvas{display:block}
 .divider::before,.divider::after{content:'';flex:1;border-top:2px solid #EFD5F2}
 #srvDot{display:flex;align-items:center;justify-content:center;gap:7px;font-size:12px;color:#A678B8;font-weight:600}
 #srvDot .d{width:8px;height:8px;border-radius:50%;background:#5AC46B;box-shadow:0 0 0 3px rgba(90,196,107,.25)}
-#scr-menu{align-items:center;justify-content:center;gap:12px;padding:calc(60px + var(--sat)) calc(12px + var(--sar)) calc(70px + var(--sab)) calc(12px + var(--sal))}
+#scr-menu{align-items:center;justify-content:center;gap:10px;padding:calc(56px + var(--sat)) calc(12px + var(--sar)) calc(60px + var(--sab)) calc(12px + var(--sal))}
 #topLeft{position:absolute;top:calc(12px + var(--sat));left:calc(12px + var(--sal));display:flex;gap:8px}
 #topRight{position:absolute;top:calc(12px + var(--sat));right:calc(12px + var(--sar))}
-#profileChip{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.94);border-radius:16px;
-  padding:5px 12px 5px 5px;box-shadow:0 4px 0 #E8C8F0;font-weight:600;font-size:14px;max-width:44vw}
-#profileChip canvas{width:34px;height:34px;border-radius:10px;flex:none}
+#profileChip{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.94);border-radius:18px;
+  padding:5px 14px 5px 5px;box-shadow:0 4px 0 #E8C8F0;font-weight:600;font-size:14px;max-width:44vw;
+  border:2px solid #F3DFF5;transition:transform .15s}
+#profileChip:active{transform:scale(.96)}
+#profileChip canvas{width:34px;height:34px;border-radius:12px;flex:none}
 #profileChip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.liveChip{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.94);border-radius:16px;
-  padding:8px 12px;box-shadow:0 4px 0 #E8C8F0;font-weight:700;font-size:15px;color:var(--red)}
+.liveChip{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.94);border-radius:18px;
+  padding:8px 14px;box-shadow:0 4px 0 #E8C8F0;font-weight:700;font-size:15px;color:var(--red);
+  border:2px solid #F3DFF5;transition:transform .15s}
+.liveChip:active{transform:scale(.96)}
 .liveChip svg{width:18px;height:18px}
-#menuLogo{font-size:clamp(46px,13vw,84px);position:relative}
+#menuLogo{font-size:clamp(44px,12vw,80px);position:relative}
 .logo-fruit{position:absolute;z-index:1;filter:drop-shadow(0 8px 8px rgba(80,40,110,.35))}
 #lf1{width:100px;left:-58px;top:-28px;animation:bob 3.4s ease-in-out infinite,fruitGlow 4s ease-in-out infinite}
 #lf2{width:80px;right:-50px;top:4px;animation:bob 2.9s .5s ease-in-out infinite,fruitGlow 4s 1.3s ease-in-out infinite}
 #lf3{width:88px;left:-40px;bottom:-32px;animation:bob 3.8s .9s ease-in-out infinite,fruitGlow 4s 2.6s ease-in-out infinite}
 @keyframes bob{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-12px) rotate(5deg)}}
 @keyframes fruitGlow{0%,100%{filter:drop-shadow(0 8px 8px rgba(80,40,110,.35)) drop-shadow(0 0 0 rgba(255,201,61,0))}50%{filter:drop-shadow(0 8px 8px rgba(80,40,110,.35)) drop-shadow(0 0 14px rgba(255,201,61,.6))}}
-#menuSub{color:#6A3E7E;font-size:14px;font-weight:500;background:rgba(255,255,255,.72);padding:6px 16px;border-radius:20px;text-align:center}
-#menuChips{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
-.mchip{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.9);border-radius:14px;
-  padding:6px 14px;font-weight:700;color:#B07800;box-shadow:0 3px 0 #E8C8F0}
+#menuSub{color:#6A3E7E;font-size:13px;font-weight:600;background:rgba(255,255,255,.8);padding:5px 18px;border-radius:16px;text-align:center;backdrop-filter:blur(4px)}
+#menuChips{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.mchip{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.94);border-radius:14px;
+  padding:6px 14px;font-weight:700;color:#B07800;box-shadow:0 3px 0 #E8C8F0;
+  border:2px solid #F3DFF5;transition:transform .15s}
+.mchip:active{transform:scale(.96)}
 .mchip svg{width:18px;height:18px}
-#menuRow2{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
-#menuRow2 .btn{font-size:14px;padding:10px 16px;border-radius:14px;position:relative}
+#menuRow2{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;width:min(92vw,360px)}
+#menuRow2 .btn{font-size:13px;padding:10px 6px;border-radius:14px;position:relative;justify-content:center;gap:4px}
+#menuRow2 .btn span{font-size:11px}
 #menuRow2 .btn.hasdot::after{content:'';position:absolute;top:-4px;right:-4px;width:14px;height:14px;
   border-radius:50%;background:var(--red);border:2.5px solid #fff;animation:pulseDot2 1s infinite}
 #mascot{position:absolute;right:calc(10px + var(--sar));bottom:calc(10px + var(--sab));width:88px;height:88px;
@@ -326,6 +333,17 @@ canvas{display:block}
 .confirm-ic{font-size:48px;margin-bottom:6px;animation:confirmPulse 1.2s ease-in-out infinite}
 @keyframes confirmPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
 .confirm-panel .btns{margin-top:14px}
+.daily-panel{width:min(92vw,360px)}
+.daily-row{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin:8px 0}
+.daily-cell{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  background:rgba(243,223,242,.7);border-radius:10px;border:2px solid transparent;transition:.2s;position:relative}
+.daily-cell.claimed{background:linear-gradient(135deg,#E0F7EF,#B8E8D8);border-color:#4CC9A8}
+.daily-cell.today{background:linear-gradient(135deg,#FFF6DE,#FFE6A8);border-color:var(--gold);
+  box-shadow:0 0 0 3px rgba(255,201,61,.3);animation:pulseDot2 1.2s infinite}
+.daily-cell .dc-day{font-size:9px;font-weight:700;color:#A678B8;text-transform:uppercase}
+.daily-cell .dc-reward{font-size:14px;font-weight:700;color:var(--ink)}
+.daily-cell.claimed .dc-reward{color:#1E8A6E}
+.daily-cell .dc-check{position:absolute;top:2px;right:2px;color:#4CC9A8;font-size:12px}
 .wheel-panel{width:min(92vw,360px)}
 .wheel-wrap{position:relative;width:280px;height:280px;margin:6px auto 10px}
 .wheel-wrap canvas{width:100%;height:100%;display:block;filter:drop-shadow(0 8px 10px rgba(80,40,110,.35))}
@@ -553,6 +571,7 @@ body.reduce-motion #btnWheel.hasdot::after{animation:none!important}
     <button class="btn b-brown" id="btnClan"><span data-i="clan">Klan</span></button>
     <button class="btn b-orange" id="btnRanks"><span data-i="ranks">Liderlik</span></button>
     <button class="btn b-blue" id="btnAchievements"><span data-i="achievements">Başarımlar</span></button>
+    <button class="btn b-green" id="btnDaily"><span style="font-size:16px">🎁</span> <span data-i="dailyBonus">Bonus</span></button>
     <button class="btn b-red" id="btnWheel"><span data-i="wheel">Çark</span></button>
   </div>
   <canvas id="mascot" width="184" height="184"></canvas>
@@ -713,6 +732,13 @@ body.reduce-motion #btnWheel.hasdot::after{animation:none!important}
   </div>
 </div></div>
 
+<div class="overlay" id="ov-daily"><div class="panel daily-panel">
+  <button class="panel-x" data-close="ov-daily"><svg viewBox="0 0 24 24" fill="none"><path d="M5 5l14 14M19 5L5 19" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"/></svg></button>
+  <h2 data-i="dailyBonus">Günlük Bonus</h2><div class="sub" data-i="dailySub">Her gün giriş yap, ödülü al!</div>
+  <div id="dailyRow" class="daily-row"></div>
+  <button class="btn b-green big" id="btnClaimDaily" style="width:100%;font-size:17px;margin-top:8px">🎁 <span data-i="claim">ÖDÜLÜ AL</span></button>
+</div></div>
+
 <div class="overlay" id="ov-wheel"><div class="panel wheel-panel">
   <button class="panel-x" data-close="ov-wheel"><svg viewBox="0 0 24 24" fill="none"><path d="M5 5l14 14M19 5L5 19" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"/></svg></button>
   <h2 data-i="wheel">Günlük Çark</h2><div class="sub" data-i="wheelSub">Her gün bir bedava çevirme!</div>
@@ -847,14 +873,22 @@ const MOTION_I18N={
   pt:{motion:'Reduzir movimento',motionSub:'Reduz animações'},
   ru:{motion:'Меньше анимаций',motionSub:'Уменьшает анимации'}};
 const HINT_I18N={
-  tr:{hintUsed:'İpucu gösterildi!',noHints:'İpucu hakkın bitti!',hintTip:'İpucu göster',theme:'Tema',themeSub:'Meyve görünümünü değiştir',themeChanged:'Tema değiştirildi!'},
-  en:{hintUsed:'Hint shown!',noHints:'Out of hints!',hintTip:'Show hint',theme:'Theme',themeSub:'Change fruit appearance',themeChanged:'Theme changed!'},
-  de:{hintUsed:'Tipp gezeigt!',noHints:'Keine Tipps mehr!',hintTip:'Tipp zeigen',theme:'Thema',themeSub:'Fruchtaussehen ändern',themeChanged:'Thema geändert!'},
-  es:{hintUsed:'¡Pista mostrada!',noHints:'¡Sin pistas!',hintTip:'Mostrar pista',theme:'Tema',themeSub:'Cambiar aspecto de frutas',themeChanged:'¡Tema cambiado!'},
-  fr:{hintUsed:'Indice montré !',noHints:'Plus d\'indices !',hintTip:'Montrer indice',theme:'Thème',themeSub:'Changer l\'apparence',themeChanged:'Thème changé !'},
-  it:{hintUsed:'Suggerimento mostrato!',noHints:'Nessun suggerimento!',hintTip:'Mostra suggerimento',theme:'Tema',themeSub:'Cambia aspetto frutti',themeChanged:'Tema cambiato!'},
-  pt:{hintUsed:'Dica mostrada!',noHints:'Sem dicas!',hintTip:'Mostrar dica',theme:'Tema',themeSub:'Mudar aparência das frutas',themeChanged:'Tema alterado!'},
-  ru:{hintUsed:'Подсказка показана!',noHints:'Подсказки кончились!',hintTip:'Показать подсказку',theme:'Тема',themeSub:'Изменить вид фруктов',themeChanged:'Тема изменена!'}};
+  tr:{hintUsed:'İpucu gösterildi!',noHints:'İpucu hakkın bitti!',hintTip:'İpucu göster',theme:'Tema',themeSub:'Meyve görünümünü değiştir',themeChanged:'Tema değiştirildi!',
+    dailyBonus:'Günlük Bonus',dailySub:'Her gün giriş yap, ödülü al!',dailyDone:'Bugün alındı',day:'Gün'},
+  en:{hintUsed:'Hint shown!',noHints:'Out of hints!',hintTip:'Show hint',theme:'Theme',themeSub:'Change fruit appearance',themeChanged:'Theme changed!',
+    dailyBonus:'Daily Bonus',dailySub:'Log in daily for rewards!',dailyDone:'Claimed today',day:'Day'},
+  de:{hintUsed:'Tipp gezeigt!',noHints:'Keine Tipps mehr!',hintTip:'Tipp zeigen',theme:'Thema',themeSub:'Fruchtaussehen ändern',themeChanged:'Thema geändert!',
+    dailyBonus:'Tagesbonus',dailySub:'Tägliche Belohnung!',dailyDone:'Heute abgeholt',day:'Tag'},
+  es:{hintUsed:'¡Pista mostrada!',noHints:'¡Sin pistas!',hintTip:'Mostrar pista',theme:'Tema',themeSub:'Cambiar aspecto',themeChanged:'¡Tema cambiado!',
+    dailyBonus:'Bono Diario',dailySub:'¡Entra cada día!',dailyDone:'Reclamado hoy',day:'Día'},
+  fr:{hintUsed:'Indice montré !',noHints:'Plus d\'indices !',hintTip:'Montrer indice',theme:'Thème',themeSub:'Changer l\'apparence',themeChanged:'Thème changé !',
+    dailyBonus:'Bonus Quotidien',dailySub:'Connectez-vous chaque jour !',dailyDone:'Réclamé aujourd\'hui',day:'Jour'},
+  it:{hintUsed:'Suggerimento mostrato!',noHints:'Nessun suggerimento!',hintTip:'Mostra suggerimento',theme:'Tema',themeSub:'Cambia aspetto',themeChanged:'Tema cambiato!',
+    dailyBonus:'Bonus Giornaliero',dailySub:'Accedi ogni giorno!',dailyDone:'Riscosso oggi',day:'Giorno'},
+  pt:{hintUsed:'Dica mostrada!',noHints:'Sem dicas!',hintTip:'Mostrar dica',theme:'Tema',themeSub:'Mudar aparência',themeChanged:'Tema alterado!',
+    dailyBonus:'Bônus Diário',dailySub:'Entre todo dia!',dailyDone:'Resgatado hoje',day:'Dia'},
+  ru:{hintUsed:'Подсказка показана!',noHints:'Подсказки кончились!',hintTip:'Показать подсказку',theme:'Тема',themeSub:'Изменить вид фруктов',themeChanged:'Тема изменена!',
+    dailyBonus:'Ежедневный бонус',dailySub:'Заходи каждый день!',dailyDone:'Получено сегодня',day:'День'}};
 const SEASON_I18N={
   tr:{seasonEnds:'Sezon bitişine:'},
   en:{seasonEnds:'Season ends in:'},
@@ -940,6 +974,7 @@ const Save={
     shields:1,
     questDay:'',quests:[],clan:null,seenTut:false,tut:{},wheelDay:'',wheelStreak:0,wheelLastDay:'',
     achievements:{},stats:{levelsWon:0,totalCombos:0,bigMatches:0,specials:0,starsEarned:0},
+    dailyBonusDay:'',dailyBonusStreak:0,dailyBonusLast:'',
     settings:{sfx:true,voice:true,music:true,vib:true,lang:'tr',serverUrl:'',reduceMotion:false,activeTheme:'default'}},
   load(){
     try{
@@ -3003,6 +3038,54 @@ function applyWheelReward(r){
   if(bonus>0){const res=$('#wheelResult');res.textContent+='  +'+bonus+'💰 🔥';}
   Save.write();updateGold();updateLifeUI();updateBoostBar();}
 
+/* ============ GÜNLÜK BONUS ============ */
+const DAILY_REWARDS=[
+  {day:1,gold:30,label:'30💰'},{day:2,gold:40,label:'40💰'},
+  {day:3,gold:50,label:'50💰'},{day:4,gold:75,label:'75💰'},
+  {day:5,gold:100,label:'100💰'},{day:6,item:'hammer',label:'🔨 +1'},
+  {day:7,gold:200,label:'200💰 🎉'}];
+function dailyBonusAvailable(){return Save.data.dailyBonusDay!==todayKey();}
+function renderDailyBonus(){
+  const row=$('#dailyRow');if(!row)return;
+  row.innerHTML='';
+  const streak=Save.data.dailyBonusStreak||0;
+  const todayClaimable=dailyBonusAvailable();
+  const todayIdx=Math.min(streak,6); // 0-based, capped at day 7
+  DAILY_REWARDS.forEach((r,i)=>{
+    const claimed=i<streak||(i===streak&&!todayClaimable);
+    const isToday=i===todayIdx&&todayClaimable;
+    const cell=document.createElement('div');
+    cell.className='daily-cell'+(claimed?' claimed':'')+(isToday?' today':'');
+    cell.innerHTML='<div class="dc-day">'+t('day')+' '+(i+1)+'</div>'+
+      '<div class="dc-reward">'+r.label+'</div>'+
+      (claimed?'<div class="dc-check">✓</div>':'');
+    row.appendChild(cell);});
+  const btn=$('#btnClaimDaily');
+  if(todayClaimable){
+    btn.style.display='flex';btn.style.opacity='1';btn.disabled=false;
+    btn.innerHTML='🎁 <span>'+t('claim')+'</span>';
+  }else{
+    btn.style.display='flex';btn.style.opacity='.5';btn.disabled=true;
+    btn.innerHTML='✓ <span>'+t('dailyDone')+'</span>';}}
+function claimDailyBonus(){
+  if(!dailyBonusAvailable())return;
+  const tk=todayKey();
+  const yest=new Date();yest.setDate(yest.getDate()-1);
+  const yKey=yest.getFullYear()+'-'+(yest.getMonth()+1)+'-'+yest.getDate();
+  if(Save.data.dailyBonusLast===yKey)Save.data.dailyBonusStreak=Math.min((Save.data.dailyBonusStreak||0)+1,6);
+  else Save.data.dailyBonusStreak=0;
+  Save.data.dailyBonusLast=tk;
+  Save.data.dailyBonusDay=tk;
+  const r=DAILY_REWARDS[Math.min(Save.data.dailyBonusStreak,6)];
+  if(r.gold)Save.data.gold=(Save.data.gold||0)+r.gold;
+  if(r.item)Save.data.items[r.item]=(Save.data.items[r.item]||0)+1;
+  Save.write();
+  Sfx.coin();Sfx.special();vibrate([20,40,60]);
+  toast('🎉 '+r.label+' '+t('goldPlus'));
+  updateGold();updateBoostBar();renderDailyBonus();
+  updateDailyBonusBadge();}
+function updateDailyBonusBadge(){$('#btnDaily').classList.toggle('hasdot',dailyBonusAvailable());}
+
 /* ============ BAHÇE ============ */
 const GARDEN=[
   {id:'gFlowers',cost:3},{id:'gBench',cost:5},{id:'gTree',cost:8},{id:'gFountain',cost:12},
@@ -3349,7 +3432,7 @@ function showScreen(id){
   Music.setTension(0);
   updateLifeUI();updateBoostBar();
   if(id==='scr-menu'){setMascot('normal');
-    $('#btnPlay').classList.toggle('pulse',wheelAvailable());}}
+    $('#btnPlay').classList.toggle('pulse',wheelAvailable()||dailyBonusAvailable());}}
 function toast(msg,dur){
   const el=$('#toast');el.textContent=msg;el.classList.add('show');
   clearTimeout(toast._t);toast._t=setTimeout(()=>el.classList.remove('show'),dur||2000);}
@@ -3694,6 +3777,8 @@ function wireUI(){
   $('#btnShop').addEventListener('click',()=>{Sfx.click();updateGold();renderShop();$('#ov-shop').classList.add('show');});
   $('#btnMapShop').addEventListener('click',()=>{Sfx.click();updateGold();renderShop();$('#ov-shop').classList.add('show');});
   $('#btnWheel').addEventListener('click',()=>{Sfx.click();openWheel();});
+  $('#btnDaily').addEventListener('click',()=>{Sfx.click();renderDailyBonus();$('#ov-daily').classList.add('show');});
+  $('#btnClaimDaily').addEventListener('click',()=>{Sfx.click();claimDailyBonus();});
   $('#btnSpin').addEventListener('click',()=>{Sfx.click();spinWheel();});
   $('#btnClan').addEventListener('click',()=>{Sfx.click();renderClan();$('#ov-clan').classList.add('show');});
   $('#lifeChipMenu').addEventListener('click',()=>{
@@ -3895,7 +3980,7 @@ function frame(ts){
   showScreen('scr-auth');
   setAuthMode('login');
   $('#menuStarNum').textContent=totalStars();
-  updateGold();updateQuestBadges();updateLifeUI();updateBoostBar();updateWheelBadge();updateAchievementsBadge();
+  updateGold();updateQuestBadges();updateLifeUI();updateBoostBar();updateWheelBadge();updateAchievementsBadge();updateDailyBonusBadge();
   loadThemeList();
   tryLoadExtAssets();
   window.addEventListener('resize',layout);
