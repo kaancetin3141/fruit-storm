@@ -2075,6 +2075,8 @@ async function finishWin(){
   Api.req('save',{token:Save.data.session,email:Save.data.user&&Save.data.user.email,
     progress:{unlocked:Save.data.unlocked,stars:Save.data.stars,best:Save.data.best,gold:Save.data.gold}});
   questAdd('qWin',1);questAdd('qStar',stars);questAdd('qScore',score);
+  if(curLevel.n<=4)saveTutorialDone(curLevel.n);
+  endTutorial();
   Save.data.stats.levelsWon=(Save.data.stats.levelsWon||0)+1;
   Save.data.stats.starsEarned=(Save.data.stats.starsEarned||0)+stars;
   checkAchievements();
@@ -2221,7 +2223,10 @@ function startLevel(n){
   if(curLevel.locked.length&&!Save.data.tut.ice){Save.data.tut.ice=1;Save.write();setTimeout(()=>toast(t('tutIce'),3200),2400);}
   else if(curLevel.stones.length&&!Save.data.tut.stone){Save.data.tut.stone=1;Save.write();setTimeout(()=>toast(t('tutStone'),3200),2400);}
   if(curLevel.mode==='jelly'&&!Save.data.tut.jelly){Save.data.tut.jelly=1;Save.write();setTimeout(()=>toast(t('tutJelly'),3200),2600);}
-  if(n===1&&!Save.data.seenTut){Save.data.seenTut=true;Save.write();setTimeout(()=>toast(t('hint1')),900);}
+  if(n===1&&!Save.data.seenTut){Save.data.seenTut=true;Save.write();}
+  // Start interactive tutorial for first 4 levels
+  if(n<=4&&!Save.data.tut['lvl'+n]){
+    setTimeout(()=>{startTutorial(n);},1500);}
   const tok=runToken;
   (async()=>{
     busy=true;
@@ -2570,7 +2575,79 @@ function renderBoard(dt,now){
     ctx.strokeText(f.txt,f.x,f.y);
     ctx.fillStyle='#fff';ctx.fillText(f.txt,f.x,f.y);
     ctx.globalAlpha=1;}
-  ctx.restore();ctx.restore();}
+  ctx.restore();ctx.restore();
+  // Tutorial finger overlay
+  drawTutorialFinger(now);}
+// ============ EĞİTİM SİSTEMİ ============
+let tutorial={active:false,step:0,steps:[],fingerX:0,fingerY:0,fingerT:0};
+const TUT_I18N_TEMP={
+  tr:{tutSwipe:'👆 Meyveleri kaydır: 3 tanesini eşleştir!',tutStriped:'✨ 4\'lü eşleşme = Çizgili şeker! Bir satır/sütunu patlatır.',tutSpecial:'💡 İpucu: Çift tıklayarak özel şekeri patlatabilirsin!'},
+  en:{tutSwipe:'👆 Swipe fruits: match 3!',tutStriped:'✨ 4-match = Striped candy! Clears a row/column.',tutSpecial:'💡 Tip: Double-tap a special to detonate it!'},
+  de:{tutSwipe:'👆 Früchte wischen: 3 abräumen!',tutStriped:'✨ 4er-Match = Gestreiftes Bonbon! Räumt eine Reihe/Spalte.',tutSpecial:'💡 Tipp: Doppelklicke ein Spezialbonbon zum Zünden!'},
+  es:{tutSwipe:'👆 Desliza frutas: ¡junta 3!',tutStriped:'✨ 4-match = ¡Caramelo rayado! Limpia fila/columna.',tutSpecial:'💡 Consejo: ¡Doble toque para detonar especial!'},
+  fr:{tutSwipe:'👆 Glisse les fruits : aligne 3 !',tutStriped:'✨ 4-match = Bonbon rayé ! Nettoie ligne/colonne.',tutSpecial:'💡 Astuce : Double-touche pour faire exploser !'},
+  it:{tutSwipe:'👆 Scorri frutti: abbina 3!',tutStriped:'✨ 4-match = Caramella striata! Pulisce riga/colonna.',tutSpecial:'💡 Consiglio: Doppio tocco per detonare!'},
+  pt:{tutSwipe:'👆 Deslize frutas: junte 3!',tutStriped:'✨ 4-match = Doce listrado! Limpa linha/coluna.',tutSpecial:'💡 Dica: Toque duplo para detonar!'},
+  ru:{tutSwipe:'👆 Свайп фруктов: собери 3!',tutStriped:'✨ 4-матч = Полосатая конфета! Очищает ряд/колонку.',tutSpecial:'💡 Совет: Двойной тап для взрыва!'}};
+// Inject tutorial i18n into existing I object
+Object.keys(I).forEach(l=>{
+  if(TUT_I18N_TEMP[l])Object.assign(I[l],TUT_I18N_TEMP[l]);
+  else if(TUT_I18N_TEMP.en)Object.assign(I[l],TUT_I18N_TEMP.en);});
+const TUTORIAL_STEPS={
+  1:[ // Level 1: Basic matching
+    {type:'highlight',text:'tutSwipe',dur:4000},
+    {type:'toast',text:'hint1',dur:3000}],
+  2:[ // Level 2: 4-match → striped
+    {type:'highlight',text:'tutL2',dur:4000},
+    {type:'toast',text:'tutStriped',dur:3000}],
+  3:[ // Level 3: Specials
+    {type:'highlight',text:'tutL3',dur:3500},
+    {type:'toast',text:'tutSpecial',dur:3000}],
+  4:[ // Level 4: Time mode
+    {type:'toast',text:'tutL4',dur:3500},
+    {type:'toast',text:'tutTime',dur:3500}]};
+function startTutorial(levelN){
+  const steps=TUTORIAL_STEPS[levelN];
+  if(!steps||!steps.length)return;
+  if(Save.data.tut['lvl'+levelN])return;
+  tutorial.active=true;tutorial.step=0;tutorial.steps=steps;
+  showTutorialStep();}
+function showTutorialStep(){
+  if(!tutorial.active||tutorial.step>=tutorial.steps.length){endTutorial();return;}
+  const step=tutorial.steps[tutorial.step];
+  if(step.type==='toast'){
+    toast(t(step.text),step.dur);
+    tutorial.step++;
+    setTimeout(showTutorialStep,step.dur);}
+  else if(step.type==='highlight'){
+    // Show animated finger pointing at best move
+    const m=bestMove()||findAnyMove();
+    if(m){
+      hintMove=m;tutorial.fingerX=cellPx(m.c2);tutorial.fingerY=cellPy(m.r2);
+      toast(t(step.text),step.dur);
+      tutorial.fingerT=performance.now();}
+    tutorial.step++;
+    setTimeout(showTutorialStep,step.dur);}}
+function endTutorial(){tutorial.active=false;tutorial.step=0;tutorial.steps=[];}
+function saveTutorialDone(levelN){
+  Save.data.tut['lvl'+levelN]=true;Save.write();}
+function drawTutorialFinger(now){
+  if(!tutorial.active)return;
+  if(!hintMove)return;
+  const t=(now-tutorial.fingerT)/1000;
+  // Pulsing finger circle
+  const pulse=.5+.5*Math.sin(t*4);
+  ctx.save();
+  // Glow ring
+  ctx.globalAlpha=.4+.3*pulse;
+  ctx.strokeStyle='#FFE066';ctx.lineWidth=3;
+  ctx.beginPath();ctx.arc(tutorial.fingerX,tutorial.fingerY,S*.4+pulse*8,0,TAU);ctx.stroke();
+  // Finger emoji
+  ctx.globalAlpha=.85;
+  ctx.font=Math.round(S*.6)+'px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+  const bob=Math.sin(t*3)*4;
+  ctx.fillText('👆',tutorial.fingerX,tutorial.fingerY-S*.3+bob);
+  ctx.restore();}
 let sceneCv=null;
 function buildBgScene(){
   if(!dpr)return;
