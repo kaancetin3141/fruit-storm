@@ -87,7 +87,7 @@ canvas{display:block}
 .divider::before,.divider::after{content:'';flex:1;border-top:2px solid #EFD5F2}
 #srvDot{display:flex;align-items:center;justify-content:center;gap:7px;font-size:12px;color:#A678B8;font-weight:600}
 #srvDot .d{width:8px;height:8px;border-radius:50%;background:#5AC46B;box-shadow:0 0 0 3px rgba(90,196,107,.25)}
-#scr-menu{align-items:center;justify-content:center;gap:10px;padding:calc(56px + var(--sat)) calc(12px + var(--sar)) calc(60px + var(--sab)) calc(12px + var(--sal))}
+#scr-menu{align-items:center;justify-content:center;gap:10px;padding:calc(56px + var(--sat)) calc(12px + var(--sar)) calc(64px + var(--sab)) calc(12px + var(--sal))}
 #topLeft{position:absolute;top:calc(12px + var(--sat));left:calc(12px + var(--sal));display:flex;gap:8px}
 #topRight{position:absolute;top:calc(12px + var(--sat));right:calc(12px + var(--sar))}
 #profileChip{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.94);border-radius:18px;
@@ -122,6 +122,18 @@ canvas{display:block}
   border-radius:50%;background:var(--red);border:2.5px solid #fff;animation:pulseDot2 1s infinite}
 #mascot{position:absolute;right:calc(10px + var(--sar));bottom:calc(10px + var(--sab));width:88px;height:88px;
   pointer-events:none;z-index:5;filter:drop-shadow(0 6px 6px rgba(80,40,110,.35))}
+.bottom-bar{position:fixed;bottom:0;left:0;right:0;z-index:10;display:flex;justify-content:space-around;
+  align-items:stretch;background:rgba(74,36,86,.92);backdrop-filter:blur(10px);
+  padding:4px 0 calc(4px + var(--sab));box-shadow:0 -4px 12px rgba(0,0,0,.2)}
+.bb-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
+  background:none;border:none;color:#fff;cursor:pointer;padding:6px 4px;flex:1;max-width:64px;
+  border-radius:12px;transition:background .15s,transform .1s;position:relative}
+.bb-btn:active{transform:scale(.92)}
+@media(hover:hover){.bb-btn:hover{background:rgba(255,255,255,.12)}}
+.bb-btn .bb-ic{font-size:22px;line-height:1}
+.bb-btn .bb-lb{font-size:9px;font-weight:600;color:rgba(255,255,255,.85);letter-spacing:.3px}
+.bb-btn.hasdot::after{content:'';position:absolute;top:2px;right:14px;width:10px;height:10px;
+  border-radius:50%;background:var(--red);border:2px solid #fff;animation:pulseDot2 1s infinite}
 #scr-map .map-head{display:flex;align-items:center;gap:7px;padding:calc(10px + var(--sat)) calc(12px + var(--sar)) 8px calc(12px + var(--sal));flex-wrap:wrap}
 #mapTitle{font-size:22px;font-weight:700;text-shadow:0 2px 0 rgba(255,255,255,.7)}
 #mapHeadRight{margin-left:auto;display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end}
@@ -575,6 +587,14 @@ body.reduce-motion #btnWheel.hasdot::after{animation:none!important}
     <button class="btn b-red" id="btnWheel"><span data-i="wheel">Çark</span></button>
   </div>
   <canvas id="mascot" width="184" height="184"></canvas>
+  <nav id="bottomBar" class="bottom-bar">
+    <button class="bb-btn" id="bbHome" title="Ana Menü"><span class="bb-ic">🏠</span><span class="bb-lb">Menü</span></button>
+    <button class="bb-btn" id="bbPlay2" title="Oyna"><span class="bb-ic">▶️</span><span class="bb-lb">Oyna</span></button>
+    <button class="bb-btn" id="bbDaily2" title="Bonus"><span class="bb-ic">🎁</span><span class="bb-lb">Bonus</span></button>
+    <button class="bb-btn" id="bbWheel2" title="Çark"><span class="bb-ic">🎡</span><span class="bb-lb">Çark</span></button>
+    <button class="bb-btn" id="bbShop2" title="Market"><span class="bb-ic">🛒</span><span class="bb-lb">Market</span></button>
+    <button class="bb-btn" id="bbAch2" title="Başarımlar"><span class="bb-ic">🏅</span><span class="bb-lb">Rozet</span></button>
+  </nav>
 </section>
 
 <section id="scr-map" class="screen">
@@ -3432,7 +3452,9 @@ function showScreen(id){
   Music.setTension(0);
   updateLifeUI();updateBoostBar();
   if(id==='scr-menu'){setMascot('normal');
-    $('#btnPlay').classList.toggle('pulse',wheelAvailable()||dailyBonusAvailable());}}
+    $('#btnPlay').classList.toggle('pulse',wheelAvailable()||dailyBonusAvailable());
+    $('#bbDaily2').classList.toggle('hasdot',dailyBonusAvailable());
+    $('#bbWheel2').classList.toggle('hasdot',wheelAvailable());}}
 function toast(msg,dur){
   const el=$('#toast');el.textContent=msg;el.classList.add('show');
   clearTimeout(toast._t);toast._t=setTimeout(()=>el.classList.remove('show'),dur||2000);}
@@ -3780,6 +3802,13 @@ function wireUI(){
   $('#btnDaily').addEventListener('click',()=>{Sfx.click();renderDailyBonus();$('#ov-daily').classList.add('show');});
   $('#btnClaimDaily').addEventListener('click',()=>{Sfx.click();claimDailyBonus();});
   $('#btnSpin').addEventListener('click',()=>{Sfx.click();spinWheel();});
+  // Bottom bar shortcuts
+  $('#bbHome').addEventListener('click',()=>{Sfx.click();showScreen('scr-menu');});
+  $('#bbPlay2').addEventListener('click',()=>{Sfx.ensure();Sfx.click();showScreen('scr-map');});
+  $('#bbDaily2').addEventListener('click',()=>{Sfx.click();renderDailyBonus();$('#ov-daily').classList.add('show');});
+  $('#bbWheel2').addEventListener('click',()=>{Sfx.click();openWheel();});
+  $('#bbShop2').addEventListener('click',()=>{Sfx.click();updateGold();renderShop();$('#ov-shop').classList.add('show');});
+  $('#bbAch2').addEventListener('click',()=>{Sfx.click();renderAchievements();updateAchievementsBadge();$('#ov-achievements').classList.add('show');});
   $('#btnClan').addEventListener('click',()=>{Sfx.click();renderClan();$('#ov-clan').classList.add('show');});
   $('#lifeChipMenu').addEventListener('click',()=>{
     Sfx.click();updateLifeUI();
