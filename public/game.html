@@ -1606,7 +1606,7 @@ function hitStone(r,c){
   tl.hp--;
   Sfx.crack();vibrate(20);
   juice(tl.px,tl.py,'#8A949E');
-  if(tl.hp<=0){board[r][c]=null;addScore(80);shake(3,150);}}
+  if(tl.hp<=0){board[r][c]=null;addScore(80);floatText(tl.px,tl.py,'80');shake(3,150);}}
 function hitLock(r,c,all){
   const tl=board[r][c];
   if(!tl||tl.type<0||tl.locked<=0)return;
@@ -1658,14 +1658,14 @@ async function explodeCells(seedCells,combo,exclude,fast){
     const tl=board[r][c];
     if(!tl||tl.type===-2)return;
     const col=tl.type>=0?FRUITS[tl.type].color:'#FFD23D';
-    if(!fast){juice(tl.px,tl.py,col);debris(tl.px,tl.py,col);}
+    if(!fast){juice(tl.px,tl.py,col);debris(tl.px,tl.py,col);floatText(tl.px,tl.py,String(Math.round(60*mult+(tl.special?30:0))));}
     splash(tl.px,tl.py,col);
     if(tl.type>=0&&curLevel)got[tl.type]=(got[tl.type]||0)+1;
     gained+=Math.round(60*mult+(tl.special?30:0));
     jellyDec(r,c);
     if(tl.bonus&&curLevel&&curLevel.mode==='time'&&!finished){
       levelTime+=tl.bonus*1000;lastTimeSec=-1;renderTimeUI();
-      floatText(tl.px,tl.py-14,'+'+tl.bonus+'s');Sfx.sparkle();
+      floatText(tl.px,tl.py-14,tl.bonus+'s');Sfx.sparkle();
       parts.push({kind:'shock',x:tl.px,y:tl.py,life:0,max:300});}
     pops.push(tween(tl,{scale:1.35,alpha:0},fast?110:200,easeInQuad,fast?0:irand(50)));});
   fx.forEach(f=>parts.push(Object.assign({life:0,max:340},f)));
@@ -1679,7 +1679,7 @@ async function explodeCells(seedCells,combo,exclude,fast){
     Sfx.bigMatch(pops.length);vibrate([15,30,45]);
     const bonus=Math.round(pops.length*15*(1+combo*.2));
     addScore(bonus);
-    floatText(cellPx(cx),cellPy(cy)-S*.5,'+'+bonus+' ⭐');
+    floatText(cellPx(cx),cellPy(cy)-S*.5,bonus+' ⭐');
     questAdd('qBigMatch',1);
     Save.data.stats.bigMatches=(Save.data.stats.bigMatches||0)+1;
     checkAchievements();
@@ -1739,9 +1739,9 @@ function updateComboHud(n){
   if(n===3||n===5||n===7){
     const reward=n===3?5:n===5?10:20;
     Save.data.gold=(Save.data.gold||0)+reward;Save.write();updateGold();
-    floatText(innerWidth/2,innerHeight*.35,'+'+reward+'💰');
+    floatText(innerWidth/2,innerHeight*.35,reward+'💰');
     Sfx.coin();
-    if(n>=5){const b=document.createElement('div');b.className='combo-gold-pop';b.textContent='+'+reward+'💰';document.body.appendChild(b);setTimeout(()=>{if(b.parentNode)b.parentNode.removeChild(b);},1200);}}
+    if(n>=5){const b=document.createElement('div');b.className='combo-gold-pop';b.textContent=reward+'💰';document.body.appendChild(b);setTimeout(()=>{if(b.parentNode)b.parentNode.removeChild(b);},1200);}}
   clearTimeout(comboHudTimer);
   comboHudTimer=setTimeout(()=>{hud.classList.remove('show');curCombo=0;},1400);}
 async function resolveBoard(swapCells,tok){
@@ -2052,7 +2052,7 @@ async function sugarRush(tok){
     if(!pool.length)break;
     const picks=[];
     for(let i=0;i<step;i++){const tl=pool[irand(pool.length)];
-      if(tl&&picks.indexOf(tl)===-1){picks.push(tl);addScore(150);}}
+      if(tl&&picks.indexOf(tl)===-1){picks.push(tl);addScore(150);floatText(tl.px,tl.py,'150');}}
     if(picks.length){
       Sfx.pop(Math.min(8,1+picks.length),picks.length);
       await explodeCells(picks.map(tl=>({r:tl.r,c:tl.c})),2,new Set(),true);
