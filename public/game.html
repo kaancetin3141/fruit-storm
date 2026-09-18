@@ -1606,7 +1606,7 @@ function hitStone(r,c){
   tl.hp--;
   Sfx.crack();vibrate(20);
   juice(tl.px,tl.py,'#8A949E');
-  if(tl.hp<=0){board[r][c]=null;addScore(80);floatText(tl.px,tl.py,'+80');shake(3,150);}}
+  if(tl.hp<=0){board[r][c]=null;addScore(80);shake(3,150);}}
 function hitLock(r,c,all){
   const tl=board[r][c];
   if(!tl||tl.type<0||tl.locked<=0)return;
@@ -1658,7 +1658,7 @@ async function explodeCells(seedCells,combo,exclude,fast){
     const tl=board[r][c];
     if(!tl||tl.type===-2)return;
     const col=tl.type>=0?FRUITS[tl.type].color:'#FFD23D';
-    if(!fast){juice(tl.px,tl.py,col);debris(tl.px,tl.py,col);floatText(tl.px,tl.py,'+'+Math.round(60*mult+(tl.special?30:0)));}
+    if(!fast){juice(tl.px,tl.py,col);debris(tl.px,tl.py,col);}
     splash(tl.px,tl.py,col);
     if(tl.type>=0&&curLevel)got[tl.type]=(got[tl.type]||0)+1;
     gained+=Math.round(60*mult+(tl.special?30:0));
@@ -2052,7 +2052,7 @@ async function sugarRush(tok){
     if(!pool.length)break;
     const picks=[];
     for(let i=0;i<step;i++){const tl=pool[irand(pool.length)];
-      if(tl&&picks.indexOf(tl)===-1){picks.push(tl);addScore(150);floatText(tl.px,tl.py,'+150');}}
+      if(tl&&picks.indexOf(tl)===-1){picks.push(tl);addScore(150);}}
     if(picks.length){
       Sfx.pop(Math.min(8,1+picks.length),picks.length);
       await explodeCells(picks.map(tl=>({r:tl.r,c:tl.c})),2,new Set(),true);
