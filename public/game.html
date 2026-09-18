@@ -87,41 +87,43 @@ canvas{display:block}
 .divider::before,.divider::after{content:'';flex:1;border-top:2px solid #EFD5F2}
 #srvDot{display:flex;align-items:center;justify-content:center;gap:7px;font-size:12px;color:#A678B8;font-weight:600}
 #srvDot .d{width:8px;height:8px;border-radius:50%;background:#5AC46B;box-shadow:0 0 0 3px rgba(90,196,107,.25)}
-#scr-menu{align-items:center;justify-content:center;gap:10px;padding:calc(56px + var(--sat)) calc(12px + var(--sar)) calc(64px + var(--sab)) calc(12px + var(--sal))}
-#topLeft{position:absolute;top:calc(12px + var(--sat));left:calc(12px + var(--sal));display:flex;gap:8px}
-#topRight{position:absolute;top:calc(12px + var(--sat));right:calc(12px + var(--sar))}
-#profileChip{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.94);border-radius:18px;
-  padding:5px 14px 5px 5px;box-shadow:0 4px 0 #E8C8F0;font-weight:600;font-size:14px;max-width:44vw;
+#scr-menu{align-items:center;justify-content:center;gap:8px;padding:calc(56px + var(--sat)) calc(12px + var(--sar)) calc(64px + var(--sab)) calc(12px + var(--sal))}
+#menuTopBar{position:absolute;top:calc(10px + var(--sat));left:calc(12px + var(--sal));right:calc(12px + var(--sar));
+  display:flex;align-items:center;gap:8px;z-index:6}
+#profileChip{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.94);border-radius:18px;
+  padding:4px 12px 4px 4px;box-shadow:0 3px 0 #E8C8F0;font-weight:600;font-size:13px;max-width:34vw;
   border:2px solid #F3DFF5;transition:transform .15s}
 #profileChip:active{transform:scale(.96)}
-#profileChip canvas{width:34px;height:34px;border-radius:12px;flex:none}
+#profileChip canvas{width:30px;height:30px;border-radius:10px;flex:none}
 #profileChip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.liveChip{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.94);border-radius:18px;
-  padding:8px 14px;box-shadow:0 4px 0 #E8C8F0;font-weight:700;font-size:15px;color:var(--red);
-  border:2px solid #F3DFF5;transition:transform .15s}
-.liveChip:active{transform:scale(.96)}
-.liveChip svg{width:18px;height:18px}
-#menuLogo{font-size:clamp(44px,12vw,80px);position:relative}
+#menuResources{display:flex;gap:6px;flex:1;justify-content:center}
+.res-chip{display:flex;align-items:center;gap:4px;background:rgba(255,255,255,.94);border-radius:14px;
+  padding:5px 10px;font-weight:700;font-size:14px;box-shadow:0 3px 0 #E8C8F0;border:2px solid #F3DFF5}
+.res-chip svg{width:16px;height:16px;flex:none}
+.res-chip.lives{color:var(--red)}
+.res-chip.gold{color:#E8A400}
+.res-chip.stars{color:var(--orange-d)}
+#menuTopBar .icon-btn{flex:none}
+#menuLogo{font-size:clamp(40px,11vw,72px);position:relative}
 .logo-fruit{position:absolute;z-index:1;filter:drop-shadow(0 8px 8px rgba(80,40,110,.35))}
-#lf1{width:100px;left:-58px;top:-28px;animation:bob 3.4s ease-in-out infinite,fruitGlow 4s ease-in-out infinite}
-#lf2{width:80px;right:-50px;top:4px;animation:bob 2.9s .5s ease-in-out infinite,fruitGlow 4s 1.3s ease-in-out infinite}
-#lf3{width:88px;left:-40px;bottom:-32px;animation:bob 3.8s .9s ease-in-out infinite,fruitGlow 4s 2.6s ease-in-out infinite}
-@keyframes bob{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-12px) rotate(5deg)}}
-@keyframes fruitGlow{0%,100%{filter:drop-shadow(0 8px 8px rgba(80,40,110,.35)) drop-shadow(0 0 0 rgba(255,201,61,0))}50%{filter:drop-shadow(0 8px 8px rgba(80,40,110,.35)) drop-shadow(0 0 14px rgba(255,201,61,.6))}}
-#menuSub{color:#6A3E7E;font-size:13px;font-weight:600;background:rgba(255,255,255,.8);padding:5px 18px;border-radius:16px;text-align:center;backdrop-filter:blur(4px)}
-#menuChips{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
-.mchip{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.94);border-radius:14px;
-  padding:6px 14px;font-weight:700;color:#B07800;box-shadow:0 3px 0 #E8C8F0;
-  border:2px solid #F3DFF5;transition:transform .15s}
-.mchip:active{transform:scale(.96)}
-.mchip svg{width:18px;height:18px}
-#menuRow2{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;width:min(92vw,360px)}
-#menuRow2 .btn{font-size:13px;padding:10px 6px;border-radius:14px;position:relative;justify-content:center;gap:4px}
-#menuRow2 .btn span{font-size:11px}
-#menuRow2 .btn.hasdot::after{content:'';position:absolute;top:-4px;right:-4px;width:14px;height:14px;
-  border-radius:50%;background:var(--red);border:2.5px solid #fff;animation:pulseDot2 1s infinite}
-#mascot{position:absolute;right:calc(10px + var(--sar));bottom:calc(10px + var(--sab));width:88px;height:88px;
-  pointer-events:none;z-index:5;filter:drop-shadow(0 6px 6px rgba(80,40,110,.35))}
+#lf1{width:92px;left:-52px;top:-24px;animation:bob 3.4s ease-in-out infinite,fruitGlow 4s ease-in-out infinite}
+#lf2{width:72px;right:-44px;top:4px;animation:bob 2.9s .5s ease-in-out infinite,fruitGlow 4s 1.3s ease-in-out infinite}
+#lf3{width:80px;left:-36px;bottom:-28px;animation:bob 3.8s .9s ease-in-out infinite,fruitGlow 4s 2.6s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-10px) rotate(5deg)}}
+@keyframes fruitGlow{0%,100%{filter:drop-shadow(0 8px 8px rgba(80,40,110,.35)) drop-shadow(0 0 0 rgba(255,201,61,0))}50%{filter:drop-shadow(0 8px 8px rgba(80,40,110,.35)) drop-shadow(0 0 12px rgba(255,201,61,.6))}}
+#menuSub{color:#6A3E7E;font-size:12px;font-weight:600;background:rgba(255,255,255,.8);padding:4px 14px;border-radius:14px;text-align:center;backdrop-filter:blur(4px)}
+#menuLevelInfo{background:rgba(255,255,255,.85);border-radius:12px;padding:4px 16px;font-size:14px;font-weight:700;color:var(--ink);box-shadow:0 2px 0 #E8C8F0;border:2px solid #F3DFF5}
+#menuQuickActions{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;max-width:340px}
+.qa-btn{width:44px;height:44px;border-radius:14px;background:rgba(255,255,255,.94);border:2px solid #F3DFF5;
+  display:flex;align-items:center;justify-content:center;box-shadow:0 3px 0 #E8C8F0;
+  cursor:pointer;transition:transform .12s;position:relative}
+.qa-btn:active{transform:scale(.9) translateY(2px);box-shadow:0 1px 0 #E8C8F0}
+@media(hover:hover){.qa-btn:hover{filter:brightness(1.05)}}
+.qa-btn .qa-ic{font-size:22px;line-height:1}
+.qa-btn.hasdot::after{content:'';position:absolute;top:-3px;right:-3px;width:12px;height:12px;
+  border-radius:50%;background:var(--red);border:2px solid #fff;animation:pulseDot2 1s infinite}
+#mascot{position:absolute;right:calc(10px + var(--sar));bottom:calc(72px + var(--sab));width:76px;height:76px;
+  pointer-events:none;z-index:5;filter:drop-shadow(0 4px 4px rgba(80,40,110,.35))}
 .bottom-bar{position:fixed;bottom:0;left:0;right:0;z-index:10;display:flex;justify-content:space-around;
   align-items:stretch;background:rgba(74,36,86,.92);backdrop-filter:blur(10px);
   padding:4px 0 calc(4px + var(--sab));box-shadow:0 -4px 12px rgba(0,0,0,.2)}
@@ -559,11 +561,15 @@ body.reduce-motion #btnWheel.hasdot::after{animation:none!important}
 </section>
 
 <section id="scr-menu" class="screen">
-  <div id="topLeft">
+  <header id="menuTopBar">
     <button id="profileChip"><canvas id="avCanvas" width="72" height="72"></canvas><span id="profName">...</span></button>
-    <button class="liveChip" id="lifeChipMenu"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.7-10-9.3C.4 8.6 2.4 5 5.9 5c2 0 3.6 1.1 4.4 2.7C11 6.1 12.6 5 14.6 5 18.1 5 20.1 8.6 22 11.7 19.5 16.3 12 21 12 21z"/></svg><span id="lifeNumMenu">6</span></button>
-  </div>
-  <div id="topRight"><button class="icon-btn" id="btnSettings"></button></div>
+    <div id="menuResources">
+      <div class="res-chip lives"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.7-10-9.3C.4 8.6 2.4 5 5.9 5c2 0 3.6 1.1 4.4 2.7C11 6.1 12.6 5 14.6 5 18.1 5 20.1 8.6 22 11.7 19.5 16.3 12 21 12 21z"/></svg><span id="lifeNumMenu">6</span></div>
+      <div class="res-chip gold"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="9" opacity=".25"/><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M12 7.5v9M9.5 9.8c0-1.1 1.1-1.8 2.5-1.8s2.5.7 2.5 1.8c0 2.6-5 1.8-5 4.4 0 1.1 1.1 1.8 2.5 1.8s2.5-.7 2.5-1.8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span id="menuGoldNum">0</span></div>
+      <div class="res-chip stars"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.2 6.6.8-4.9 4.6 1.3 6.6-5.9-3.3-5.9 3.3 1.3-6.6L2.5 9l6.6-.8z"/></svg><span id="menuStarNum">0</span></div>
+    </div>
+    <button class="icon-btn" id="btnSettings"></button>
+  </header>
   <div id="menuLogo" class="logo">
     <canvas class="logo-fruit" id="lf1" width="112" height="112"></canvas>
     <canvas class="logo-fruit" id="lf2" width="90" height="90"></canvas>
@@ -571,29 +577,24 @@ body.reduce-motion #btnWheel.hasdot::after{animation:none!important}
     <span class="w1">MEYVE</span><br><span class="w2">PATLAT!</span>
   </div>
   <div id="menuSub" data-i="tagline">Eşleştir · Zincirle · Yıldızları topla</div>
-  <div id="menuChips">
-    <div class="mchip"><svg viewBox="0 0 24 24" fill="#FFB020"><path d="M12 2l2.9 6.2 6.6.8-4.9 4.6 1.3 6.6-5.9-3.3-5.9 3.3 1.3-6.6L2.5 9l6.6-.8z"/></svg><span id="menuStarNum">0</span></div>
-    <div class="mchip"><svg viewBox="0 0 24 24" fill="#E8A400"><circle cx="12" cy="12" r="9" opacity=".25"/><circle cx="12" cy="12" r="9" fill="none" stroke="#E8A400" stroke-width="2.4"/><path d="M12 7.5v9M9.5 9.8c0-1.1 1.1-1.8 2.5-1.8s2.5.7 2.5 1.8c0 2.6-5 1.8-5 4.4 0 1.1 1.1 1.8 2.5 1.8s2.5-.7 2.5-1.8" fill="none" stroke="#E8A400" stroke-width="1.8" stroke-linecap="round"/></svg><span id="menuGoldNum">0</span></div>
-  </div>
-  <button class="btn b-green big" id="btnPlay" data-i="play">OYNA</button>
-  <div id="menuRow2">
-    <button class="btn b-green" id="btnGarden"><span data-i="garden">Bahçe</span></button>
-    <button class="btn b-blue" id="btnQuests"><span data-i="quests">Görevler</span></button>
-    <button class="btn b-orange" id="btnShop"><span data-i="shop">Market</span></button>
-    <button class="btn b-brown" id="btnClan"><span data-i="clan">Klan</span></button>
-    <button class="btn b-orange" id="btnRanks"><span data-i="ranks">Liderlik</span></button>
-    <button class="btn b-blue" id="btnAchievements"><span data-i="achievements">Başarımlar</span></button>
-    <button class="btn b-green" id="btnDaily"><span style="font-size:16px">🎁</span> <span data-i="dailyBonus">Bonus</span></button>
-    <button class="btn b-red" id="btnWheel"><span data-i="wheel">Çark</span></button>
+  <div id="menuLevelInfo"><span id="menuLevelNum">Bölüm 1</span></div>
+  <button class="btn b-green big pulse" id="btnPlay" data-i="play">OYNA</button>
+  <div id="menuQuickActions">
+    <button class="qa-btn" id="btnDaily" title="Günlük Bonus"><span class="qa-ic">🎁</span></button>
+    <button class="qa-btn" id="btnWheel" title="Çark"><span class="qa-ic">🎡</span></button>
+    <button class="qa-btn" id="btnQuests" title="Görevler"><span class="qa-ic">📋</span></button>
+    <button class="qa-btn" id="btnGarden" title="Bahçe"><span class="qa-ic">🌳</span></button>
+    <button class="qa-btn" id="btnClan" title="Klan"><span class="qa-ic">👥</span></button>
+    <button class="qa-btn" id="btnRanks" title="Liderlik"><span class="qa-ic">🏆</span></button>
+    <button class="qa-btn" id="btnAchievements" title="Başarımlar"><span class="qa-ic">🏅</span></button>
+    <button class="qa-btn" id="btnShop" title="Market"><span class="qa-ic">🛒</span></button>
   </div>
   <canvas id="mascot" width="184" height="184"></canvas>
   <nav id="bottomBar" class="bottom-bar">
     <button class="bb-btn" id="bbHome" title="Ana Menü"><span class="bb-ic">🏠</span><span class="bb-lb">Menü</span></button>
     <button class="bb-btn" id="bbPlay2" title="Oyna"><span class="bb-ic">▶️</span><span class="bb-lb">Oyna</span></button>
-    <button class="bb-btn" id="bbDaily2" title="Bonus"><span class="bb-ic">🎁</span><span class="bb-lb">Bonus</span></button>
-    <button class="bb-btn" id="bbWheel2" title="Çark"><span class="bb-ic">🎡</span><span class="bb-lb">Çark</span></button>
     <button class="bb-btn" id="bbShop2" title="Market"><span class="bb-ic">🛒</span><span class="bb-lb">Market</span></button>
-    <button class="bb-btn" id="bbAch2" title="Başarımlar"><span class="bb-ic">🏅</span><span class="bb-lb">Rozet</span></button>
+    <button class="bb-btn" id="bbAch2" title="Profil"><span class="bb-ic">🏅</span><span class="bb-lb">Profil</span></button>
   </nav>
 </section>
 
@@ -3453,8 +3454,10 @@ function showScreen(id){
   updateLifeUI();updateBoostBar();
   if(id==='scr-menu'){setMascot('normal');
     $('#btnPlay').classList.toggle('pulse',wheelAvailable()||dailyBonusAvailable());
-    $('#bbDaily2').classList.toggle('hasdot',dailyBonusAvailable());
-    $('#bbWheel2').classList.toggle('hasdot',wheelAvailable());}}
+    $('#btnDaily').classList.toggle('hasdot',dailyBonusAvailable());
+    $('#btnWheel').classList.toggle('hasdot',wheelAvailable());
+    $('#btnQuests').classList.toggle('hasdot',questClaimable()>0);
+    const ln=$('#menuLevelNum');if(ln)ln.textContent=t('levels')+' '+Save.data.unlocked;}}
 function toast(msg,dur){
   const el=$('#toast');el.textContent=msg;el.classList.add('show');
   clearTimeout(toast._t);toast._t=setTimeout(()=>el.classList.remove('show'),dur||2000);}
@@ -3805,12 +3808,11 @@ function wireUI(){
   // Bottom bar shortcuts
   $('#bbHome').addEventListener('click',()=>{Sfx.click();showScreen('scr-menu');});
   $('#bbPlay2').addEventListener('click',()=>{Sfx.ensure();Sfx.click();showScreen('scr-map');});
-  $('#bbDaily2').addEventListener('click',()=>{Sfx.click();renderDailyBonus();$('#ov-daily').classList.add('show');});
-  $('#bbWheel2').addEventListener('click',()=>{Sfx.click();openWheel();});
   $('#bbShop2').addEventListener('click',()=>{Sfx.click();updateGold();renderShop();$('#ov-shop').classList.add('show');});
-  $('#bbAch2').addEventListener('click',()=>{Sfx.click();renderAchievements();updateAchievementsBadge();$('#ov-achievements').classList.add('show');});
+  $('#bbAch2').addEventListener('click',()=>{Sfx.click();openSettings('menu');});
   $('#btnClan').addEventListener('click',()=>{Sfx.click();renderClan();$('#ov-clan').classList.add('show');});
-  $('#lifeChipMenu').addEventListener('click',()=>{
+  // Lives click from top bar resource chip
+  document.querySelector('.res-chip.lives')?.addEventListener('click',()=>{
     Sfx.click();updateLifeUI();
     $('#lifeTimer').textContent=lifeTimerTxt();
     $('#ov-lives').classList.add('show');});
