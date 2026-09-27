@@ -267,6 +267,8 @@ body.reduce-motion #gameMascot .gm-cv{animation:none}
 @keyframes mascotBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
 .mascot-hype{animation:mascotHype .55s cubic-bezier(.2,1.7,.4,1) !important}
 @keyframes mascotHype{0%{transform:scale(1)}35%{transform:scale(1.22) rotate(-7deg)}65%{transform:scale(.94) rotate(4deg)}100%{transform:scale(1) rotate(0)}}
+/* Maskot tıkla-coş easter egg — canvas tıklanabilir, konteyner giriş alanını asla bloklamaz */
+#mascot,#gameMascot .gm-cv{pointer-events:auto;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .gm-bubble{position:absolute;bottom:calc(100% + 7px);left:2px;max-width:170px;min-width:66px;
   background:linear-gradient(160deg,#FFFDFE,#FFEBF5);border:2px solid #fff;border-radius:14px 14px 14px 4px;
   padding:7px 10px;font-size:11.5px;line-height:1.3;font-weight:700;color:#6A2A56;white-space:normal;
@@ -583,6 +585,15 @@ body.reduce-motion #hFill::before{animation:none}
 .gold-popup.show{animation:goldPop 1.5s cubic-bezier(.2,1.5,.4,1) forwards}
 .gold-popup.fade{opacity:.6;transition:opacity .6s}
 @keyframes goldPop{0%{opacity:0;transform:translate(-50%,30px) scale(.4)}30%{opacity:1;transform:translate(-50%,-10px) scale(1.15)}60%{transform:translate(-50%,-22px) scale(1)}100%{opacity:1;transform:translate(-50%,-34px) scale(1)}}
+/* 3 yıldız "Mükemmel" taç rozeti — panelin tepesinde, başlığın üstünde */
+#ov-win .panel{position:relative}
+.win-perfect{display:block;width:max-content;margin:-2px auto 8px;transform:rotate(-3deg);
+  background:linear-gradient(135deg,#FFE28A,#FF9E2C);color:#6B3A00;font-weight:900;font-size:14px;letter-spacing:.6px;
+  padding:7px 16px;border-radius:999px;border:2.5px solid #FFF7D6;white-space:nowrap;
+  box-shadow:0 5px 14px rgba(255,158,44,.5),0 0 0 4px rgba(255,214,92,.22);
+  animation:perfectPop .55s cubic-bezier(.2,1.6,.4,1)}
+@keyframes perfectPop{0%{transform:rotate(-3deg) scale(0)}60%{transform:rotate(-3deg) scale(1.18)}100%{transform:rotate(-3deg) scale(1)}}
+body.reduce-motion .win-perfect{animation:none}
 #bestRow{text-align:center;font-size:14px;font-weight:600;color:#A678B8;margin-bottom:12px}
 #newRec{display:none;text-align:center;font-weight:700;color:#fff;background:var(--green);
   border-radius:12px;padding:5px 14px;font-size:13px;margin:6px auto 12px;width:max-content;box-shadow:0 3px 0 var(--green-d)}
@@ -1073,14 +1084,14 @@ ru:{login:'Войти',register:'Регистрация',loginBtn:'Войти',r
 };
 const BACK_MENU={tr:'Ana Menüye Dön',en:'Back to Main Menu',de:'Zum Hauptmenü',es:'Menú Principal',fr:'Menu Principal',it:'Menu Principale',pt:'Menu Principal',ru:'В главное меню'};
 const MASCOT2_I18N={
-  tr:{mGo:'Hadi başlayalım!',mCombo:'Vay be, zincir!',mLow:'Az hamle kaldı!',mWin:'Harikaydın!',mLose:'Bir daha dene!',noClan:'Henüz klanın yok',noClanSub:'Klan kur, yıldızların klanına yazılsın!'},
-  en:{mGo:'Let\u2019s go!',mCombo:'What a chain!',mLow:'Running low on moves!',mWin:'You were amazing!',mLose:'Try again!',noClan:'No clan yet',noClanSub:'Create a clan — your stars count for it!'},
-  de:{mGo:'Los geht\u2019s!',mCombo:'Was für eine Kette!',mLow:'Wenige Züge übrig!',mWin:'Du warst super!',mLose:'Versuch\u2019s nochmal!',noClan:'Noch kein Klan',noClanSub:'Gründe einen Klan — deine Sterne zählen!'},
-  es:{mGo:'¡Vamos!',mCombo:'¡Vaya cadena!',mLow:'¡Quedan pocos movimientos!',mWin:'¡Fuiste increíble!',mLose:'¡Inténtalo otra vez!',noClan:'Aún sin clan',noClanSub:'¡Crea un clan y suma tus estrellas!'},
-  fr:{mGo:'C\u2019est parti !',mCombo:'Quelle chaîne !',mLow:'Plus que quelques coups !',mWin:'Tu as été formidable !',mLose:'Réessaie !',noClan:'Pas encore de clan',noClanSub:'Crée un clan — tes étoiles comptent !'},
-  it:{mGo:'Andiamo!',mCombo:'Che catena!',mLow:'Poche mosse!',mWin:'Sei stato fantastico!',mLose:'Riprova!',noClan:'Ancora nessun clan',noClanSub:'Crea un clan — le tue stelle contano!'},
-  pt:{mGo:'Vamos lá!',mCombo:'Que sequência!',mLow:'Poucas jogadas!',mWin:'Você foi incrível!',mLose:'Tente de novo!',noClan:'Ainda sem clã',noClanSub:'Crie um clã — suas estrelas contam!'},
-  ru:{mGo:'Поехали!',mCombo:'Вот это цепочка!',mLow:'Мало ходов!',mWin:'Было здорово!',mLose:'Попробуй ещё!',noClan:'Клана пока нет',noClanSub:'Создай клан — твои звёзды идут в него!'}};
+  tr:{mGo:'Hadi başlayalım!',mCombo:'Vay be, zincir!',mLow:'Az hamle kaldı!',mWin:'Harikaydın!',mLose:'Bir daha dene!',noClan:'Henüz klanın yok',noClanSub:'Klan kur, yıldızların klanına yazılsın!',mOrder:'Sipariş tamamlandı!',mTap1:'Oha! Gıdıklandım!',mTap2:'Bir zincir kur bakalım!',mTap3:'Elmaları patlat!'},
+  en:{mGo:'Let\u2019s go!',mCombo:'What a chain!',mLow:'Running low on moves!',mWin:'You were amazing!',mLose:'Try again!',noClan:'No clan yet',noClanSub:'Create a clan — your stars count for it!',mOrder:'Order complete!',mTap1:'Eek! Tickles!',mTap2:'Make a chain!',mTap3:'Blast those fruits!'},
+  de:{mGo:'Los geht\u2019s!',mCombo:'Was für eine Kette!',mLow:'Wenige Züge übrig!',mWin:'Du warst super!',mLose:'Versuch\u2019s nochmal!',noClan:'Noch kein Klan',noClanSub:'Gründe einen Klan — deine Sterne zählen!',mOrder:'Bestellung erfüllt!',mTap1:'Hihi! Das kitzelt!',mTap2:'Bilde eine Kette!',mTap3:'Knall die Früchte!'},
+  es:{mGo:'¡Vamos!',mCombo:'¡Vaya cadena!',mLow:'¡Quedan pocos movimientos!',mWin:'¡Fuiste increíble!',mLose:'¡Inténtalo otra vez!',noClan:'Aún sin clan',noClanSub:'¡Crea un clan y suma tus estrellas!',mOrder:'¡Pedido completo!',mTap1:'¡Ja! ¡Cosquillas!',mTap2:'¡Haz una cadena!',mTap3:'¡Explota esas frutas!'},
+  fr:{mGo:'C\u2019est parti !',mCombo:'Quelle chaîne !',mLow:'Plus que quelques coups !',mWin:'Tu as été formidable !',mLose:'Réessaie !',noClan:'Pas encore de clan',noClanSub:'Crée un clan — tes étoiles comptent !',mOrder:'Commande terminée !',mTap1:'Hihi ! Ça chatouille !',mTap2:'Fais une chaîne !',mTap3:'Fais tout exploser !'},
+  it:{mGo:'Andiamo!',mCombo:'Che catena!',mLow:'Poche mosse!',mWin:'Sei stato fantastico!',mLose:'Riprova!',noClan:'Ancora nessun clan',noClanSub:'Crea un clan — le tue stelle contano!',mOrder:'Ordine completato!',mTap1:'Ehi! Solletico!',mTap2:'Fai una catena!',mTap3:'Fai esplodere tutto!'},
+  pt:{mGo:'Vamos lá!',mCombo:'Que sequência!',mLow:'Poucas jogadas!',mWin:'Você foi incrível!',mLose:'Tente de novo!',noClan:'Ainda sem clã',noClanSub:'Crie um clã — suas estrelas contam!',mOrder:'Pedido completo!',mTap1:'Ei! Cócegas!',mTap2:'Faça uma sequência!',mTap3:'Exploda essas frutas!'},
+  ru:{mGo:'Поехали!',mCombo:'Вот это цепочка!',mLow:'Мало ходов!',mWin:'Было здорово!',mLose:'Попробуй ещё!',noClan:'Клана пока нет',noClanSub:'Создай клан — твои звёзды идут в него!',mOrder:'Заказ выполнен!',mTap1:'Ой! Щекотно!',mTap2:'Собери цепочку!',mTap3:'Взрывай фрукты!'}};
 const WHEEL_I18N={
   tr:{wheel:'Çark',wheelSub:'Her gün bir bedava çevirme!',spin:'ÇEVİR!',wheelDone:'Bugün çevrildi',streak:'Seri'},
   en:{wheel:'Wheel',wheelSub:'One free spin every day!',spin:'SPIN!',wheelDone:'Spun today',streak:'Streak'},
@@ -1102,6 +1113,9 @@ const QUEST_I18N={
   it:{qHammer:'Usa martello',qBigMatch:'Grande abbinata (5+)',qCascade:'Raggiungi combo x4'},
   pt:{qHammer:'Usar martelo',qBigMatch:'Grande combinação (5+)',qCascade:'Chegar a combo x4'},
   ru:{qHammer:'Используй молот',qBigMatch:'Большое совпадение (5+)',qCascade:'Дойди до комбо x4'}};
+const PERFECT_I18N={
+  tr:{perfect:'MÜKEMMEL!'},en:{perfect:'PERFECT!'},de:{perfect:'PERFEKT!'},es:{perfect:'¡PERFECTO!'},
+  fr:{perfect:'PARFAIT !'},it:{perfect:'PERFETTO!'},pt:{perfect:'PERFEITO!'},ru:{perfect:'ИДЕАЛЬНО!'}};
 const MOTION_I18N={
   tr:{motion:'Hareketi Azalt',motionSub:'Animasyonları azaltır'},
   en:{motion:'Reduce Motion',motionSub:'Reduces animations'},
@@ -1192,6 +1206,7 @@ Object.keys(I).forEach(l=>{
   Object.assign(I[l],WHEEL_I18N[l]||WHEEL_I18N.en);
   Object.assign(I[l],COMBO_I18N[l]||COMBO_I18N.en);
   Object.assign(I[l],QUEST_I18N[l]||QUEST_I18N.en);
+  Object.assign(I[l],PERFECT_I18N[l]||PERFECT_I18N.en);
   Object.assign(I[l],MOTION_I18N[l]||MOTION_I18N.en);
   Object.assign(I[l],HINT_I18N[l]||HINT_I18N.en);
   Object.assign(I[l],SEASON_I18N[l]||SEASON_I18N.en);
@@ -1784,7 +1799,7 @@ const fxCv=$('#fx'),fctx=fxCv.getContext('2d');
 let dpr=1,cvW=0,S=60,ox=8,oy=8;
 let board=[],jelly=[],tileId=0;
 let busy=false,finished=false,pausedFlag=false,autoPlay=false,autoT=0;
-let curLevel=null,score=0,dispScore=0,moves=0,got=[];
+let curLevel=null,score=0,dispScore=0,moves=0,got=[],orderDone={};
 let jellyLeft=0;
 let levelTime=0,lastTimeSec=-1,timeOver=false;
 let sel=null,hintMove=null,idleT=0,starVoiced=[false,false];
@@ -1921,7 +1936,12 @@ function planSpecials(runs,swapCells){
 function jellyDec(r,c){
   if(jelly[r]&&jelly[r][c]>0){
     jelly[r][c]--;
-    if(jelly[r][c]===0)jellyLeft--;
+    // Jöle sıçrama efekti — yarım katman hafif, son katman dolu patlama
+    const jt=board[r]&&board[r][c];
+    if(jt&&jelly[r][c]===1)juice(jt.px,jt.py,'#F9A8D4');
+    if(jelly[r][c]===0){
+      jellyLeft--;
+      if(jt){splash(jt.px,jt.py,'#FF7FBE');parts.push({kind:'spark',x:jt.px,y:jt.py,size:11,life:0,max:320});}}
     questAdd('qJelly',1);
     updateMissionUI();}}
 function hitStone(r,c){
@@ -2014,7 +2034,14 @@ async function explodeCells(seedCells,combo,exclude,fast){
     const col=tl.type>=0?FRUITS[tl.type].color:'#FFD23D';
     if(!fast){juice(tl.px,tl.py,col);debris(tl.px,tl.py,col);floatText(tl.px,tl.py,String(Math.round(60*mult+(tl.special?30:0))));}
     splash(tl.px,tl.py,col);
-    if(tl.type>=0&&curLevel)got[tl.type]=(got[tl.type]||0)+1;
+    if(tl.type>=0&&curLevel){
+      got[tl.type]=(got[tl.type]||0)+1;
+      // Sipariş tamamlanma kutlaması — toplama görevindeki bir meyve ihtiyacı karşılandığında
+      const oc=curLevel.collect.find(q=>q.type===tl.type);
+      if(oc&&got[tl.type]>=oc.need&&!orderDone[tl.type]){
+        orderDone[tl.type]=true;
+        setMascot('excited',1700);sayMascot.show('mOrder',4500);
+        parts.push({kind:'shock',x:tl.px,y:tl.py,life:0,max:380});Sfx.sparkle();}}
     gained+=Math.round(60*mult+(tl.special?30:0));
     jellyDec(r,c);
     if(tl.bonus&&curLevel&&curLevel.mode==='time'&&!finished){
@@ -2330,7 +2357,8 @@ function getLevel(n){
     const m=n%4;
     if(m===2)mode='time';
     else if(m===1&&n>=4)mode='collect1';
-    else if(m===0&&n>=8)mode='jelly';}
+    else if(m===0&&n>=8)mode='jelly';
+    else if(m===3&&n>=15)mode='collect2';}
   const mult=diff==='hard'?1.08:diff==='epic'?1.18:1;
   let movesN;
   if(n<=4)movesN=9+n;
@@ -2346,7 +2374,9 @@ function getLevel(n){
   if(mode==='collect1')L.collect=[{type:(rng()*kinds)|0,need:Math.max(6,Math.round((10+Math.min(30,n*2))*(n<=6?.6:1)))}];
   if(mode==='collect2'){
     const a=(rng()*kinds)|0,b2=(a+1+((rng()*(kinds-1))|0))%kinds;
-    L.collect=[{type:a,need:8+Math.min(20,(n*1.5)|0)},{type:b2,need:8+Math.min(20,(n*1.5)|0)}];}
+    // İki meyve siparişi — toplam yük collect1 ile aynı seviyede kalsın diye meyve başına ~%62
+    const need2=Math.max(6,Math.round((10+Math.min(30,n*2))*.62));
+    L.collect=[{type:a,need:need2},{type:b2,need:need2}];}
   if(mode==='jelly'){
     const rad=diff==='epic'?3:2;
     for(let r=ROWS/2-rad;r<ROWS/2+rad;r++)
@@ -2509,6 +2539,10 @@ async function finishWin(){
   Sfx.win();Voice.say('Sweet victory!');
   if(stars===3)setTimeout(()=>Voice.say('Perfect!'),1200);
   setMascot('happy',2600);sayMascot.show('mWin',3000);
+  // 3 yıldız = mükemmel — taçlı kutlama rozeti
+  const wpEl=$('#ov-win .panel');
+  const oldPf=wpEl.querySelector('.win-perfect');if(oldPf)oldPf.remove();
+  if(stars===3){const pf=document.createElement('div');pf.className='win-perfect';pf.textContent='👑 '+t('perfect');wpEl.prepend(pf);}
   $('#winTitle').textContent=t('levels')+' '+curLevel.n+' — OK!';
   $('#bestVal').textContent=fmt(Save.data.best[curLevel.n]||score);
   $('#newRec').style.display=newRec?'block':'none';
@@ -2605,7 +2639,7 @@ function startLevel(n){
   cancelTweens();
   curLevel=getLevel(n);
   score=0;dispScore=0;moves=curLevel.moves;finished=false;pausedFlag=false;
-  got=[];sel=null;hintMove=null;idleT=0;starVoiced=[false,false];
+  got=[];orderDone={};sel=null;hintMove=null;idleT=0;starVoiced=[false,false];
   lastChip={};parts.length=0;floaters.length=0;needSnap=false;
   hammerMode=false;$('#bHammer').classList.remove('active');
   fishMode=false;fishHover=null;if($('#bFish'))$('#bFish').classList.remove('active');
@@ -4081,6 +4115,16 @@ const sayMascot={_cd:{},
     b.textContent=t(key);b.classList.add('show');
     clearTimeout(this._t);
     this._t=setTimeout(()=>b.classList.remove('show'),2200);}};
+
+/* Maskot tıkla-coş easter egg — dokununca coşar, oyunda rastgele şaklar */
+const MASCOT_TAPS=['mTap1','mTap2','mTap3'];
+document.addEventListener('pointerdown',e=>{
+  const cv=e.target&&e.target.classList&&e.target.classList.contains('mascot-cv')?e.target:null;
+  if(!cv)return;
+  setMascot('excited',2000);
+  Sfx.pop(2,2);vibrate(12);
+  if(state==='play'&&!pausedFlag)sayMascot.show(MASCOT_TAPS[irand(MASCOT_TAPS.length)],1200);
+});
 
 /* ============ GÖREVLER ============ */
 const QDEFS={
