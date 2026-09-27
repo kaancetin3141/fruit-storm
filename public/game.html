@@ -404,6 +404,31 @@ body.reduce-motion .rank-clan.cta .btn{animation:none}
 .chip.bump{animation:chipBump .35s ease}
 @keyframes chipBump{40%{transform:scale(1.2)}100%{transform:scale(1)}}
 #topMission{padding:2px 8px 4px}
+/* Sipariş fişi — collect/jöle görevleri için makbuz görünümlü ilerleme paneli */
+.order-slip{display:flex;flex-direction:column;gap:7px;margin-top:6px;text-align:left;
+  background:repeating-linear-gradient(0deg,rgba(255,240,250,.5) 0 9px,rgba(255,255,255,0) 9px 18px);
+  border-top:2px dashed #F0C8E8;padding:8px 4px 10px;position:relative}
+.os-row{display:flex;align-items:center;gap:8px}
+.os-row .os-ic{width:30px;height:30px;flex:none;background:#fff;border-radius:9px;
+  box-shadow:0 2px 0 #EFD5F2;display:flex;align-items:center;justify-content:center}
+.os-row .os-ic canvas{width:26px;height:26px}
+.os-row .os-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.os-row .os-top{display:flex;justify-content:space-between;align-items:baseline}
+.os-row .os-count{font-weight:800;font-size:12px;color:#8A4D74;font-variant-numeric:tabular-nums}
+.os-row .os-count.bump{animation:chipBump .35s ease}
+.os-row .os-bar{height:7px;border-radius:99px;background:rgba(180,100,160,.16);overflow:hidden;
+  box-shadow:inset 0 1px 2px rgba(120,40,100,.18)}
+.os-row .os-bar i{display:block;height:100%;border-radius:99px;
+  background:linear-gradient(90deg,#E86FA8,#F090C0);transition:width .45s cubic-bezier(.3,1,.4,1)}
+.os-row .os-bar i.full{background:linear-gradient(90deg,#38B58C,#5BD6A8)}
+.os-row.done .os-count{color:#1E8A6E}
+body.reduce-motion .os-bar i{transition:none}
+/* Epic/hard seviye tahta çerçeveleri */
+#board.board-epic{box-shadow:0 0 0 3.5px #FFD65C,0 0 0 7px rgba(255,190,60,.35),0 0 30px rgba(255,170,40,.5);
+  animation:epicGlow 2.2s ease-in-out infinite}
+@keyframes epicGlow{50%{box-shadow:0 0 0 3.5px #FFE58A,0 0 0 8px rgba(255,190,60,.5),0 0 42px rgba(255,170,40,.68)}}
+body.reduce-motion #board.board-epic{animation:none}
+#board.board-hard{box-shadow:0 0 0 3px #C77DDA,0 0 0 6px rgba(180,90,210,.26),0 0 22px rgba(170,80,200,.42)}
 #gameBody{flex:1;display:flex;min-height:0}
 #sidePanel{display:none;flex-direction:column;align-items:center;gap:10px;width:190px;flex:none;padding:6px 8px 14px}
 .p-card{background:rgba(255,255,255,.94);border-radius:17px;box-shadow:0 4px 0 #E8C8F0;padding:9px 13px;width:100%;text-align:center;
@@ -649,12 +674,21 @@ body.reduce-motion .win-perfect{animation:none}
   border:1px solid rgba(140,90,190,.35);padding:1px 7px;border-radius:999px;
   margin-left:4px;vertical-align:1px;white-space:nowrap;max-width:110px;overflow:hidden;text-overflow:ellipsis}
 .rrow.you .rclan{color:#8A5A10;background:linear-gradient(135deg,rgba(255,178,32,.16),rgba(255,178,32,.26));border-color:rgba(220,150,20,.45)}
-.rank-clan{display:flex;align-items:center;gap:8px;margin:0 0 10px;padding:8px 12px;
+.rank-clan{display:flex;align-items:center;gap:8px;margin:0 0 10px;padding:8px 12px;flex-wrap:wrap;
   background:linear-gradient(135deg,#F3E8FF,#FFE8F4);border-radius:14px;
   box-shadow:0 3px 0 #D8C0E8;font-size:12.5px;font-weight:600;color:#6A4D8C}
 .rank-clan .rkc-ic{font-size:16px}
 .rank-clan .rkc-name{font-weight:800;color:#7C42B8;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .rank-clan .rkc-meta{color:#9A7AB8;font-size:11.5px;white-space:nowrap}
+/* Klan haftalık yıldız hedefi — şeridin altında tam genişlik progress */
+.rkc-goal{flex-basis:100%;display:flex;flex-direction:column;gap:3px;margin-top:1px}
+.rkc-goalbar{height:8px;border-radius:99px;background:rgba(124,66,184,.16);overflow:hidden;
+  box-shadow:inset 0 1px 2px rgba(90,40,130,.2)}
+.rkc-goalbar i{display:block;height:100%;border-radius:99px;width:0;
+  background:linear-gradient(90deg,#B565D8,#E96FB1);transition:width .5s cubic-bezier(.3,1,.4,1)}
+.rkc-goalbar i.full{background:linear-gradient(90deg,#F2B23A,#FFD766)}
+.rkc-goal small{font-size:10.5px;font-weight:700;color:#9A7AB8}
+body.reduce-motion .rkc-goalbar i{transition:none}
 .srow{display:flex;align-items:center;gap:10px;background:#fff;border-radius:15px;padding:9px 11px;margin-bottom:8px;box-shadow:0 2px 0 #EFD5F2}
 .srow .sic{width:44px;height:44px;border-radius:13px;display:flex;align-items:center;justify-content:center;flex:none;font-size:22px}
 .srow .snm{flex:1;font-weight:600;font-size:14px}
@@ -1105,17 +1139,20 @@ const COMBO_I18N={
   tr:{combo:'KOMBO'},en:{combo:'COMBO'},de:{combo:'KOMBO'},es:{combo:'COMBO'},
   fr:{combo:'COMBO'},it:{combo:'COMBO'},pt:{combo:'COMBO'},ru:{combo:'КОМБО'}};
 const QUEST_I18N={
-  tr:{qHammer:'Çekiç kullan',qBigMatch:'Büyük eşleşme (5+) yap',qCascade:'Kombo x4 ulaş'},
-  en:{qHammer:'Use hammer',qBigMatch:'Big match (5+)',qCascade:'Reach combo x4'},
-  de:{qHammer:'Hammer benutzen',qBigMatch:'Großes Match (5+)',qCascade:'Kombo x4 erreichen'},
-  es:{qHammer:'Usar martillo',qBigMatch:'Gran combinación (5+)',qCascade:'Llegar a combo x4'},
-  fr:{qHammer:'Utiliser marteau',qBigMatch:'Gros match (5+)',qCascade:'Atteindre combo x4'},
-  it:{qHammer:'Usa martello',qBigMatch:'Grande abbinata (5+)',qCascade:'Raggiungi combo x4'},
-  pt:{qHammer:'Usar martelo',qBigMatch:'Grande combinação (5+)',qCascade:'Chegar a combo x4'},
-  ru:{qHammer:'Используй молот',qBigMatch:'Большое совпадение (5+)',qCascade:'Дойди до комбо x4'}};
+  tr:{qHammer:'Çekiç kullan',qBigMatch:'Büyük eşleşme (5+) yap',qCascade:'Kombo x4 ulaş',qStone:'Taş kır',qOrder:'Meyve siparişi tamamla'},
+  en:{qHammer:'Use hammer',qBigMatch:'Big match (5+)',qCascade:'Reach combo x4',qStone:'Break stones',qOrder:'Complete fruit orders'},
+  de:{qHammer:'Hammer benutzen',qBigMatch:'Großes Match (5+)',qCascade:'Kombo x4 erreichen',qStone:'Steine zerbrechen',qOrder:'Fruchtaufträge erfüllen'},
+  es:{qHammer:'Usar martillo',qBigMatch:'Gran combinación (5+)',qCascade:'Llegar a combo x4',qStone:'Rompe piedras',qOrder:'Completa pedidos de fruta'},
+  fr:{qHammer:'Utiliser marteau',qBigMatch:'Gros match (5+)',qCascade:'Atteindre combo x4',qStone:'Casse des pierres',qOrder:'Termine des commandes'},
+  it:{qHammer:'Usa martello',qBigMatch:'Grande abbinata (5+)',qCascade:'Raggiungi combo x4',qStone:'Rompi pietre',qOrder:'Completa ordini di frutta'},
+  pt:{qHammer:'Usar martelo',qBigMatch:'Grande combinação (5+)',qCascade:'Chegar a combo x4',qStone:'Quebre pedras',qOrder:'Complete pedidos de frutas'},
+  ru:{qHammer:'Используй молот',qBigMatch:'Большое совпадение (5+)',qCascade:'Дойди до комбо x4',qStone:'Разбей камни',qOrder:'Выполни заказы фруктов'}};
 const PERFECT_I18N={
   tr:{perfect:'MÜKEMMEL!'},en:{perfect:'PERFECT!'},de:{perfect:'PERFEKT!'},es:{perfect:'¡PERFECTO!'},
   fr:{perfect:'PARFAIT !'},it:{perfect:'PERFETTO!'},pt:{perfect:'PERFEITO!'},ru:{perfect:'ИДЕАЛЬНО!'}};
+const WEEKGOAL_I18N={
+  tr:{weekGoal:'Haftalık hedef'},en:{weekGoal:'Weekly goal'},de:{weekGoal:'Wochenziel'},es:{weekGoal:'Meta semanal'},
+  fr:{weekGoal:'Objectif hebdo'},it:{weekGoal:'Obiettivo settimanale'},pt:{weekGoal:'Meta semanal'},ru:{weekGoal:'Недельная цель'}};
 const MOTION_I18N={
   tr:{motion:'Hareketi Azalt',motionSub:'Animasyonları azaltır'},
   en:{motion:'Reduce Motion',motionSub:'Reduces animations'},
@@ -1207,6 +1244,7 @@ Object.keys(I).forEach(l=>{
   Object.assign(I[l],COMBO_I18N[l]||COMBO_I18N.en);
   Object.assign(I[l],QUEST_I18N[l]||QUEST_I18N.en);
   Object.assign(I[l],PERFECT_I18N[l]||PERFECT_I18N.en);
+  Object.assign(I[l],WEEKGOAL_I18N[l]||WEEKGOAL_I18N.en);
   Object.assign(I[l],MOTION_I18N[l]||MOTION_I18N.en);
   Object.assign(I[l],HINT_I18N[l]||HINT_I18N.en);
   Object.assign(I[l],SEASON_I18N[l]||SEASON_I18N.en);
@@ -1800,7 +1838,7 @@ let dpr=1,cvW=0,S=60,ox=8,oy=8;
 let board=[],jelly=[],tileId=0;
 let busy=false,finished=false,pausedFlag=false,autoPlay=false,autoT=0;
 let curLevel=null,score=0,dispScore=0,moves=0,got=[],orderDone={};
-let jellyLeft=0;
+let jellyLeft=0,jellyTotal=0;
 let levelTime=0,lastTimeSec=-1,timeOver=false;
 let sel=null,hintMove=null,idleT=0,starVoiced=[false,false];
 let shakeT=0,shakeDur=1,shakeAmp=0;
@@ -1950,7 +1988,7 @@ function hitStone(r,c){
   tl.hp--;
   Sfx.crack();vibrate(20);
   juice(tl.px,tl.py,'#8A949E');
-  if(tl.hp<=0){board[r][c]=null;addScore(80);floatText(tl.px,tl.py,'80');shake(3,150);}}
+  if(tl.hp<=0){board[r][c]=null;addScore(80);floatText(tl.px,tl.py,'80');shake(3,150);questAdd('qStone',1);}}
 function hitLock(r,c,all){
   const tl=board[r][c];
   if(!tl||tl.type<0||tl.locked<=0)return;
@@ -2041,7 +2079,8 @@ async function explodeCells(seedCells,combo,exclude,fast){
       if(oc&&got[tl.type]>=oc.need&&!orderDone[tl.type]){
         orderDone[tl.type]=true;
         setMascot('excited',1700);sayMascot.show('mOrder',4500);
-        parts.push({kind:'shock',x:tl.px,y:tl.py,life:0,max:380});Sfx.sparkle();}}
+        parts.push({kind:'shock',x:tl.px,y:tl.py,life:0,max:380});Sfx.sparkle();
+        questAdd('qOrder',1);}}
     gained+=Math.round(60*mult+(tl.special?30:0));
     jellyDec(r,c);
     if(tl.bonus&&curLevel&&curLevel.mode==='time'&&!finished){
@@ -2529,6 +2568,7 @@ async function finishWin(){
   Api.req('save',{token:Save.data.session,email:Save.data.user&&Save.data.user.email,
     progress:{unlocked:Save.data.unlocked,stars:Save.data.stars,best:Save.data.best,gold:Save.data.gold}});
   questAdd('qWin',1);questAdd('qStar',stars);questAdd('qScore',score);
+  weekStarsAdd(stars);
   if(curLevel.n<=4)saveTutorialDone(curLevel.n);
   endTutorial();
   Save.data.stats.levelsWon=(Save.data.stats.levelsWon||0)+1;
@@ -2654,6 +2694,7 @@ function startLevel(n){
   do{fillBoard(curLevel.kinds);guard++;}while(!findAnyMove()&&guard<40);
   curLevel.jellyCells.forEach(jc=>{
     if(board[jc[0]]&&board[jc[0]][jc[1]]){jelly[jc[0]][jc[1]]=jc[2];jellyLeft++;}});
+  jellyTotal=jellyLeft;
   curLevel.stones.forEach(s=>{
     if(board[s[0]][s[1]]&&!jelly[s[0]][s[1]]){
       const st=newTile(-2);st.hp=s[2];st.r=s[0];st.c=s[1];
@@ -2680,6 +2721,10 @@ function startLevel(n){
   snapAll();
   $('#lvChip').textContent=t('levels')+' '+n;
   $('#pauseLvl').textContent=t('levels')+' '+n;
+  // Zorluk çerçeveleri — epic altın parıltı, hard mor çerçeve
+  const bdEl=$('#board');
+  bdEl.classList.toggle('board-epic',curLevel.diff==='epic');
+  bdEl.classList.toggle('board-hard',curLevel.diff==='hard');
   const isTime=curLevel.mode==='time';
   $('#topTime').style.display=isTime?'block':'none';
   $('#topMoves').style.display=isTime?'none':'block';
@@ -4139,7 +4184,9 @@ const QDEFS={
   qCascade:{icon:'cascade',target:1,gold:95},
   qChoco:{icon:'choco',target:8,gold:90},
   qChest:{icon:'chest',target:3,gold:95},
-  qFish:{icon:'fish',target:2,gold:85}};
+  qFish:{icon:'fish',target:2,gold:85},
+  qStone:{icon:'stone',target:5,gold:80},
+  qOrder:{icon:'order',target:3,gold:90}};
 const QICONS={
   jelly:'<svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="4" fill="#E83E6E" opacity=".8"/><rect x="7" y="6.5" width="10" height="4" rx="2" fill="#fff" opacity=".6"/></svg>',
   spark:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.2 5.8L20 10l-5.8 2.2L12 18l-2.2-5.8L4 10l5.8-2.2z"/></svg>',
@@ -4152,7 +4199,9 @@ const QICONS={
   cascade:'<svg viewBox="0 0 24 24" fill="none"><path d="M6 4l4 4-4 4M14 12l4 4-4 4M4 20h16" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
   choco:'<svg viewBox="0 0 24 24" fill="none"><rect x="5" y="3" width="14" height="18" rx="2" fill="#6B4226"/><path d="M5 9h14M5 15h14M12 3v18" stroke="#3A1F0E" stroke-width="1.6"/><rect x="6.5" y="4" width="11" height="3" rx="1.5" fill="#9A6538" opacity=".7"/></svg>',
   chest:'<svg viewBox="0 0 24 24" fill="none"><rect x="3" y="9" width="18" height="11" rx="2" fill="#8A5A2B"/><path d="M3 9c0-3.3 4-6 9-6s9 2.7 9 6" fill="#A96E38"/><rect x="3" y="12" width="18" height="2.4" fill="#F2B23A"/><rect x="10.2" y="10.5" width="3.6" height="5" rx="1" fill="#FFD766"/><circle cx="12" cy="13" r=".9" fill="#6B4226"/></svg>',
-  fish:'<svg viewBox="0 0 24 24" fill="none"><path d="M6.5 12c0-3.6 3-6 6.5-6 3.2 0 5.6 2.2 6.3 5.2.1.5.1 1.1 0 1.6-.7 3-3.1 5.2-6.3 5.2-3.5 0-6.5-2.4-6.5-6z" fill="#3ECFC0"/><path d="M6.5 12L2.5 8.5c-.4 2.3-.4 4.7 0 7L6.5 12z" fill="#2AA99C"/><circle cx="15.5" cy="10.5" r="1.1" fill="#0E3B37"/><circle cx="15.2" cy="10.2" r=".35" fill="#fff"/><path d="M11 6.8c1.2 1.6 1.2 8.8 0 10.4M13.5 6.3c1.3 1.7 1.3 9.7 0 11.4" stroke="#2AA99C" stroke-width="1.3" stroke-linecap="round"/><circle cx="7.5" cy="5" r="1" fill="#7CE8D5" opacity=".85"/><circle cx="5.5" cy="3.2" r=".6" fill="#7CE8D5" opacity=".7"/></svg>'};
+  fish:'<svg viewBox="0 0 24 24" fill="none"><path d="M6.5 12c0-3.6 3-6 6.5-6 3.2 0 5.6 2.2 6.3 5.2.1.5.1 1.1 0 1.6-.7 3-3.1 5.2-6.3 5.2-3.5 0-6.5-2.4-6.5-6z" fill="#3ECFC0"/><path d="M6.5 12L2.5 8.5c-.4 2.3-.4 4.7 0 7L6.5 12z" fill="#2AA99C"/><circle cx="15.5" cy="10.5" r="1.1" fill="#0E3B37"/><circle cx="15.2" cy="10.2" r=".35" fill="#fff"/><path d="M11 6.8c1.2 1.6 1.2 8.8 0 10.4M13.5 6.3c1.3 1.7 1.3 9.7 0 11.4" stroke="#2AA99C" stroke-width="1.3" stroke-linecap="round"/><circle cx="7.5" cy="5" r="1" fill="#7CE8D5" opacity=".85"/><circle cx="5.5" cy="3.2" r=".6" fill="#7CE8D5" opacity=".7"/></svg>',
+  stone:'<svg viewBox="0 0 24 24" fill="none"><path d="M7 5l8-1.5L20 8l-1 9-7.5 3.5L4 17l.5-8z" fill="#9AA6B2"/><path d="M7 5l4.5 3.5L11 20.5 4 17l.5-8z" fill="#7E8A96"/><path d="M7 5l8-1.5L20 8l-8.5.5z" fill="#C2CCD6"/></svg>',
+  order:'<svg viewBox="0 0 24 24" fill="none"><path d="M6 3h12v18l-2.4-1.8L13.2 21 10.8 19.2 8.4 21 6 19.2z" fill="#FFF3D6" stroke="#D89A2B" stroke-width="1.6"/><path d="M9 8h6M9 11.5h6M9 15h4" stroke="#C77E1F" stroke-width="1.7" stroke-linecap="round"/></svg>'};
 function todayKey(){const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();}
 function questInit(){
   const tk=todayKey();
@@ -4767,6 +4816,14 @@ function renderClan(){
 /* ============ LİDERLİK ============ */
 const BOT_NAMES=['KirazKral','Limonez','Meyveci42','BerryQueen','ElmaŞeker','ÜzümUsta','PortakalX','Vişne_09','ŞeftaliPro','KavunBey','NarEfendi','ErikHanım'];
 function weekSeed(){return Math.floor(Date.now()/604800000);}
+/* Haftalık yıldız takibi — klan hedef çubuğu için (hafta Pazartesi 00:00 UTC'de sıfırlanır) */
+function weekStarsAdd(n){
+  const ws=weekSeed();
+  if(Save.data.weekKey!==ws){Save.data.weekKey=ws;Save.data.weekStars=0;}
+  Save.data.weekStars=(Save.data.weekStars||0)+n;Save.write();}
+function weekStarsGet(){
+  if(Save.data.weekKey!==weekSeed())return 0;
+  return Save.data.weekStars||0;}
 function weekResetCountdown(){
   // Weeks reset Monday 00:00 UTC. Compute time until next Monday.
   const now=new Date();
@@ -4797,8 +4854,14 @@ async function buildRanks(){
     if(myClan&&Save.data.clan&&Array.isArray(Save.data.clan.members)){
       const cSum=Save.data.clan.members.reduce((a2,m)=>a2+(m.stars||0),0);
       rc.classList.remove('cta');rc.style.display='flex';
+      // Haftalık yıldız hedefi — bu hafta kazandığın yıldızlar klana yazılır
+      const wk=weekStarsGet();
+      const goal=Math.max(50,Save.data.clan.members.length*25);
+      const gpct=Math.min(100,Math.round(wk/goal*100));
       rc.innerHTML='<span class="rkc-ic">👥</span><span class="rkc-name">'+myClan+'</span>'+
-        '<span class="rkc-meta">'+Save.data.clan.members.length+' '+t('memberShort')+' · '+fmt(cSum)+' ⭐ '+t('clanStars')+'</span>';}
+        '<span class="rkc-meta">'+Save.data.clan.members.length+' '+t('memberShort')+' · '+fmt(cSum)+' ⭐ '+t('clanStars')+'</span>'+
+        '<div class="rkc-goal"><div class="rkc-goalbar"><i class="'+(wk>=goal?'full':'')+'" style="width:'+gpct+'%"></i></div>'+
+        '<small>'+t('weekGoal')+': '+fmt(wk)+'/'+goal+' ⭐'+(wk>=goal?' ✓':'')+'</small></div>';}
     else{
       rc.classList.add('cta');rc.style.display='flex';
       rc.innerHTML='<span class="rkc-ic">👥</span><span class="rkc-txt"><b>'+t('noClan')+'</b><small>'+t('noClanSub')+'</small></span>'+
@@ -4935,11 +4998,38 @@ function updateMissionUI(){
   if(!curLevel)return;
   renderChips($('#topMission'),false);
   const pm=$('#pMission');
-  if(curLevel.mode!=='score'&&curLevel.mode!=='time'){
+  if(curLevel.mode==='jelly'||curLevel.collect.length){
     pm.style.display='block';
     $('#pMissionLbl').textContent=curLevel.mode==='jelly'?t('jelly'):t('collect');
-    renderChips($('#pMissionChips'),true);
+    renderOrderSlip($('#pMissionChips'));
   }else pm.style.display='none';}
+function renderOrderSlip(container){
+  container.innerHTML='';container.classList.remove('chips');container.classList.add('order-slip');
+  if(!curLevel)return;
+  const rows=[];
+  if(curLevel.mode==='jelly'){
+    const tot=Math.max(1,jellyTotal||jellyLeft);
+    rows.push({ic:()=>jellyIcon(48),have:tot-jellyLeft,need:tot,done:jellyLeft===0,
+      label:(tot-jellyLeft)+'/'+tot,key:'osj'});}
+  else curLevel.collect.forEach(cl=>{
+    const have=Math.min(got[cl.type]||0,cl.need);
+    rows.push({ic:()=>iconEl(cl.type,48),have:have,need:cl.need,done:have>=cl.need,
+      label:have+'/'+cl.need,key:'os'+cl.type});});
+  rows.forEach(rw=>{
+    const pct=Math.min(100,Math.round(rw.have/rw.need*100));
+    const row=document.createElement('div');row.className='os-row'+(rw.done?' done':'');
+    const icw=document.createElement('span');icw.className='os-ic';icw.appendChild(rw.ic());
+    const body=document.createElement('div');body.className='os-body';
+    const top=document.createElement('div');top.className='os-top';
+    const cnt=document.createElement('span');cnt.className='os-count';cnt.textContent=rw.done?'✓':rw.label;
+    if(lastChip[rw.key]!==undefined&&lastChip[rw.key]!==cnt.textContent){cnt.classList.add('bump');}
+    lastChip[rw.key]=cnt.textContent;
+    const bar=document.createElement('div');bar.className='os-bar';
+    const fill=document.createElement('i');fill.style.width=pct+'%';if(rw.done)fill.classList.add('full');
+    bar.appendChild(fill);
+    top.appendChild(cnt);body.appendChild(top);body.appendChild(bar);
+    row.appendChild(icw);row.appendChild(body);
+    container.appendChild(row);});}
 function refreshScoreUI(){
   if(!curLevel)return;
   const th=[curLevel.target,curLevel.t2,curLevel.t3];
