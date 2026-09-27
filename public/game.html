@@ -479,8 +479,8 @@ body.reduce-motion #hFill::before{animation:none}
   #scr-menu{gap:8px}.btn.big{font-size:20px;padding:13px 44px}
 }
 .overlay{position:fixed;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;
-  background:rgba(60,25,85,.55);backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .25s}
-.overlay.show{opacity:1;pointer-events:auto}
+  background:rgba(60,25,85,.55);backdrop-filter:blur(4px);opacity:0;pointer-events:none;visibility:hidden;transition:opacity .25s,visibility .25s}
+.overlay.show{opacity:1;pointer-events:auto;visibility:visible}
 .panel{background:var(--cream);border-radius:26px;padding:24px 20px 20px;width:min(92vw,380px);
   max-height:calc(100dvh - var(--sat) - var(--sab) - 24px);overflow-y:auto;
   box-shadow:0 12px 0 rgba(90,45,110,.45);position:relative;
