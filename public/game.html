@@ -257,6 +257,38 @@ body.reduce-motion #xpFill::before{animation:none}
   border-radius:50%;background:var(--red);border:2px solid #fff;animation:pulseDot2 1s infinite}
 #mascot{position:absolute;right:calc(10px + var(--sar));bottom:calc(72px + var(--sab));width:76px;height:76px;
   pointer-events:none;z-index:5;filter:drop-shadow(0 4px 4px rgba(80,40,110,.35))}
+/* Oyun içi maskot yardımcısı + konuşma balonu */
+#gameMascot{display:none;position:absolute;left:calc(6px + var(--sal));bottom:calc(42px + var(--sab));
+  z-index:6;pointer-events:none;flex-direction:column;align-items:flex-start}
+#scr-game.active #gameMascot{display:flex}
+#gameMascot .gm-cv{width:74px;height:74px;animation:mascotBob 3.4s ease-in-out infinite;
+  filter:drop-shadow(0 4px 5px rgba(80,40,110,.4))}
+body.reduce-motion #gameMascot .gm-cv{animation:none}
+@keyframes mascotBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+.mascot-hype{animation:mascotHype .55s cubic-bezier(.2,1.7,.4,1) !important}
+@keyframes mascotHype{0%{transform:scale(1)}35%{transform:scale(1.22) rotate(-7deg)}65%{transform:scale(.94) rotate(4deg)}100%{transform:scale(1) rotate(0)}}
+.gm-bubble{position:absolute;bottom:calc(100% + 7px);left:2px;max-width:170px;min-width:66px;
+  background:linear-gradient(160deg,#FFFDFE,#FFEBF5);border:2px solid #fff;border-radius:14px 14px 14px 4px;
+  padding:7px 10px;font-size:11.5px;line-height:1.3;font-weight:700;color:#6A2A56;white-space:normal;
+  box-shadow:0 4px 0 rgba(122,36,86,.22),0 8px 18px rgba(60,20,60,.28);
+  opacity:0;transform:scale(.5);transform-origin:bottom left;pointer-events:none;
+  transition:opacity .18s,transform .28s cubic-bezier(.2,1.5,.4,1)}
+.gm-bubble.show{opacity:1;transform:scale(1)}
+.gm-bubble::after{content:'';position:absolute;bottom:-6px;left:8px;width:11px;height:11px;
+  background:#FFEBF5;border-right:2px solid #fff;border-bottom:2px solid #fff;
+  transform:rotate(45deg);border-radius:2px}
+@media(max-width:560px){#gameMascot .gm-cv{width:60px;height:60px}
+  .gm-bubble{max-width:132px;font-size:10.5px;padding:6px 8px}}
+/* Klansız oyuncu için Klan Kur CTA şeridi */
+.rank-clan.cta{flex-direction:row;flex-wrap:wrap;border:2px dashed #E9B7DC;background:linear-gradient(120deg,rgba(255,240,250,.96),rgba(243,222,255,.96));
+  box-shadow:0 3px 0 rgba(196,132,196,.35);cursor:default}
+.rank-clan.cta .rkc-txt{display:flex;flex-direction:column;gap:1px;flex:1;min-width:120px}
+.rank-clan.cta .rkc-txt b{font-size:12.5px;color:#7C42B8}
+.rank-clan.cta .rkc-txt small{font-size:10.5px;color:#A678B8;font-weight:600;line-height:1.25}
+.rank-clan.cta .btn{font-size:11.5px;padding:7px 12px;border-radius:11px;flex:none;
+  animation:ctaPulse 1.8s ease-in-out infinite;box-shadow:0 3px 0 var(--green-d)}
+body.reduce-motion .rank-clan.cta .btn{animation:none}
+@keyframes ctaPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
 .bottom-bar{position:fixed;bottom:0;left:0;right:0;z-index:10;display:flex;justify-content:space-around;
   align-items:stretch;background:rgba(74,36,86,.92);backdrop-filter:blur(10px);
   padding:4px 0 calc(4px + var(--sab));box-shadow:0 -4px 12px rgba(0,0,0,.2)}
@@ -755,7 +787,7 @@ body.reduce-motion #btnWheel.hasdot::after{animation:none!important}
     <button class="qa-btn" id="btnAchievements" title="Başarımlar"><span class="qa-ic">🏅</span></button>
     <button class="qa-btn" id="btnShop" title="Market"><span class="qa-ic">🛒</span></button>
   </div>
-  <canvas id="mascot" width="184" height="184"></canvas>
+  <canvas id="mascot" class="mascot-cv" width="184" height="184"></canvas>
   <nav id="bottomBar" class="bottom-bar">
     <button class="bb-btn" id="bbHome" title="Ana Menü"><span class="bb-ic">🏠</span><span class="bb-lb">Menü</span></button>
     <button class="bb-btn" id="bbPlay2" title="Oyna"><span class="bb-ic">▶️</span><span class="bb-lb">Oyna</span></button>
@@ -821,6 +853,7 @@ body.reduce-motion #btnWheel.hasdot::after{animation:none!important}
   <div id="hScore" class="m-only">0 / 0</div>
   <div id="comboBanner"></div>
   <div id="comboHud"><div class="ch-count"><span class="ch-x">x</span><span class="ch-n">2</span></div><div class="ch-label" data-i="combo">KOMBO</div><div class="ch-mult">×1.5</div></div>
+  <div id="gameMascot" aria-hidden="true"><div class="gm-bubble" id="gmBubble"></div><canvas id="gameMascotCv" class="gm-cv mascot-cv" width="184" height="184"></canvas></div>
   <div id="hammerSwing">🔨</div>
   <div id="fishLayer" aria-hidden="true"></div>
   <div id="chestLayer" aria-hidden="true"></div>
@@ -1039,6 +1072,15 @@ pt:{login:'Entrar',register:'Cadastrar',loginBtn:'Entrar',regBtn:'Cadastrar',nic
 ru:{login:'Войти',register:'Регистрация',loginBtn:'Войти',regBtn:'Регистрация',nick:'Ник',email:'Почта',pass:'Пароль',or:'или',guest:'Играть гостем',localSrv:'Локальная демо · офлайн',tagline:'Совмещай · Каскады · Собирай звёзды',play:'ИГРАТЬ',levels:'Уровни',moves:'ХОДЫ',time:'ВРЕМЯ',target:'ЦЕЛЬ',score:'ОЧКИ',collect:'СОБРАТЬ',jelly:'ЖЕЛЕ',settings:'Настройки',sound:'Звуки',voice:'Голоса',voiceSub:'Sweet! Tasty! Perfect!',music:'Музыка',vib:'Вибрация',lang:'Язык',server:'URL сервера',testSrv:'Проверить связь',demo:'Демо-режим',demoSub:'Игра играет сама',reset:'Сбросить прогресс',about:'Meyve Patlat! v4.5',close:'Закрыть',logout:'Выход',winSub:'Великолепно!',next:'ДАЛЬШЕ',retry:'Ещё раз',toMap:'Карта',loseTitle:'Время/ходы вышли!',loseSub:'Продолжить?',tryAgain:'ЕЩЁ РАЗ',paused:'ПАУЗА',resume:'ПРОДОЛЖИТЬ',restart:'Заново',quit:'К карте',sugarRush:'САХАРНЫЙ ЗАВАЛ!',needField:'Заполните все поля',badMail:'Неверная почта',shortPass:'Минимум 4 символа',noUser:'Аккаунт не найден',wrongPass:'Неверный пароль',exists:'Почта уже занята',welcome:'Добро пожаловать',srvLocal:'Нет сервера — демо-режим',srvOk:'Связь установлена',srvFail:'Сервер недоступен',resetQ:'Точно? Ещё раз',resetDone:'Сброшено',bye:'Вы вышли',hint1:'Меняй фрукты — собирай 3+!',locked:'Сначала пройди прошлый уровень!',shuffled:'Нет ходов — перемешиваю!',bonusTxt:'Бонус! Ходы взрываются!',best:'Рекорд',newRec:'НОВЫЙ РЕКОРД!',demoOn:'АВТО · стоп',hard:'СЛОЖНЫЙ',epic:'ОЧЕНЬ СЛОЖНЫЙ',hardTxt:'СЛОЖНЫЙ УРОВЕНЬ!',epicTxt:'ОЧЕНЬ СЛОЖНЫЙ УРОВЕНЬ!',tutIce:'Заморожен: собирай рядом',tutStone:'Камень: разрушается сборами рядом',tutJelly:'Собирай на желе',tutTime:'УРОВЕНЬ НА ВРЕМЯ! Часы +5с!',quests:'Задания',ranks:'Рейтинг',clan:'Клан',shop:'Магазин',garden:'Сад',gardenSub:'Трать звёзды, украшай сад!',questSub:'3 задания в день',rankSub:'Недельный рейтинг',shopSub:'Улучшай за золото',claim:'ЗАБРАТЬ',claimed:'Забрано',allDone:'На сегодня всё!',goldPlus:'Золото получено',qJelly:'Очисти желе',qSpecial:'Создай особые конфеты',qWin:'Побеждай уровни',qStar:'Зарабатывай звёзды',qCombo:'Делай комбо (x2+)',qScore:'Набирай очки',lives:'Жизни',livesSub:'1 жизнь каждые 3 часа',refill:'Наполнить жизни — 300',noLives:'Жизни кончились! Ждите или купите',lifeFull:'Жизни полны!',hammer:'Молот',hammerD:'Разбей одну плитку',shuffle:'Перемешать',shuffleD:'Перемешать поле',moreMoves:'+5 Ходов',moreMovesD:'Добавить 5 ходов',fullLives:'Наполнить жизни',fullLivesD:'Заполняет все жизни',buy:'КУПИТЬ',needGold:'Мало золота!',itemGet:'Получено',bought:'Куплено!',usedHammer:'Режим молота: коснитесь плитки',movesUsed:'+5 ходов!',oncePerLevel:'Один раз за уровень',shopHint:'Доступно в магазине!',clanName:'Название клана',createClan:'Создать клан',clanSug:'Предложения',members:'Участники',chat:'Чат',leaveClan:'Покинуть клан',send:'Отправить',chatPh:'Напишите сообщение...',clanCreated:'Клан создан!',clanLeft:'Клан покинут',clanStars:'всего звёзд',clanOnline:'Демо — участники = боты',continue:'ПРОДОЛЖИТЬ',contMoves:'+5 ходов',contTime:'+15 секунд',timeNoMoves:'Нет бонусов ходов на уровнях времени',continueOk:'Продолжено — удачи!',gNeed:'Мало звёзд!',gDone:'Сад завершён!',gFountain:'Фонтан',gBench:'Скамейка',gTree:'Фруктовое дерево',gFlowers:'Клумба',gSwing:'Качели',gGreen:'Теплица',gArch:'Радужная арка',gStatue:'Золотая статуя',winCond:'ЦЕЛЬ',condScore:'наберите очки',condCollect:'соберите фрукты',condJelly:'Очисти всё желе',condTime:'очка до конца времени',tutL1:'👆 Свайп: собери 3 одинаковых фрукта!',tutL2:'✨ Собери 4 → полосатая конфета!',tutL3:'⏰ Уровень на время! Часы +5с',tutL4:'🌈 Собери 5 → радужная конфета!'}
 };
 const BACK_MENU={tr:'Ana Menüye Dön',en:'Back to Main Menu',de:'Zum Hauptmenü',es:'Menú Principal',fr:'Menu Principal',it:'Menu Principale',pt:'Menu Principal',ru:'В главное меню'};
+const MASCOT2_I18N={
+  tr:{mGo:'Hadi başlayalım!',mCombo:'Vay be, zincir!',mLow:'Az hamle kaldı!',mWin:'Harikaydın!',mLose:'Bir daha dene!',noClan:'Henüz klanın yok',noClanSub:'Klan kur, yıldızların klanına yazılsın!'},
+  en:{mGo:'Let\u2019s go!',mCombo:'What a chain!',mLow:'Running low on moves!',mWin:'You were amazing!',mLose:'Try again!',noClan:'No clan yet',noClanSub:'Create a clan — your stars count for it!'},
+  de:{mGo:'Los geht\u2019s!',mCombo:'Was für eine Kette!',mLow:'Wenige Züge übrig!',mWin:'Du warst super!',mLose:'Versuch\u2019s nochmal!',noClan:'Noch kein Klan',noClanSub:'Gründe einen Klan — deine Sterne zählen!'},
+  es:{mGo:'¡Vamos!',mCombo:'¡Vaya cadena!',mLow:'¡Quedan pocos movimientos!',mWin:'¡Fuiste increíble!',mLose:'¡Inténtalo otra vez!',noClan:'Aún sin clan',noClanSub:'¡Crea un clan y suma tus estrellas!'},
+  fr:{mGo:'C\u2019est parti !',mCombo:'Quelle chaîne !',mLow:'Plus que quelques coups !',mWin:'Tu as été formidable !',mLose:'Réessaie !',noClan:'Pas encore de clan',noClanSub:'Crée un clan — tes étoiles comptent !'},
+  it:{mGo:'Andiamo!',mCombo:'Che catena!',mLow:'Poche mosse!',mWin:'Sei stato fantastico!',mLose:'Riprova!',noClan:'Ancora nessun clan',noClanSub:'Crea un clan — le tue stelle contano!'},
+  pt:{mGo:'Vamos lá!',mCombo:'Que sequência!',mLow:'Poucas jogadas!',mWin:'Você foi incrível!',mLose:'Tente de novo!',noClan:'Ainda sem clã',noClanSub:'Crie um clã — suas estrelas contam!'},
+  ru:{mGo:'Поехали!',mCombo:'Вот это цепочка!',mLow:'Мало ходов!',mWin:'Было здорово!',mLose:'Попробуй ещё!',noClan:'Клана пока нет',noClanSub:'Создай клан — твои звёзды идут в него!'}};
 const WHEEL_I18N={
   tr:{wheel:'Çark',wheelSub:'Her gün bir bedava çevirme!',spin:'ÇEVİR!',wheelDone:'Bugün çevrildi',streak:'Seri'},
   en:{wheel:'Wheel',wheelSub:'One free spin every day!',spin:'SPIN!',wheelDone:'Spun today',streak:'Streak'},
@@ -1154,7 +1196,8 @@ Object.keys(I).forEach(l=>{
   Object.assign(I[l],HINT_I18N[l]||HINT_I18N.en);
   Object.assign(I[l],SEASON_I18N[l]||SEASON_I18N.en);
   Object.assign(I[l],SHIELD_I18N[l]||SHIELD_I18N.en);
-  Object.assign(I[l],ACH_I18N[l]||ACH_I18N.en);});
+  Object.assign(I[l],ACH_I18N[l]||ACH_I18N.en);
+  Object.assign(I[l],MASCOT2_I18N[l]||MASCOT2_I18N.en);});
 const t=k=>(I[Save.data.settings.lang]&&I[Save.data.settings.lang][k])||I.en[k]||I.tr[k]||k;
 function applyI18n(){
   document.documentElement.lang=Save.data.settings.lang;
@@ -2031,6 +2074,7 @@ function updateComboHud(n){
   hud.querySelector('.ch-n').style.color=col;
   hud.classList.add('show');
   hud.classList.remove('bump');void hud.offsetWidth;hud.classList.add('bump');
+  if(n>=3){setMascot('excited',1600);sayMascot.show('mCombo',6500);}
   if(n>=4)questAdd('qCascade',1);
   Save.data.stats.totalCombos=(Save.data.stats.totalCombos||0)+1;
   // Combo milestone gold rewards: x3→+5, x5→+10, x7→+20
@@ -2432,7 +2476,7 @@ async function finishWin(){
   if(curLevel.n%3===0||Math.random()<.25)setTimeout(dropItem,1600);
   Sfx.win();Voice.say('Sweet victory!');
   if(stars===3)setTimeout(()=>Voice.say('Perfect!'),1200);
-  setMascot('happy',2600);
+  setMascot('happy',2600);sayMascot.show('mWin',3000);
   $('#winTitle').textContent=t('levels')+' '+curLevel.n+' — OK!';
   $('#bestVal').textContent=fmt(Save.data.best[curLevel.n]||score);
   $('#newRec').style.display=newRec?'block':'none';
@@ -2479,7 +2523,7 @@ function finishLose(){
     Save.write();}
   updateLifeUI();
   Sfx.lose();
-  setMascot('worried',3000);
+  setMascot('worried',3000);sayMascot.show('mLose',3000);
   $('#loseScore').textContent=fmt(score)+((curLevel.mode==='score'||curLevel.mode==='time')?' / '+fmt(curLevel.target):'');
   const lc=$('#loseChips');lc.innerHTML='';
   renderChips(lc,false);
@@ -2578,6 +2622,7 @@ function startLevel(n){
   $('#pTarget').textContent=fmt(curLevel.target);
   if(isTime)renderTimeUI();
   updateMoves();updateMissionUI();refreshScoreUI();updateBoostBar();
+  lowMovesWarned=false;setMascot('happy',2000);sayMascot.show('mGo',1500);
   showIntro();
   if(isTime&&!Save.data.tut.time){Save.data.tut.time=1;Save.write();setTimeout(()=>toast(t('tutTime'),3200),2200);}
   if(curLevel.locked.length&&!Save.data.tut.ice){Save.data.tut.ice=1;Save.write();setTimeout(()=>toast(t('tutIce'),3200),2400);}
@@ -3841,7 +3886,11 @@ function drawKiraz(c,mood,blink){
   c.fillStyle='#8E1608';
   c.beginPath();c.ellipse(50,120,10,5,0,0,TAU);c.ellipse(78,120,10,5,0,0,TAU);c.fill();
   c.strokeStyle='#C22E18';c.lineWidth=7;c.lineCap='round';
-  if(mood==='happy'){
+  if(mood==='excited'){
+    // Kollar havada — coşku!
+    c.beginPath();c.moveTo(26,76);c.quadraticCurveTo(8,66,6,46);c.stroke();
+    c.beginPath();c.moveTo(102,76);c.quadraticCurveTo(120,66,122,46);c.stroke();
+  }else if(mood==='happy'){
     c.beginPath();c.moveTo(26,80);c.quadraticCurveTo(12,68,16,58);c.stroke();
     c.beginPath();c.moveTo(102,80);c.quadraticCurveTo(116,68,112,58);c.stroke();
   }else{
@@ -3849,23 +3898,53 @@ function drawKiraz(c,mood,blink){
     c.beginPath();c.moveTo(102,82);c.quadraticCurveTo(114,86,116,94);c.stroke();}
   const ey=70;
   c.fillStyle='#fff';
-  const eh=blink?2:(mood==='worried'?10:11);
+  const eh=blink?2:(mood==='worried'?10:12);
   c.beginPath();c.ellipse(50,ey,9,eh,0,0,TAU);c.fill();
   c.beginPath();c.ellipse(80,ey,9,eh,0,0,TAU);c.fill();
   if(!blink){
-    c.fillStyle='#2A1420';
-    if(mood==='happy'){
-      c.strokeStyle='#2A1420';c.lineWidth=4;c.lineCap='round';
-      c.beginPath();c.arc(50,ey+3,6,Math.PI,0);c.stroke();
-      c.beginPath();c.arc(80,ey+3,6,Math.PI,0);c.stroke();
+    if(mood==='excited'){
+      // Yıldız parıltılı gözler
+      const starEye=(sx,sy)=>{
+        c.save();c.translate(sx,sy);
+        const sg=c.createRadialGradient(0,0,1,0,0,8.5);
+        sg.addColorStop(0,'#FFF6C4');sg.addColorStop(.55,'#FFD23D');sg.addColorStop(1,'#FFAA20');
+        c.fillStyle=sg;
+        c.beginPath();
+        for(let i2=0;i2<5;i2++){
+          const a1=-Math.PI/2+i2*TAU/5,a2=a1+TAU/10;
+          c.lineTo(Math.cos(a1)*7.5,Math.sin(a1)*7.5);
+          c.lineTo(Math.cos(a2)*3.1,Math.sin(a2)*3.1);}
+        c.closePath();c.fill();
+        c.strokeStyle='#E08A00';c.lineWidth=1.2;c.stroke();
+        c.fillStyle='rgba(255,255,255,.95)';
+        c.beginPath();c.arc(-1.6,-2.2,1.4,0,TAU);c.fill();
+        c.restore();};
+      starEye(50,ey);starEye(80,ey);
     }else{
-      c.beginPath();c.arc(50,ey+1,4.5,0,TAU);c.fill();
-      c.beginPath();c.arc(80,ey+1,4.5,0,TAU);c.fill();
-      c.fillStyle='#fff';
-      c.beginPath();c.arc(51.5,ey-.5,1.5,0,TAU);c.fill();
-      c.beginPath();c.arc(81.5,ey-.5,1.5,0,TAU);c.fill();}}
+      c.fillStyle='#2A1420';
+      if(mood==='happy'){
+        c.strokeStyle='#2A1420';c.lineWidth=4;c.lineCap='round';
+        c.beginPath();c.arc(50,ey+3,6,Math.PI,0);c.stroke();
+        c.beginPath();c.arc(80,ey+3,6,Math.PI,0);c.stroke();
+      }else{
+        c.beginPath();c.arc(50,ey+1,4.5,0,TAU);c.fill();
+        c.beginPath();c.arc(80,ey+1,4.5,0,TAU);c.fill();
+        c.fillStyle='#fff';
+        c.beginPath();c.arc(51.5,ey-.5,1.5,0,TAU);c.fill();
+        c.beginPath();c.arc(81.5,ey-.5,1.5,0,TAU);c.fill();}}}
   c.strokeStyle='#5A0E06';c.lineWidth=4;c.lineCap='round';
-  if(mood==='happy'){
+  if(mood==='excited'){
+    // Kocaman gülüş
+    c.fillStyle='#7A1420';
+    c.beginPath();c.moveTo(51,88);
+    c.quadraticCurveTo(65,108,79,88);
+    c.quadraticCurveTo(65,94,51,88);c.closePath();c.fill();
+    c.fillStyle='#FF8A9E';
+    c.beginPath();c.ellipse(65,95,6,3.4,0,0,Math.PI);c.fill();
+    // yanak allığı güçlü
+    c.fillStyle='rgba(255,110,130,.6)';
+    c.beginPath();c.ellipse(34,88,7.5,4.5,0,0,TAU);c.ellipse(96,88,7.5,4.5,0,0,TAU);c.fill();
+  }else if(mood==='happy'){
     c.fillStyle='#7A1420';
     c.beginPath();c.arc(65,92,10,0,Math.PI);c.closePath();c.fill();
     c.fillStyle='#FF8A9E';
@@ -3931,10 +4010,10 @@ function drawMascotCostume(c,th){
     miniHeart(90,6,12,'#FF6FB5');
     c.restore();}}
 function renderMascot(){
-  const m=$('#mascot');if(!m)return;
-  drawKiraz(m.getContext('2d'),mascotMood,mascotBlink);}
+  $$('.mascot-cv').forEach(m=>{if(m)drawKiraz(m.getContext('2d'),mascotMood,mascotBlink);});
+  $$('.mascot-cv').forEach(m=>{m.classList.toggle('mascot-hype',mascotMood==='excited');});}
 setInterval(()=>{
-  if(mascotMood!=='happy'){
+  if(mascotMood!=='happy'&&mascotMood!=='excited'){
     mascotBlink=true;renderMascot();
     setTimeout(()=>{mascotBlink=false;renderMascot();},150);}
 },3400);
@@ -3942,6 +4021,17 @@ function setMascot(mood,dur){
   mascotMood=mood;renderMascot();
   clearTimeout(setMascot._t);
   if(dur)setMascot._t=setTimeout(()=>{mascotMood='normal';renderMascot();},dur);}
+/* Oyun içi maskot konuşma balonu — tuşa-göre kısa mesajlar, spam önleyen cooldown */
+const sayMascot={_cd:{},
+  show(key,cd){
+    if(state!=='play'||pausedFlag)return;
+    const now=performance.now();
+    if(this._cd[key]&&now<this._cd[key])return;
+    this._cd[key]=now+(cd||5000);
+    const b=$('#gmBubble');if(!b)return;
+    b.textContent=t(key);b.classList.add('show');
+    clearTimeout(this._t);
+    this._t=setTimeout(()=>b.classList.remove('show'),2200);}};
 
 /* ============ GÖREVLER ============ */
 const QDEFS={
@@ -4608,15 +4698,20 @@ async function buildRanks(){
   // Render season countdown
   const ss=$('#rankSeason');
   if(ss)ss.innerHTML='<span class="rs-ic">🏆</span><span class="rs-label">'+t('seasonEnds')+'</span><span class="rs-time">'+weekResetCountdown()+'</span>';
-  // Klan özet şeridi — klanı olan oyuncuya
+  // Klan özet şeridi — klanı olan oyuncuya özet, olmayana "Klan Kur" CTA'sı
   const rc=$('#rankClan');
   if(rc){
     if(myClan&&Save.data.clan&&Array.isArray(Save.data.clan.members)){
       const cSum=Save.data.clan.members.reduce((a2,m)=>a2+(m.stars||0),0);
-      rc.style.display='flex';
+      rc.classList.remove('cta');rc.style.display='flex';
       rc.innerHTML='<span class="rkc-ic">👥</span><span class="rkc-name">'+myClan+'</span>'+
         '<span class="rkc-meta">'+Save.data.clan.members.length+' '+t('memberShort')+' · '+fmt(cSum)+' ⭐ '+t('clanStars')+'</span>';}
-    else rc.style.display='none';}
+    else{
+      rc.classList.add('cta');rc.style.display='flex';
+      rc.innerHTML='<span class="rkc-ic">👥</span><span class="rkc-txt"><b>'+t('noClan')+'</b><small>'+t('noClanSub')+'</small></span>'+
+        '<button class="btn b-green" id="btnClanCta">'+t('createClan')+'</button>';
+      const bc=$('#btnClanCta');
+      if(bc)bc.addEventListener('click',()=>{Sfx.click();renderClan();$('#ov-clan').classList.add('show');});}}
   let list=null;
   if(Api.base){
     const r=await Api.req('scores',{token:Save.data.session,email:Save.data.user&&Save.data.user.email,
@@ -4710,13 +4805,18 @@ function showCombo(n){
   el.classList.remove('pop');void el.offsetWidth;el.classList.add('pop');
   Voice.say(pickWord(k).replace('!',''));
   questAdd('qCombo',1);}
+let lowMovesWarned=false;
 function updateMoves(){
   const tm=$('#topMoves');
   tm.querySelector('b').textContent=moves;
   $('#pMoves').textContent=moves;
   const isScore=curLevel&&curLevel.mode!=='time';
   tm.classList.toggle('danger',moves<=3&&isScore);
-  tm.classList.toggle('warn',moves<=5&&moves>3&&isScore);}
+  tm.classList.toggle('warn',moves<=5&&moves>3&&isScore);
+  // Maskot endişesi — hamleler azalınca (bölüm başına bir uyarı)
+  if(moves>3)lowMovesWarned=false;
+  if(moves<=3&&!lowMovesWarned&&state==='play'&&!finished&&!pausedFlag){
+    lowMovesWarned=true;setMascot('worried',2800);sayMascot.show('mLow',4000);}}
 function makeChip(iconFn,txt,done,bump,key){
   const ch=document.createElement('span');
   ch.className='chip'+(done?' done':'')+(bump&&lastChip[key]!==undefined&&lastChip[key]!==txt?' bump':'');
