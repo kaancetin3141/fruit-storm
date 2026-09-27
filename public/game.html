@@ -522,6 +522,26 @@ body.reduce-motion #hFill::before{animation:none}
 #intro small{color:#A678B8;font-weight:600}
 .dTag{font-size:12.5px;font-weight:700;letter-spacing:1.5px;color:#fff;border-radius:10px;padding:4px 14px;box-shadow:0 3px 0 rgba(0,0,0,.25);animation:pulseDot2 1s infinite}
 .dTag.hard{background:var(--red)}.dTag.epic{background:var(--epic)}
+/* ---- Bölüm başı hedef kartı (piyasa stili) ---- */
+#ov-prelevel{z-index:34}
+#ov-prelevel .panel{text-align:center;background:linear-gradient(180deg,#FFF7FD 0%,#F9E7F7 100%);max-width:330px;animation:prePop .45s cubic-bezier(.34,1.56,.64,1)}
+@keyframes prePop{0%{transform:scale(.55) translateY(30px);opacity:0}100%{transform:scale(1) translateY(0);opacity:1}}
+body.reduce-motion #ov-prelevel .panel{animation:none}
+.pre-emoji{font-size:38px;line-height:1;filter:drop-shadow(0 4px 6px rgba(180,80,180,.35));animation:preBounce 1.4s ease-in-out infinite}
+@keyframes preBounce{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-5px) scale(1.06)}}
+body.reduce-motion .pre-emoji{animation:none}
+.pre-num{font-size:30px;font-weight:800;color:var(--ink);text-shadow:0 2px 0 #fff;letter-spacing:.5px;line-height:1.15}
+.pre-sub{color:#A678B8;font-weight:600;font-size:13px;margin:2px 0 10px}
+.pre-goals{display:flex;flex-direction:column;gap:7px;margin-bottom:10px}
+.pgr{display:flex;align-items:center;gap:10px;background:#fff;border-radius:14px;padding:7px 12px;box-shadow:0 3px 0 #F0DCEC;font-weight:700;color:var(--ink);font-size:15.5px;text-align:left}
+.pgr canvas,.pgr svg{width:34px;height:34px;flex:none}
+.pgr .pgx{margin-left:auto;color:#B56CE8;font-weight:800;font-size:17px;font-variant-numeric:tabular-nums}
+.pre-stars{display:flex;gap:8px;justify-content:center}
+.pre-stars .ps{flex:1;background:#fff;border-radius:12px;padding:7px 4px 6px;box-shadow:0 3px 0 #F0DCEC;display:flex;flex-direction:column;align-items:center;gap:1px}
+.pre-stars .ps svg{width:22px;height:22px;color:#FFC93C;filter:drop-shadow(0 2px 2px rgba(200,120,20,.35))}
+.pre-stars .ps b{font-size:10px;font-weight:800;color:#D89C1E;letter-spacing:1px}
+.pre-stars .ps span{font-size:12px;font-weight:700;color:#8A5C9E;font-variant-numeric:tabular-nums}
+.pre-meta{display:inline-flex;align-items:center;gap:6px;background:var(--ink);color:#fff;border-radius:999px;padding:6px 16px;font-weight:700;font-size:14px;margin-bottom:12px;box-shadow:0 3px 0 rgba(0,0,0,.25);letter-spacing:.5px}
 #autoBadge{position:absolute;right:calc(12px + var(--sar));bottom:calc(12px + var(--sab));z-index:6;display:none;
   align-items:center;gap:7px;border-radius:13px;background:var(--ink);color:#fff;font-weight:600;font-size:13px;padding:8px 14px;box-shadow:0 4px 0 #2E1440}
 #autoBadge.show{display:flex}
@@ -556,6 +576,7 @@ body.reduce-motion #hFill::before{animation:none}
 .pause-stats .ps-cell{background:rgba(243,223,242,.7);border-radius:12px;padding:7px 10px;text-align:center}
 .pause-stats .ps-cell b{display:block;font-size:17px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
 .pause-stats .ps-cell small{font-size:10px;font-weight:600;color:#A678B8;letter-spacing:.5px;text-transform:uppercase}
+.pause-stats .ps-goal{grid-column:1/-1;background:#E0F7EF;border-radius:11px;padding:6px 9px;font-size:12.5px;font-weight:700;color:#1E8A6E;text-align:center;line-height:1.35}
 .confirm-panel{width:min(88vw,340px);text-align:center}
 .confirm-ic{font-size:48px;margin-bottom:6px;animation:confirmPulse 1.2s ease-in-out infinite}
 @keyframes confirmPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
@@ -956,6 +977,16 @@ body.reduce-motion #btnWheel.hasdot::after{animation:none!important}
   <div style="display:flex;justify-content:center;margin-top:10px"><button class="icon-btn" id="btnPauseSettings"></button></div>
 </div></div>
 
+<div class="overlay" id="ov-prelevel"><div class="panel pre-panel">
+  <div class="pre-emoji">🍓</div>
+  <div class="pre-num" id="preNum">Bölüm 1</div>
+  <div class="pre-sub" id="preReady">Hazır mısın?</div>
+  <div id="preDiff" class="dTag" style="display:none">ZOR BÖLÜM!</div>
+  <div id="preGoals" class="pre-goals"></div>
+  <div class="pre-meta"><span id="preMetaIc">🔁</span><span id="preMetaTxt">30 HAMLE</span></div>
+  <div class="btns"><button class="btn b-green big pulse" id="btnBegin">BAŞLA!</button></div>
+</div></div>
+
 <div class="overlay" id="ov-garden"><div class="panel">
   <button class="panel-x" data-close="ov-garden"><svg viewBox="0 0 24 24" fill="none"><path d="M5 5l14 14M19 5L5 19" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"/></svg></button>
   <h2 data-i="garden">Bahçe</h2><div class="sub" data-i="gardenSub">Yıldız harca, bahçeni güzelleştir!</div>
@@ -1238,12 +1269,22 @@ const ACH_I18N={
     aCombo10:'Мастер комбо (10 комбо)',aBigMatch5:'Мастер взрывов (5 больших)',
     aSpecial20:'Шеф-конфеты (20 спец.)',aStars30:'Охотник за звёздами (30)',aWheel7:'Король серии (7 дней)',
     resetConfirm:'Весь прогресс будет потерян! Уверены?'}};
+const PRELEVEL_I18N={
+  tr:{start:'BAŞLA!',getReady:'Hazır mısın?',level:'Bölüm'},
+  en:{start:'START!',getReady:'Ready to play?',level:'Level'},
+  de:{start:'LOS!',getReady:'Bereit?',level:'Level'},
+  es:{start:'¡JUGAR!',getReady:'¿Listo?',level:'Nivel'},
+  fr:{start:'GO !',getReady:'Prêt ?',level:'Niveau'},
+  it:{start:'VIA!',getReady:'Pronto?',level:'Livello'},
+  pt:{start:'JOGAR!',getReady:'Pronto?',level:'Nível'},
+  ru:{start:'СТАРТ!',getReady:'Готов?',level:'Уровень'}};
 Object.keys(I).forEach(l=>{
   I[l].backMenu=BACK_MENU[l]||BACK_MENU.en;
   Object.assign(I[l],WHEEL_I18N[l]||WHEEL_I18N.en);
   Object.assign(I[l],COMBO_I18N[l]||COMBO_I18N.en);
   Object.assign(I[l],QUEST_I18N[l]||QUEST_I18N.en);
   Object.assign(I[l],PERFECT_I18N[l]||PERFECT_I18N.en);
+  Object.assign(I[l],PRELEVEL_I18N[l]||PRELEVEL_I18N.en);
   Object.assign(I[l],WEEKGOAL_I18N[l]||WEEKGOAL_I18N.en);
   Object.assign(I[l],MOTION_I18N[l]||MOTION_I18N.en);
   Object.assign(I[l],HINT_I18N[l]||HINT_I18N.en);
@@ -2733,23 +2774,72 @@ function startLevel(n){
   $('#pTarget').textContent=fmt(curLevel.target);
   if(isTime)renderTimeUI();
   updateMoves();updateMissionUI();refreshScoreUI();updateBoostBar();
-  lowMovesWarned=false;setMascot('happy',2000);sayMascot.show('mGo',1500);
-  showIntro();
+  lowMovesWarned=false;
+  showPreLevel();
+  const tok=runToken;
+  (async()=>{
+    busy=true;
+    await Promise.all(allTiles().map(tl=>tween(tl,{scale:1},240,easeOutBack,(tl.r+tl.c)*20)));
+    if(tok===runToken)busy=false;})();}
+function preGoalRow(icEl,label,val){
+  const row=document.createElement('div');row.className='pgr';
+  row.appendChild(icEl);
+  const lab=document.createElement('span');lab.textContent=label;row.appendChild(lab);
+  if(val){const x=document.createElement('span');x.className='pgx';x.textContent=val;row.appendChild(x);}
+  return row;}
+function showPreLevel(){
+  const ov=$('#ov-prelevel');if(!ov||!curLevel)return;
+  const tok=runToken;
+  $('#preNum').textContent=t('level')+' '+curLevel.n;
+  $('#preReady').textContent=t('getReady');
+  $('#btnBegin').textContent=t('start');
+  const pd=$('#preDiff');
+  if(curLevel.diff!=='normal'){
+    pd.style.display='inline-block';pd.className='dTag '+curLevel.diff;
+    pd.textContent=t(curLevel.diff==='epic'?'epicTxt':'hardTxt');
+    Voice.say(curLevel.diff==='epic'?'Super hard level!':'Hard level!');}
+  else pd.style.display='none';
+  const pg=$('#preGoals');pg.innerHTML='';
+  if(curLevel.mode==='jelly'){
+    pg.appendChild(preGoalRow(jellyIcon(44),t('condJelly')));
+  }else if(curLevel.collect.length){
+    curLevel.collect.forEach(cl=>pg.appendChild(preGoalRow(iconEl(cl.type,44),FRUITS[cl.type].name,'×'+cl.need)));
+  }else{
+    const row=document.createElement('div');row.className='pre-stars';
+    [curLevel.target,curLevel.t2,curLevel.t3].forEach((tv,i)=>{
+      row.insertAdjacentHTML('beforeend','<div class="ps"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.2 6.6.8-4.9 4.6 1.3 6.6-5.9-3.3-5.9 3.3 1.3-6.6L2.5 9l6.6-.8z"/></svg><b>★'+(i+1)+'</b><span>'+fmt(tv)+'</span></div>');});
+    pg.appendChild(row);}
+  if(curLevel.mode==='time'){
+    $('#preMetaIc').textContent='⏱';
+    $('#preMetaTxt').textContent=Math.ceil(curLevel.time)+' '+t('time').toLowerCase();}
+  else{
+    $('#preMetaIc').textContent='🔁';
+    $('#preMetaTxt').textContent=curLevel.moves+' '+t('moves').toLowerCase();}
+  ov.classList.add('show');
+  clearTimeout(showPreLevel._at);
+  if(autoPlay)showPreLevel._at=setTimeout(()=>{if(runToken===tok&&$('#ov-prelevel').classList.contains('show'))beginLevel();},900);}
+function beginLevel(){
+  if(!curLevel)return;
+  const ov=$('#ov-prelevel');
+  if(!ov.classList.contains('show'))return;
+  ov.classList.remove('show');
+  clearTimeout(showPreLevel._at);
+  Sfx.click();Sfx.pop(2,2);
+  setMascot('happy',2000);sayMascot.show('mGo',1500);
+  lowMovesWarned=false;
+  inputLockUntil=performance.now()+250;
+  const lv=curLevel.n,isTime=curLevel.mode==='time';
   if(isTime&&!Save.data.tut.time){Save.data.tut.time=1;Save.write();setTimeout(()=>toast(t('tutTime'),3200),2200);}
   if(curLevel.locked.length&&!Save.data.tut.ice){Save.data.tut.ice=1;Save.write();setTimeout(()=>toast(t('tutIce'),3200),2400);}
   else if(curLevel.stones.length&&!Save.data.tut.stone){Save.data.tut.stone=1;Save.write();setTimeout(()=>toast(t('tutStone'),3200),2400);}
   if(curLevel.mode==='jelly'&&!Save.data.tut.jelly){Save.data.tut.jelly=1;Save.write();setTimeout(()=>toast(t('tutJelly'),3200),2600);}
   if(curLevel.choco.length&&!Save.data.tut.choco){Save.data.tut.choco=1;Save.write();setTimeout(()=>toast(t('tutChoco'),3400),3000);}
   if(curLevel.chests.length&&!Save.data.tut.chest){Save.data.tut.chest=1;Save.write();setTimeout(()=>toast(t('tutChest'),3400),3400);}
-  if(n===1&&!Save.data.seenTut){Save.data.seenTut=true;Save.write();}
-  // Start interactive tutorial for first 4 levels
-  if(n<=4&&!Save.data.tut['lvl'+n]){
-    setTimeout(()=>{startTutorial(n);},1500);}
-  const tok=runToken;
-  (async()=>{
-    busy=true;
-    await Promise.all(allTiles().map(tl=>tween(tl,{scale:1},240,easeOutBack,(tl.r+tl.c)*20)));
-    if(tok===runToken)busy=false;})();}
+  if(lv===1&&!Save.data.seenTut){Save.data.seenTut=true;Save.write();}
+  // İlk 4 bölüm interaktif eğitim
+  if(lv<=4&&!Save.data.tut['lvl'+lv]){
+    setTimeout(()=>{startTutorial(lv);},1500);}
+  Voice.say('Go!');}
 function useHammerMode(){
   if(state!=='play'||busy||finished||pausedFlag)return;
   if((Save.data.items.hammer||0)<=0){toast(t('shopHint')+' 💛 '+t('hammer'));Sfx.bad();return;}
@@ -5215,7 +5305,7 @@ function renderPauseStats(){
     ['Lv '+(Save.data.plevel||1),fmt(Save.data.xp||0)+' XP'],
     [t('stars'),String(totalStars())],
     [t('best'),fmt(Save.data.best[curLevel.n]||0)]];
-  ps.innerHTML=cells.map(c=>'<div class="ps-cell"><b>'+c[1]+'</b><small>'+c[0]+'</small></div>').join('');}
+  ps.innerHTML='<div class="ps-goal">🎯 '+t('winCond')+': '+condText()+'</div>'+cells.map(c=>'<div class="ps-cell"><b>'+c[1]+'</b><small>'+c[0]+'</small></div>').join('');}
 function setLang(l){
   Save.data.settings.lang=l;Save.write();applyI18n();setAuthMode(authMode);
   if(curLevel){
@@ -5304,6 +5394,7 @@ function wireInput(){
   document.addEventListener('keydown',e=>{
     if(e.key==='Escape'&&state==='play'&&!finished){
       if($('#ov-set').classList.contains('show'))return;
+      if($('#ov-prelevel').classList.contains('show'))return;
       if($('#ov-pause').classList.contains('show'))$('#btnResume').click();
       else $('#btnPause').click();}});
   document.addEventListener('pointerdown',()=>{
@@ -5484,6 +5575,7 @@ function wireUI(){
   $('#autoBadge').addEventListener('click',()=>{
     autoPlay=false;$('#swDemo').checked=false;Save.write();
     $('#autoBadge').classList.remove('show');});
+  $('#btnBegin').addEventListener('click',()=>{Sfx.ensure();beginLevel();});
   $('#btnPause').addEventListener('click',()=>{
     Sfx.click();
     if(state!=='play'||finished)return;
@@ -5528,10 +5620,10 @@ function frame(ts){
     dispScore+=(score-dispScore)*Math.min(1,dt*.012);
     if(Math.abs(score-dispScore)<1)dispScore=score;
     refreshScoreUI();
-    if(autoPlay&&!busy&&!finished&&!pausedFlag){
+    if(autoPlay&&!busy&&!finished&&!pausedFlag&&!document.querySelector('.overlay.show')){
       autoT+=dt;
       if(autoT>620){autoT=0;const m=bestMove();if(m)trySwap(m.r1,m.c1,m.r2,m.c2);}
-    }else if(!busy&&!finished&&!pausedFlag&&!hammerMode&&!fishMode){
+    }else if(!busy&&!finished&&!pausedFlag&&!hammerMode&&!fishMode&&!document.querySelector('.overlay.show')){
       idleT+=dt;
       const threshold=tutPulse?900:4500;
       if(idleT>threshold&&!hintMove){
