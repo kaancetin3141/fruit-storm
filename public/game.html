@@ -1579,7 +1579,7 @@ function getSpecialPath(name){
   const theme=resolveThemeId();
   return 'themes/'+theme+'/'+name+'.png';}
 function tryLoadExtAssets(){
-  let pending=FRUITS.length+3; // 8 fruits + 3 special candies
+  let pending=FRUITS.length+4; // 8 fruits + 3 special candies + choco (opsiyonel)
   const done=()=>{if(--pending===0)refreshAllSprites();};
   for(let i=0;i<FRUITS.length;i++){
     const img=new Image();
@@ -1602,7 +1602,17 @@ function tryLoadExtAssets(){
       c.drawImage(img,(128-img.width*s)/2,(128-img.height*s)/2,img.width*s,img.height*s);
       EXT_SPECIALS[key]=cn;done();};
     img.onerror=done;
-    img.src=getSpecialPath(file);});}
+    img.src=getSpecialPath(file);});
+  // Opsiyonel çikolata asset'i — temada choco.png varsa canvas çizim yerine o kullanılır
+  const img=new Image();
+  img.onload=()=>{
+    const cn=document.createElement('canvas');cn.width=cn.height=128;
+    const c=cn.getContext('2d');
+    const s=Math.min(128/img.width,128/img.height);
+    c.drawImage(img,(128-img.width*s)/2,(128-img.height*s)/2,img.width*s,img.height*s);
+    EXT_SPECIALS.choco=cn;done();};
+  img.onerror=done;
+  img.src='themes/'+resolveThemeId()+'/choco.png';}
 function drawStripes(c,dir){
   c.save();c.globalAlpha=.94;
   for(let i=-1;i<=1;i++){
@@ -1729,7 +1739,7 @@ function buildMasterSprites(){
   MASTER_SPR._lock=[master128(c=>drawLockTile(c,1)),master128(c=>drawLockTile(c,2))];
   MASTER_SPR._rainbow=EXT_SPECIALS.r||master128(drawRainbowCandy);
   MASTER_SPR._bonus=master128(drawClockBadge);
-  MASTER_SPR._choco=master128(drawChocoTile);
+  MASTER_SPR._choco=EXT_SPECIALS.choco||master128(drawChocoTile);
   MASTER_SPR._chest=master128(drawChestTile);}
 function master128(fn){const m=document.createElement('canvas');m.width=m.height=128;fn(m.getContext('2d'));return m;}
 function fruitBase(i){return EXT_FRUITS[i]||master128(FRUITS[i].draw);}
@@ -1893,8 +1903,11 @@ function findRuns(){
       r=e+1;}}
   return runs;}
 function pickCell(run,swapCells){
+  const hasSp=(r,c)=>{const t2=board[r]&&board[r][c];return !!(t2&&t2.special);};
   if(swapCells)for(const sc of swapCells)
-    if(run.cells.some(cc=>cc[0]===sc.r&&cc[1]===sc.c))return[sc.r,sc.c];
+    if(run.cells.some(cc=>cc[0]===sc.r&&cc[1]===sc.c)&&!hasSp(sc.r,sc.c))return[sc.r,sc.c];
+  // Zaten özel şeker olan hücreye yeni şeker koyma — oradaki eski şeker patlamalı!
+  for(const cc of run.cells)if(!hasSp(cc[0],cc[1]))return cc;
   return run.cells[(run.cells.length/2)|0];}
 function planSpecials(runs,swapCells){
   const out=[],taken=new Set();
@@ -2095,6 +2108,11 @@ async function resolveBoard(swapCells,tok){
     combo++;
     if(combo>=2){showCombo(combo);updateComboHud(combo);}
     const creations=planSpecials(runs,swapCells);swapCells=null;
+    // Kesişim hücresinde zaten özel şeker varsa yeni şeker OLUŞTURMA —
+    // eski şeker patlasın (dönüştürme-susturma bugı)
+    for(let i2=creations.length-1;i2>=0;i2--){
+      const cr=creations[i2],t2=board[cr.r]&&board[cr.r][cr.c];
+      if(t2&&t2.special)creations.splice(i2,1);}
     const cellSet=new Map();
     runs.forEach(rn=>rn.cells.forEach(cc=>cellSet.set(cc[0]*COLS+cc[1],{r:cc[0],c:cc[1]})));
     const exclude=new Set(creations.map(cr=>cr.r*COLS+cr.c));
@@ -2186,6 +2204,13 @@ async function trySwap(r1,c1,r2,c2){
       await specialFusion(a,b);
       await settleBoard(tok);await resolveBoard(null,tok);
       afterMove(tok);return;}
+    // RENK UYUŞMASI: özel şeker, kendi meyvesiyle takas edilirse patlar
+    // (kombo şeker hangi meyveninse o meyveyle etkileşime girer)
+    if((a.special||b.special)&&a.type===b.type){
+      spendMove();tutPulse=false;
+      await explodeCells([{r:a.r,c:a.c},{r:b.r,c:b.c}],2);
+      await settleBoard(tok);await resolveBoard(null,tok);
+      afterMove(tok);return;}
     if(findRuns().length){
       spendMove();
       tutPulse=false;
@@ -2221,6 +2246,8 @@ function findAnyMove(){
     const a=board[r1][c1],b=board[r2][c2];
     if(!a||!b||isBlocked(a)||isBlocked(b)||a.type<0||b.type<0)return false;
     if(a.special==='rainbow'||b.special==='rainbow')return true;
+    // Özel şeker + aynı renk meyve takası artık geçerli hamle (renk uyuşması patlaması)
+    if((a.special||b.special)&&a.type===b.type)return true;
     board[r1][c1]=b;board[r2][c2]=a;
     const ok=findRuns().length>0;
     board[r1][c1]=a;board[r2][c2]=b;
@@ -2241,6 +2268,11 @@ function bestMove(){
       const v=(a.special==='rainbow'&&b.special==='rainbow')?90:60;
       if(v>bs){bs=v;best={r1:r1,c1:c1,r2:r2,c2:c2};}return;}
     if(a.special&&b.special){if(80>bs){bs=80;best={r1:r1,c1:c1,r2:r2,c2:c2};}return;}
+    // Renk uyuşması: özel şeker + aynı renk meyve — patlama garantili, öncelikli
+    if((a.special||b.special)&&a.type===b.type){
+      const isQ=curLevel&&curLevel.collect&&curLevel.collect.some(cl=>cl.type===a.type);
+      const v=isQ?70:55;
+      if(v>bs){bs=v;best={r1:r1,c1:c1,r2:r2,c2:c2};}return;}
     board[r1][c1]=b;board[r2][c2]=a;
     const runs=findRuns();
     if(!runs.length){board[r1][c1]=a;board[r2][c2]=b;return;}
@@ -2902,13 +2934,30 @@ function halo(x,y,r,color,a){
 function drawJellyCell(r,c,now){
   const x=ox+c*S,y=oy+r*S,layer=jelly[r][c];
   ctx.save();
-  const wob=1+.02*Math.sin(now*.003+r+c);
+  const wob=1+.025*Math.sin(now*.003+r+c);
   ctx.translate(x+S/2,y+S/2);ctx.scale(wob,1/wob);ctx.translate(-S/2,-S/2);
-  if(layer>=2){ctx.fillStyle='rgba(214,40,130,.38)';rr(ctx,2,2,S-4,S-4,S*.22);ctx.fill();}
-  ctx.fillStyle='rgba(255,90,160,.32)';rr(ctx,4,4,S-8,S-8,S*.2);ctx.fill();
-  ctx.strokeStyle='rgba(255,150,200,'+(.55+.15*Math.sin(now*.004+c))+')';
-  ctx.lineWidth=2;rr(ctx,4,4,S-8,S-8,S*.2);ctx.stroke();
-  ctx.fillStyle='rgba(255,255,255,.45)';rr(ctx,S*.14,S*.1,S*.72,S*.26,S*.12);ctx.fill();
+  // Çift katman: koyu mürekkep pembe taban + iç içe çerçeve (iki katman olduğu belli olsun)
+  if(layer>=2){
+    ctx.fillStyle='rgba(214,40,130,.62)';rr(ctx,1,1,S-2,S-2,S*.24);ctx.fill();
+    ctx.strokeStyle='rgba(255,255,255,.5)';ctx.lineWidth=2;
+    rr(ctx,S*.18,S*.18,S*.64,S*.64,S*.12);ctx.stroke();}
+  // Tek/üst katman: canlı pembe jöle — daha belirgin
+  ctx.fillStyle='rgba(255,70,155,'+(layer>=2?.5:.55)+')';rr(ctx,3,3,S-6,S-6,S*.2);ctx.fill();
+  // Işıltılı animasyonlu kenar
+  const pulse=.75+.25*Math.sin(now*.004+c*1.7+r);
+  ctx.strokeStyle='rgba(255,170,215,'+pulse+')';ctx.lineWidth=3;
+  rr(ctx,3,3,S-6,S-6,S*.2);ctx.stroke();
+  // Dış beyaz halo — jöleyi tahtadan ayırır
+  ctx.strokeStyle='rgba(255,255,255,.34)';ctx.lineWidth=1.5;
+  rr(ctx,1.5,1.5,S-3,S-3,S*.22);ctx.stroke();
+  // Kalın parlak cam bandı
+  ctx.fillStyle='rgba(255,255,255,.62)';rr(ctx,S*.14,S*.08,S*.72,S*.3,S*.13);ctx.fill();
+  ctx.fillStyle='rgba(255,255,255,.4)';rr(ctx,S*.2,S*.42,S*.32,S*.14,S*.07);ctx.fill();
+  // Küçük hava kabarcıkları (canlı jöle hissi)
+  ctx.fillStyle='rgba(255,255,255,.5)';
+  const bx=S*.68+Math.sin(now*.002+c)*S*.03,by=S*.68+Math.cos(now*.0023+r)*S*.03;
+  ctx.beginPath();ctx.arc(bx,by,S*.045,0,TAU);ctx.fill();
+  ctx.beginPath();ctx.arc(S*.3+Math.sin(now*.0018+r)*S*.02,S*.78,S*.032,0,TAU);ctx.fill();
   ctx.restore();}
 function drawTile(tl,now,hintSet){
   if(tl.alpha<=0||tl.scale<=0)return;
