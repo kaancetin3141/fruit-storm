@@ -22,8 +22,18 @@ public/themes/
 │   └── sp_r.png (Gökkuşağı lolipop — 5'li eşleşme)
 ├── realistic/           ← Gerçekçi stil (alternatif, 6 meyve, özel şeker yok)
 │   └── fr0-5.png
-└── halloween/           ← Cadılar Bayramı etkinlik teması (örnek - boş)
-    └── fr0-7.png + sp_h/b/r.png  ← Kendi etkinlik asset'lerinizi koyun
+└── halloween/           ← Cadılar Bayramı etkinlik teması (11 asset hazır!)
+    ├── fr0.png (Balkabağı 🎃 — Jack-o'-lantern)
+    ├── fr1.png (Mısır şeker 🌽 — candy corn)
+    ├── fr2.png (İksir şişesi ⚗️ — mor iksir)
+    ├── fr3.png (Slom yaratık 🟢 — yeşil balçık)
+    ├── fr4.png (Yarasa şeker 🦇 — mor)
+    ├── fr5.png (Cadı şapkası 🧙 — turuncu)
+    ├── fr6.png (Kafatası jölesi 💀 — pembe/kırmızı)
+    ├── fr7.png (Hayalet muz 👻 — muz hayalet kostümünde)
+    ├── sp_h.png (Cadılar Bayramı çizgili şeker — siyah/turuncu)
+    ├── sp_b.png (Fırın bombası 🍲 — siyah kazan, yeşil iksir)
+    └── sp_r.png (Büyü lolipopi 🌀 — mor/yeşil girdap)
 ```
 
 ## 🎨 Yeni Tema Ekleme

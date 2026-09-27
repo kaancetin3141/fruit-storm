@@ -1397,6 +1397,19 @@ function drawLockTile(c,layers){
   for(let i=0;i<n;i++){const sx=34+i*26,sy=32+i*20;
     c.beginPath();c.moveTo(sx,sy);c.lineTo(sx+12,sy+18);c.lineTo(sx+6,sy+34);c.stroke();}
   c.restore();}
+function drawChocoTile(c){
+  // Çikolata tablosu: koyu kahve gövde + segment olukları + parlak highlight
+  const g=c.createLinearGradient(16,10,112,120);
+  g.addColorStop(0,'#9A6538');g.addColorStop(.45,'#6B4226');g.addColorStop(1,'#4A2A14');
+  rr(c,10,10,108,108,24);c.fillStyle=g;c.fill();
+  c.strokeStyle='rgba(40,20,8,.9)';c.lineWidth=5;rr(c,10,10,108,108,24);c.stroke();
+  c.strokeStyle='rgba(40,20,8,.75)';c.lineWidth=5;c.lineCap='round';
+  c.beginPath();c.moveTo(64,16);c.lineTo(64,112);c.moveTo(16,64);c.lineTo(112,64);c.stroke();
+  c.fillStyle='rgba(255,255,255,.22)';rr(c,19,17,90,26,13);c.fill();
+  c.fillStyle='rgba(255,255,255,.55)';c.beginPath();c.arc(31,31,6,0,TAU);c.fill();
+  // ısırık izi (sağ üst)
+  c.fillStyle='#C9A3E8';c.beginPath();c.arc(96,26,13,0,TAU);c.arc(108,40,10,0,TAU);c.fill();
+  c.fillStyle='rgba(40,20,8,.35)';c.beginPath();c.arc(96,26,8,0,TAU);c.arc(106,39,6,0,TAU);c.fill();}
 function drawClockBadge(c){
   c.fillStyle='rgba(255,255,255,.97)';c.beginPath();c.arc(98,30,21,0,TAU);c.fill();
   c.strokeStyle='#F5942E';c.lineWidth=5;c.beginPath();c.arc(98,30,21,0,TAU);c.stroke();
@@ -1408,7 +1421,7 @@ function makeSprite(fn,size){
   fn(m.getContext('2d'));
   const o=document.createElement('canvas');o.width=o.height=size;
   o.getContext('2d').drawImage(m,0,0,size,size);return o;}
-let SPR=[],RBS=null,BICONS=[],STONE_SPR=[],LOCK_SPR=[],BON_SPR=null;
+let SPR=[],RBS=null,BICONS=[],STONE_SPR=[],LOCK_SPR=[],BON_SPR=null,CHOCO_SPR=null;
 // Cached 128x128 master sprites (built once, scaled to any size on demand)
 let MASTER_SPR=null;
 function buildMasterSprites(){
@@ -1425,7 +1438,8 @@ function buildMasterSprites(){
   MASTER_SPR._stone=[master128(c=>drawStoneTile(c,2)),master128(c=>drawStoneTile(c,1))];
   MASTER_SPR._lock=[master128(c=>drawLockTile(c,1)),master128(c=>drawLockTile(c,2))];
   MASTER_SPR._rainbow=EXT_SPECIALS.r||master128(drawRainbowCandy);
-  MASTER_SPR._bonus=master128(drawClockBadge);}
+  MASTER_SPR._bonus=master128(drawClockBadge);
+  MASTER_SPR._choco=master128(drawChocoTile);}
 function master128(fn){const m=document.createElement('canvas');m.width=m.height=128;fn(m.getContext('2d'));return m;}
 function fruitBase(i){return EXT_FRUITS[i]||master128(FRUITS[i].draw);}
 function buildFruitSprites(size){
@@ -1435,7 +1449,8 @@ function buildFruitSprites(size){
   RBS=scaled(MASTER_SPR._rainbow);
   STONE_SPR=[scaled(MASTER_SPR._stone[0]),scaled(MASTER_SPR._stone[1])];
   LOCK_SPR=[scaled(MASTER_SPR._lock[0]),scaled(MASTER_SPR._lock[1])];
-  BON_SPR=scaled(MASTER_SPR._bonus);}
+  BON_SPR=scaled(MASTER_SPR._bonus);
+  CHOCO_SPR=scaled(MASTER_SPR._choco);}
 function buildIcons(){BICONS=FRUITS.map((f,i)=>fruitBase(i));}
 function refreshAllSprites(){
   buildIcons();
@@ -1483,7 +1498,7 @@ function newTile(type,special){
 const cellPx=c=>ox+c*S+S/2,cellPy=r=>oy+r*S+S/2;
 function allTiles(){const o=[];for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++)if(board[r]&&board[r][c])o.push(board[r][c]);return o;}
 function snapAll(){allTiles().forEach(tl=>{tl.px=cellPx(tl.c);tl.py=cellPy(tl.r);});}
-function isBlocked(tl){return!tl||tl.type===-2||tl.locked>0;}
+function isBlocked(tl){return!tl||tl.type<0||tl.locked>0;}
 function tween(obj,to,dur,ease,delay){
   return new Promise(res=>tweens.push({obj:obj,to:to,from:null,dur:Math.max(1,dur),t:-(delay||0),ease:ease||easeOutQuad,res:res}));}
 function updateTweens(dt){
@@ -1618,6 +1633,13 @@ function hitLock(r,c,all){
   addScore(30);Sfx.ice();
   parts.push({kind:'spark',x:tl.px,y:tl.py,size:9,life:0,max:260});
   if(tl.locked===0){tl.flash=1;floatText(tl.px,tl.py,'✓');}}
+function hitChoco(r,c){
+  const tl=board[r][c];
+  if(!tl||tl.type!==-3)return;
+  board[r][c]=null;
+  addScore(60);floatText(tl.px,tl.py,'60');
+  Sfx.crack();vibrate(20);shake(2,120);
+  juice(tl.px,tl.py,'#6B4226');debris(tl.px,tl.py,'#6B4226');}
 async function explodeCells(seedCells,combo,exclude,fast){
   exclude=exclude||new Set();fast=!!fast;
   const destroyed=new Set(),seen=new Set(),q=[],fx=[];
@@ -1632,6 +1654,7 @@ async function explodeCells(seedCells,combo,exclude,fast){
     const tl=board[r][c];
     if(!tl){jellyDec(r,c);continue;}
     if(tl.type===-2){hitStone(r,c);continue;}
+    if(tl.type===-3){hitChoco(r,c);continue;}
     if(tl.locked>0){hitLock(r,c,true);if(tl.locked>0)continue;}
     destroyed.add(r*COLS+c);
     if(tl.special==='lineH'){for(let cc=0;cc<COLS;cc++)push(r,cc);fx.push({kind:'ray',dir:'h',pos:tl.py});Sfx.zap();}
@@ -1654,6 +1677,7 @@ async function explodeCells(seedCells,combo,exclude,fast){
       if(splashed.has(kk)||exclude.has(kk))return;
       const nb=board[r2][c2];if(!nb)return;
       if(nb.type===-2){splashed.add(kk);hitStone(r2,c2);}
+      else if(nb.type===-3){splashed.add(kk);hitChoco(r2,c2);}
       else if(nb.locked>0){splashed.add(kk);hitLock(r2,c2,false);}});});
   const mult=1+(combo-1)*.5;
   let gained=0;const pops=[];
@@ -1702,9 +1726,9 @@ async function settleBoard(tok){
   for(let c=0;c<COLS;c++){
     let bottom=ROWS-1;
     while(bottom>=0){
-      if(board[bottom][c]&&board[bottom][c].type===-2){bottom--;continue;}
+      if(board[bottom][c]&&board[bottom][c].type<0){bottom--;continue;}
       let top=bottom;
-      while(top>=0&&!(board[top][c]&&board[top][c].type===-2))top--;
+      while(top>=0&&!(board[top][c]&&board[top][c].type<0))top--;
       let write=bottom;
       for(let r=bottom;r>top;r--){
         const tl=board[r][c];
@@ -1829,7 +1853,7 @@ async function trySwap(r1,c1,r2,c2){
   if(performance.now()<inputLockUntil)return;
   const a=board[r1][c1],b=board[r2][c2];
   if(!a||!b)return;
-  if(a.type===-2||b.type===-2){Sfx.bad();shake(2,120);return;}
+  if(a.type<0||b.type<0){Sfx.bad();shake(2,120);return;}
   if(a.locked>0||b.locked>0){Sfx.bad();shake(2,120);return;}
   busy=true;sel=null;hintMove=null;idleT=0;
   const tok=runToken;
@@ -1866,6 +1890,7 @@ async function detonateSpecial(r,c){
   if(busy||finished||pausedFlag||state!=='play')return;
   const tl=board[r][c];
   if(!tl||!tl.special)return;
+  spreadPaused=true; // ücretsiz patlatma çikolatayı büyütmez
   busy=true;sel=null;hintMove=null;idleT=0;
   const tok=runToken;
   Sfx.whoosh();
@@ -1965,7 +1990,7 @@ function getLevel(n){
   if(n<=4)movesN=9+n;
   else movesN=Math.max(14,21-((n/3)|0))-(diff==='hard'?2:diff==='epic'?4:0)+((rng()*3)|0);
   const base=Math.round((n<=4?800+n*500:700+n*380+Math.pow(n,1.4)*60)*mult);
-  const L={n:n,kinds:kinds,moves:movesN,mode:mode,diff:diff,collect:[],stones:[],locked:[],jellyCells:[],time:0};
+  const L={n:n,kinds:kinds,moves:movesN,mode:mode,diff:diff,collect:[],stones:[],locked:[],choco:[],jellyCells:[],time:0};
   if(mode==='time'){
     L.time=Math.max(45,70-((n/10)|0)*2);
     L.target=Math.round(base*.75);L.t2=Math.round(base*1.15);L.t3=Math.round(base*1.55);}
@@ -2005,6 +2030,16 @@ function getLevel(n){
       used.add(r*COLS+c);
       L.locked.push([r,c,(diff==='epic'&&cnt%2===0)?2:1]);
       cnt--;}}
+  if(n>=12){
+    let cnt=Math.min(4,1+(((n-12)/5)|0))+(diff==='epic'?1:0);
+    const used=new Set(L.stones.map(s=>s[0]*COLS+s[1]).concat(L.locked.map(l=>l[0]*COLS+l[1])).concat(L.jellyCells.map(j=>j[0]*COLS+j[1])));
+    let guard=0;
+    while(cnt>0&&guard++<80){
+      const r=1+((rng()*(ROWS-2))|0),c=(rng()*COLS)|0;
+      if(used.has(r*COLS+c))continue;
+      used.add(r*COLS+c);
+      L.choco.push([r,c]);
+      cnt--;}}
   return L;}
 function assignBonuses(){
   if(!curLevel||curLevel.mode!=='time')return;
@@ -2026,6 +2061,27 @@ function missionDone(){return!curLevel.collect.length||curLevel.collect.every(cl
 function levelWon(){
   return curLevel.mode==='jelly'?jellyLeft<=0:
     (curLevel.mode==='score'||curLevel.mode==='time')?score>=curLevel.target:missionDone();}
+let spreadPaused=false;
+function spreadChoco(){
+  if(spreadPaused){spreadPaused=false;return;}
+  if(!curLevel||!curLevel.choco||!curLevel.choco.length)return;
+  const chocoTiles=allTiles().filter(tl=>tl.type===-3);
+  if(!chocoTiles.length||chocoTiles.length>=6)return;
+  const list=chocoTiles.slice();
+  for(let i=list.length-1;i>0;i--){const j=irand(i+1);const tmp=list[i];list[i]=list[j];list[j]=tmp;}
+  for(const ch of list){
+    const nbs=[[1,0],[-1,0],[0,1],[0,-1]].map(d=>[ch.r+d[0],ch.c+d[1]])
+      .filter(rc=>rc[0]>=0&&rc[0]<ROWS&&rc[1]>=0&&rc[1]<COLS)
+      .filter(rc=>{const tl=board[rc[0]][rc[1]];return tl&&tl.type>=0&&tl.locked===0&&!tl.bonus;});
+    if(nbs.length){
+      const rc2=nbs[irand(nbs.length)],r=rc2[0],c=rc2[1];
+      const old=board[r][c];
+      const ch2=newTile(-3);ch2.r=r;ch2.c=c;ch2.px=old.px;ch2.py=old.py;ch2.scale=.4;
+      board[r][c]=ch2;
+      tween(ch2,{scale:1},260,easeOutBack);
+      juice(ch2.px,ch2.py,'#6B4226');
+      Sfx.crack();vibrate(15);
+      return;}}}
 function afterMove(tok){
   (async()=>{
     if(tok!==runToken)return;
@@ -2040,6 +2096,7 @@ function afterMove(tok){
       if(tok!==runToken)return;
       finishLose();
     }else{
+      spreadChoco();
       hintMove=null;
       if(!findAnyMove())await shuffleBoard();
       busy=false;idleT=0;}})();}
@@ -2206,6 +2263,11 @@ function startLevel(n){
   curLevel.locked.forEach(l=>{
     const tl=board[l[0]][l[1]];
     if(tl&&tl.type>=0)tl.locked=l[2];});
+  curLevel.choco.forEach(s=>{
+    if(board[s[0]]&&board[s[0]][s[1]]&&board[s[0]][s[1]].type>=0&&!jelly[s[0]][s[1]]){
+      const ch=newTile(-3);ch.r=s[0];ch.c=s[1];
+      ch.px=cellPx(s[1]);ch.py=cellPy(s[0]);ch.scale=0;
+      board[s[0]][s[1]]=ch;}});
   if(!findAnyMove())randomizeFreeTypes();
   assignBonuses();
   hideOverlays();
@@ -2227,6 +2289,7 @@ function startLevel(n){
   if(curLevel.locked.length&&!Save.data.tut.ice){Save.data.tut.ice=1;Save.write();setTimeout(()=>toast(t('tutIce'),3200),2400);}
   else if(curLevel.stones.length&&!Save.data.tut.stone){Save.data.tut.stone=1;Save.write();setTimeout(()=>toast(t('tutStone'),3200),2400);}
   if(curLevel.mode==='jelly'&&!Save.data.tut.jelly){Save.data.tut.jelly=1;Save.write();setTimeout(()=>toast(t('tutJelly'),3200),2600);}
+  if(curLevel.choco.length&&!Save.data.tut.choco){Save.data.tut.choco=1;Save.write();setTimeout(()=>toast(t('tutChoco'),3400),3000);}
   if(n===1&&!Save.data.seenTut){Save.data.seenTut=true;Save.write();}
   // Start interactive tutorial for first 4 levels
   if(n<=4&&!Save.data.tut['lvl'+n]){
@@ -2263,6 +2326,7 @@ async function hammerHit(r,c){
   await sleep(230);
   const tok=runToken;
   if(tl.type===-2)hitStone(r,c);
+  else if(tl.type===-3){hitChoco(r,c);await settleBoard(tok);await resolveBoard(null,tok);}
   else if(tl.locked>0)hitLock(r,c,true);
   else{
     await explodeCells([{r:r,c:c}],1);
@@ -2405,6 +2469,7 @@ function drawTile(tl,now,hintSet){
   if(tl.special==='rainbow')ctx.rotate(now*.0012);
   let img;
   if(tl.type===-2)img=STONE_SPR[Math.min(1,Math.max(0,tl.hp-1))];
+  else if(tl.type===-3)img=CHOCO_SPR;
   else img=tl.special==='rainbow'?RBS:
     tl.special==='lineH'?SPR[tl.type].h:
     tl.special==='lineV'?SPR[tl.type].v:
@@ -2613,6 +2678,18 @@ const TUT_I18N_TEMP={
 Object.keys(I).forEach(l=>{
   if(TUT_I18N_TEMP[l])Object.assign(I[l],TUT_I18N_TEMP[l]);
   else if(TUT_I18N_TEMP.en)Object.assign(I[l],TUT_I18N_TEMP.en);});
+const CHOCO_I18N={
+  tr:{tutChoco:'🍫 Çikolata: komşusunda eşleştir, yoksa yayılır!'},
+  en:{tutChoco:'🍫 Chocolate: match next to it before it spreads!'},
+  de:{tutChoco:'🍫 Schokolade: daneben matchen, bevor sie sich ausbreitet!'},
+  es:{tutChoco:'🍫 Chocolate: combina al lado antes de que se extienda!'},
+  fr:{tutChoco:'🍫 Chocolat : aligne à côté avant qu\u2019il ne s\u2019étende !'},
+  it:{tutChoco:'🍫 Cioccolato: abbina accanto prima che si espanda!'},
+  pt:{tutChoco:'🍫 Chocolate: combine ao lado antes que se espalhe!'},
+  ru:{tutChoco:'🍫 Шоколад: собирай рядом, пока он не распространился!'}};
+Object.keys(I).forEach(l=>{
+  if(CHOCO_I18N[l])Object.assign(I[l],CHOCO_I18N[l]);
+  else if(CHOCO_I18N.en)Object.assign(I[l],CHOCO_I18N.en);});
 const TUTORIAL_STEPS={
   1:[ // Level 1: Basic matching
     {type:'highlight',text:'tutSwipe',dur:4000},
@@ -3819,7 +3896,7 @@ function wireInput(){
     if(busy||finished)return;
     if(performance.now()<inputLockUntil)return;
     const tl=board[rc.r][rc.c];
-    if(!tl||tl.type===-2||tl.locked>0)return;
+    if(!tl||tl.type<0||tl.locked>0)return;
     // Double-tap to detonate a special candy
     const now=performance.now();
     if(tl.special&&now-lastTapTime<320&&lastTapR===rc.r&&lastTapC===rc.c){
