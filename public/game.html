@@ -38,7 +38,7 @@ canvas{display:block}
 #burn.t1{opacity:.4}
 #burn.t2{opacity:.9;animation:burnPulse .9s ease-in-out infinite}
 @keyframes burnPulse{50%{opacity:.45}}
-.screen{position:fixed;inset:0;z-index:1;display:flex;flex-direction:column;opacity:0;pointer-events:none;transition:opacity .3s}
+.screen{position:fixed;inset:0;z-index:1;display:flex;flex-direction:column;opacity:0;pointer-events:none;visibility:hidden;transition:opacity .3s,visibility .3s}
 /* Noel kar yağışı (DOM overlay — tema christmas iken) */
 #snowfall{position:fixed;inset:0;pointer-events:none;z-index:2;overflow:hidden}
 #snowfall i{position:absolute;top:-14px;display:block;border-radius:50%;
@@ -91,11 +91,38 @@ body.theme-halloween .qa-btn{background:linear-gradient(150deg,#45296E,#2C1A47);
   box-shadow:0 4px 14px rgba(92,46,145,.45),inset 0 1px 0 rgba(255,255,255,.25);
   display:none;align-items:center;gap:6px;white-space:nowrap;pointer-events:none}
 #seasonBadge.show{display:flex;animation:seasonIn .55s cubic-bezier(.2,.9,.3,1.35)}
+/* Kademe yükseltme pulse — profil rozeti */
+#profileChip.tier-pop{animation:tierPop 1.25s cubic-bezier(.2,.9,.3,1.4)}
+@keyframes tierPop{0%{transform:scale(1)}28%{transform:scale(1.16) rotate(-2.5deg);filter:brightness(1.3) saturate(1.2)}
+  55%{transform:scale(.96) rotate(1deg)}75%{transform:scale(1.05)}100%{transform:scale(1)}}
 @keyframes seasonIn{from{opacity:0;transform:translate(-50%,-16px)}to{opacity:1;transform:translate(-50%,0)}}
 @media(max-width:560px){#seasonBadge{font-size:10.5px;padding:5px 11px;top:52px}}
 body.theme-christmas .boostBtn{background:linear-gradient(160deg,#FDFEFF,#DCE8FA)}
 body.theme-christmas .p-card{box-shadow:0 4px 16px rgba(30,42,84,.38),inset 0 0 0 1px rgba(220,234,252,.6)}
-.screen.active{opacity:1;pointer-events:auto}
+/* Sevgililer günü gül yaprağı yağmuru (DOM overlay — tema valentine iken) */
+#petalfall{position:fixed;inset:0;pointer-events:none;z-index:2;overflow:hidden}
+#petalfall i{position:absolute;top:-22px;display:block;
+  border-radius:62% 62% 62% 8%;
+  background:linear-gradient(135deg,#FF9CC7,#E8455A);
+  box-shadow:inset -1px -1px 2px rgba(120,20,50,.25);
+  animation:petalFall linear infinite;transform-origin:50% 0;will-change:transform}
+#petalfall i:nth-child(2n){background:linear-gradient(135deg,#FFC2DA,#FF6FB5)}
+#petalfall i:nth-child(3n){background:linear-gradient(135deg,#FFE3EC,#FF9CC7)}
+#petalfall i:nth-child(5n){border-radius:8% 62% 62% 62%}
+@keyframes petalFall{
+  0%{transform:translate(0,-4vh) rotate(0)}
+  25%{transform:translate(4vw,26vh) rotate(95deg)}
+  50%{transform:translate(-3vw,52vh) rotate(200deg)}
+  75%{transform:translate(3vw,78vh) rotate(285deg)}
+  100%{transform:translate(-2vw,106vh) rotate(380deg)}}
+body.reduce-motion #petalfall{display:none}
+body.theme-valentine #tint{background:radial-gradient(circle at 50% 42%,rgba(255,214,232,.5),rgba(255,140,190,.24) 58%,transparent 76%)}
+body.theme-valentine .panel{box-shadow:0 10px 34px rgba(120,30,70,.35),inset 0 0 0 1.5px rgba(255,200,225,.85),0 0 26px rgba(255,110,170,.28)}
+body.theme-valentine .boostBtn{background:linear-gradient(160deg,#FFE9F2,#FFC7DC);border-color:#F06FA8}
+body.theme-valentine .boostBtn .cnt{background:#E8455A;box-shadow:0 2px 0 #B82844}
+body.theme-valentine .qa-btn{background:linear-gradient(150deg,#FFDCE9,#FFB8D3);border-color:#F06FA8;color:#8A2447}
+body.theme-valentine .p-card{box-shadow:0 4px 16px rgba(120,30,70,.3),inset 0 0 0 1px rgba(255,200,225,.6)}
+.screen.active{opacity:1;pointer-events:auto;visibility:visible}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;color:#fff;font-weight:600;
   font-size:17px;border-radius:18px;padding:13px 26px;
   box-shadow:0 5px 0 var(--sh,#333),0 8px 14px rgba(74,36,86,.3);text-shadow:0 2px 0 rgba(0,0,0,.16);
@@ -1443,8 +1470,8 @@ const FRUITS=[
 const EXT_FRUITS=[null,null,null,null,null,null,null,null];
 let THEME_LIST=[{id:'default',name:'Klasik'}]; // populated from config.json
 /* Sezonluk otomatik tema: tarih aralıkları (AA-GG) — window sarmalı destekli */
-const SEASON_WINDOWS={halloween:['09-20','11-10'],christmas:['12-01','01-06']};
-const SEASON_EMOJI={halloween:'🎃',christmas:'🎄'};
+const SEASON_WINDOWS={halloween:['09-20','11-10'],christmas:['12-01','01-06'],valentine:['02-01','02-20']};
+const SEASON_EMOJI={halloween:'🎃',christmas:'🎄',valentine:'💝'};
 function dateMD(){const d=new Date();const p=n=>String(n).padStart(2,'0');return p(d.getMonth()+1)+'-'+p(d.getDate());}
 function seasonalThemeId(){
   const md=dateMD();
@@ -3167,6 +3194,22 @@ const LVL_I18N={
 Object.keys(I).forEach(l=>{
   if(LVL_I18N[l])Object.assign(I[l],LVL_I18N[l]);
   else if(LVL_I18N.en)Object.assign(I[l],LVL_I18N.en);});
+/* Kademe yükseltme kutlaması: bronz→gümüş→altın→elmas geçişinde özel an */
+const TIER_I18N={
+  tr:{tierUp:'YENİ KADEME!',tierUpSub:'{tier} kademesine yükseldin!',tierSilver:'Gümüş',tierGold:'Altın',tierDiamond:'Elmas'},
+  en:{tierUp:'NEW TIER!',tierUpSub:'You reached the {tier} tier!',tierSilver:'Silver',tierGold:'Gold',tierDiamond:'Diamond'},
+  de:{tierUp:'NEUE STUFE!',tierUpSub:'Du hast die Stufe {tier} erreicht!',tierSilver:'Silber',tierGold:'Gold',tierDiamond:'Diamant'},
+  es:{tierUp:'¡NUEVO RANGO!',tierUpSub:'¡Alcanzaste el rango {tier}!',tierSilver:'Plata',tierGold:'Oro',tierDiamond:'Diamante'},
+  fr:{tierUp:'NOUVEAU RANG !',tierUpSub:'Tu as atteint le rang {tier} !',tierSilver:'Argent',tierGold:'Or',tierDiamond:'Diamant'},
+  it:{tierUp:'NUOVO GRADO!',tierUpSub:'Hai raggiunto il grado {tier}!',tierSilver:'Argento',tierGold:'Oro',tierDiamond:'Diamante'},
+  pt:{tierUp:'NOVO PATAMAR!',tierUpSub:'Você alcançou o patamar {tier}!',tierSilver:'Prata',tierGold:'Ouro',tierDiamond:'Diamante'},
+  ru:{tierUp:'НОВЫЙ РАНГ!',tierUpSub:'Вы достигли ранга {tier}!',tierSilver:'Серебро',tierGold:'Золото',tierDiamond:'Бриллиант'}};
+Object.keys(I).forEach(l=>{
+  if(TIER_I18N[l])Object.assign(I[l],TIER_I18N[l]);
+  else if(TIER_I18N.en)Object.assign(I[l],TIER_I18N.en);});
+const TIER_CONFETTI={silver:['#F4F5FA','#C9CDD8','#A9ABB6','#FFFFFF','#E8EAF2'],
+  gold:['#FFEC9E','#FFD23D','#E8A417','#FFF6C9','#FFB84D'],
+  diamond:['#7CE8D5','#B56CE8','#A8E8F0','#D8C8F0','#FFFFFF']};
 const TUTORIAL_STEPS={
   1:[ // Level 1: Basic matching
     {type:'highlight',text:'tutSwipe',dur:4000},
@@ -3225,12 +3268,15 @@ function drawTutorialFinger(now){
 let sceneCv=null;
 let bgNight=false;
 let bgXmas=false;
+let bgVal=false;
 function buildBgScene(){
   if(!dpr)return;
   const th=resolveThemeId();
   bgNight=(th==='halloween');
   bgXmas=(th==='christmas');
+  bgVal=(th==='valentine');
   if(bgXmas){buildChristmasScene();return;}
+  if(bgVal){buildValentineScene();return;}
   if(bgNight){buildHalloweenScene();return;}
   sceneCv=document.createElement('canvas');
   sceneCv.width=Math.round(innerWidth*dpr);sceneCv.height=Math.round(innerHeight*dpr);
@@ -3445,11 +3491,106 @@ function drawCloud(c,x,y,s){
     c.fillStyle='rgba(198,212,238,.55)';
     c.beginPath();c.arc(x+22*s,y+9*s,15*s,0,Math.PI);c.fill();
     return;}
+  if(bgVal){
+    c.fillStyle='rgba(255,241,247,.95)';
+    c.beginPath();
+    c.arc(x,y,22*s,0,TAU);c.arc(x+24*s,y-8*s,18*s,0,TAU);
+    c.arc(x+46*s,y,20*s,0,TAU);c.arc(x+22*s,y+8*s,17*s,0,TAU);
+    c.fill();
+    c.fillStyle='rgba(255,170,205,.5)';
+    c.beginPath();c.arc(x+22*s,y+9*s,15*s,0,Math.PI);c.fill();
+    return;}
   c.fillStyle=bgNight?'rgba(58,36,96,.85)':'rgba(255,255,255,.9)';
   c.beginPath();
   c.arc(x,y,22*s,0,TAU);c.arc(x+24*s,y-8*s,18*s,0,TAU);
   c.arc(x+46*s,y,20*s,0,TAU);c.arc(x+22*s,y+8*s,17*s,0,TAU);
   c.fill();}
+/* ============ SEVGİLİLER SAHNESİ ============ */
+function buildValentineScene(){
+  if(!dpr)return;
+  sceneCv=document.createElement('canvas');
+  sceneCv.width=Math.round(innerWidth*dpr);sceneCv.height=Math.round(innerHeight*dpr);
+  const c=sceneCv.getContext('2d');c.scale(dpr,dpr);
+  const w=innerWidth,h=innerHeight;
+  // Şafak pembe gökyüzü (gül altın → şeftali → pudra)
+  const sky=c.createLinearGradient(0,0,0,h);
+  sky.addColorStop(0,'#8A2E5C');sky.addColorStop(.28,'#C94F86');
+  sky.addColorStop(.55,'#F28AB4');sky.addColorStop(.8,'#FFC0D8');sky.addColorStop(1,'#FFE9F2');
+  c.fillStyle=sky;c.fillRect(0,0,w,h);
+  // Kalp şeklinde güneş halesi
+  const gx=w*.78,gy=h*.16;
+  const glow=c.createRadialGradient(gx,gy,10,gx,gy,w*.5);
+  glow.addColorStop(0,'rgba(255,236,180,.55)');glow.addColorStop(1,'rgba(255,236,180,0)');
+  c.fillStyle=glow;c.fillRect(0,0,w,h);
+  const heartPath=(x,y,s)=>{c.beginPath();c.moveTo(x,y+s*.32);
+    c.bezierCurveTo(x-s*.5,y-s*.15,x-s*.38,y-s*.5,x,y-s*.22);
+    c.bezierCurveTo(x+s*.38,y-s*.5,x+s*.5,y-s*.15,x,y+s*.32);c.closePath();};
+  // Kalp güneş
+  c.save();
+  const sg=c.createLinearGradient(gx,gy-34,gx,gy+30);
+  sg.addColorStop(0,'#FFE08A');sg.addColorStop(1,'#FF9A5C');
+  c.fillStyle=sg;heartPath(gx,gy,64);c.fill();
+  c.strokeStyle='rgba(255,255,255,.7)';c.lineWidth=3;heartPath(gx,gy,64);c.stroke();
+  c.fillStyle='rgba(255,255,255,.45)';
+  c.beginPath();c.ellipse(gx-14,gy-12,10,6,-.6,0,TAU);c.fill();
+  c.restore();
+  // Uçan kalp balonları (ip + parlak kalp)
+  const balloon=(bx,by,bs,col,col2)=>{
+    c.strokeStyle='rgba(255,255,255,.55)';c.lineWidth=1.6;
+    c.beginPath();c.moveTo(bx,by+bs*.42);c.quadraticCurveTo(bx+7*bs,by+bs*1.1,bx+2*bs,by+bs*1.7);c.stroke();
+    c.save();
+    const bg2=c.createLinearGradient(bx-bs*.4,by-bs*.4,bx+bs*.4,by+bs*.4);
+    bg2.addColorStop(0,col);bg2.addColorStop(1,col2);
+    c.fillStyle=bg2;heartPath(bx,by,bs);c.fill();
+    c.strokeStyle='rgba(255,255,255,.65)';c.lineWidth=2;heartPath(bx,by,bs);c.stroke();
+    c.fillStyle='rgba(255,255,255,.5)';
+    c.beginPath();c.ellipse(bx-bs*.18,by-bs*.16,bs*.14,bs*.09,-.5,0,TAU);c.fill();
+    c.restore();};
+  balloon(w*.12,h*.3,26,'#FF6FB5','#E8455A');
+  balloon(w*.62,h*.36,20,'#FFA5C8','#F06FA8');
+  balloon(w*.9,h*.5,17,'#FFD23D','#FF8AC2');
+  balloon(w*.32,h*.5,14,'#C9A0F0','#B56CE8');
+  // Gül bahçesi tepeleri
+  const hill1=c.createLinearGradient(0,h*.62,0,h*.8);
+  hill1.addColorStop(0,'#F06FA8');hill1.addColorStop(1,'#D14C86');
+  c.fillStyle=hill1;
+  c.beginPath();c.moveTo(0,h*.68);
+  c.bezierCurveTo(w*.22,h*.56,w*.45,h*.7,w*.65,h*.62);
+  c.bezierCurveTo(w*.82,h*.56,w*.94,h*.64,w,h*.6);
+  c.lineTo(w,h);c.lineTo(0,h);c.fill();
+  const hill2=c.createLinearGradient(0,h*.76,0,h*.94);
+  hill2.addColorStop(0,'#C94F86');hill2.addColorStop(1,'#8A2E5C');
+  c.fillStyle=hill2;
+  c.beginPath();c.moveTo(0,h*.8);
+  c.bezierCurveTo(w*.28,h*.7,w*.55,h*.84,w*.78,h*.76);
+  c.bezierCurveTo(w*.9,h*.72,w,h*.78,w,h*.78);
+  c.lineTo(w,h);c.lineTo(0,h);c.fill();
+  // Gül çalıları (tepe üstü)
+  const rose=(rx,ry,rs)=>{
+    c.strokeStyle='#2E7D4F';c.lineWidth=2.2*rs;c.lineCap='round';
+    c.beginPath();c.moveTo(rx,ry+14*rs);c.lineTo(rx,ry);c.stroke();
+    c.fillStyle='#3E9B63';
+    c.beginPath();c.ellipse(rx-6*rs,ry+6*rs,5*rs,2.6*rs,-.5,0,TAU);
+    c.ellipse(rx+6*rs,ry+8*rs,5*rs,2.6*rs,.5,0,TAU);c.fill();
+    c.save();
+    const rg=c.createRadialGradient(rx-3*rs,ry-3*rs,1,rx,ry,9*rs);
+    rg.addColorStop(0,'#FF9CC7');rg.addColorStop(.6,'#E8455A');rg.addColorStop(1,'#A81C3C');
+    c.fillStyle=rg;
+    for(let p=0;p<6;p++){c.save();c.translate(rx,ry);c.rotate(p*TAU/6);
+      c.beginPath();c.ellipse(0,-5.5*rs,4*rs,6*rs,0,0,TAU);c.fill();c.restore();}
+    c.fillStyle='#FFD7E5';c.beginPath();c.arc(rx,ry,3.2*rs,0,TAU);c.fill();
+    c.restore();};
+  rose(w*.08,h*.7,1.5);rose(w*.16,h*.74,1.1);rose(w*.44,h*.66,1.3);
+  rose(w*.58,h*.72,1);rose(w*.78,h*.68,1.6);rose(w*.9,h*.74,1.1);
+  // Yerde yaprak/parıltı
+  for(let i=0;i<30;i++){
+    c.globalAlpha=rand(.25,.6);
+    c.fillStyle=['#FFD7E5','#FFC0D8','#FFE9F2','#fff'][irand(4)];
+    const px=rand(0,w),py=rand(h*.74,h*.97);
+    c.save();c.translate(px,py);c.rotate(rand(0,TAU));
+    c.beginPath();c.ellipse(0,0,rand(3,6),rand(1.6,3),0,0,TAU);c.fill();c.restore();
+    c.globalAlpha=1;}
+  bgClouds=[{x:w*.06,y:h*.12,s:1,v:.008},{x:w*.48,y:h*.2,s:.8,v:.011},{x:w*.8,y:h*.07,s:.9,v:.006},{x:w*.3,y:h*.4,s:.6,v:.009}];}
 /* ============ NOEL SAHNESİ ============ */
 let bgSnow=[];
 function buildChristmasScene(){
@@ -3579,6 +3720,7 @@ function applyThemeDom(){
   const th=resolveThemeId();
   document.body.classList.toggle('theme-christmas',th==='christmas');
   document.body.classList.toggle('theme-halloween',th==='halloween');
+  document.body.classList.toggle('theme-valentine',th==='valentine');
   let sf=document.getElementById('snowfall');
   if(th==='christmas'){
     if(!sf){
@@ -3592,12 +3734,26 @@ function applyThemeDom(){
         sf.appendChild(f);}
       document.body.appendChild(sf);}}
   else if(sf)sf.remove();
+  // Sevgililer günü gül yaprağı yağmuru (DOM overlay — tema valentine iken)
+  let pf=document.getElementById('petalfall');
+  if(th==='valentine'){
+    if(!pf){
+      pf=document.createElement('div');pf.id='petalfall';pf.setAttribute('aria-hidden','true');
+      for(let i=0;i<26;i++){
+        const p=document.createElement('i');
+        const pw=6+Math.random()*9,ph=pw*(1.1+Math.random()*.5);
+        p.style.cssText='left:'+(Math.random()*100).toFixed(2)+'%;width:'+pw.toFixed(1)+'px;height:'+ph.toFixed(1)+'px;'+
+          'animation-duration:'+(9+Math.random()*11).toFixed(1)+'s;animation-delay:-'+(Math.random()*16).toFixed(1)+'s;'+
+          'opacity:'+(0.4+Math.random()*.45).toFixed(2)+';';
+        pf.appendChild(p);}
+      document.body.appendChild(pf);}}
+  else if(pf)pf.remove();
   updateSeasonBadge();}
-function confettiBurst(){
-  const cols=['#FF6FB5','#7B61E8','#FFD23D','#4CC9A8','#B56CE8','#7CE8D5'];
+function confettiBurst(cols){
+  const palette=cols||['#FF6FB5','#7B61E8','#FFD23D','#4CC9A8','#B56CE8','#7CE8D5'];
   for(let i=0;i<110;i++)fxParts.push({x:rand(0,innerWidth),y:rand(-180,-10),
     vx:rand(-.05,.05),vy:rand(.07,.18),w:rand(6,11),h:rand(9,16),
-    rot:rand(0,TAU),vr:rand(-.006,.006),color:cols[irand(cols.length)]});}
+    rot:rand(0,TAU),vr:rand(-.006,.006),color:palette[irand(palette.length)]});}
 function updateBg(dt,now){
   bctx.clearRect(0,0,innerWidth,innerHeight);
   if(!sceneCv)return;
@@ -3831,6 +3987,7 @@ function xpNeed(l){return 100+(l-1)*50;}
 function gainXp(n,src){
   if(!(n>0))return;
   const d=Save.data;
+  const oldTier=lvTier(d.plevel);
   d.xp=(d.xp||0)+n;
   let leveled=false;
   while(d.xp>=xpNeed(d.plevel)){
@@ -3849,6 +4006,19 @@ function gainXp(n,src){
     gp.textContent='⬆ Lv '+d.plevel+' · +'+(40+((d.plevel-2)%3)*10)+'💰';
     document.body.appendChild(gp);
     setTimeout(()=>{if(gp.parentNode)gp.parentNode.removeChild(gp);},1500);
+    // Kademe yükseltmesi (bronz→gümüş→altın→elmas): kademe renklerinde ikinci konfeti + rozet pulse
+    const newTier=lvTier(d.plevel);
+    if(newTier!==oldTier&&TIER_CONFETTI[newTier]){
+      setTimeout(()=>{
+        confettiBurst(TIER_CONFETTI[newTier]);
+        Sfx.win();
+        const tname=t('tier'+newTier.charAt(0).toUpperCase()+newTier.slice(1))||newTier;
+        showBanner('🏅 '+t('tierUp'));
+        toast('🏅 '+t('tierUpSub').replace('{tier}',tname),3400);
+        const chip=$('#profileChip');
+        if(chip){chip.classList.remove('tier-pop');void chip.offsetWidth;chip.classList.add('tier-pop');
+          setTimeout(()=>chip.classList.remove('tier-pop'),1400);}
+      },650);}
   }else{Save.write();updateXpUI();}}
 function updateXpUI(){
   const d=Save.data;

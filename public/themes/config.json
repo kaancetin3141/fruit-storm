@@ -23,6 +23,12 @@
       "folder": "christmas",
       "fruits": ["fr0.png", "fr1.png", "fr2.png", "fr3.png", "fr4.png", "fr5.png", "fr6.png", "fr7.png"],
       "specials": ["sp_h.png", "sp_b.png", "sp_r.png"]
+    },
+    "valentine": {
+      "name": "Sevgililer 💝",
+      "folder": "valentine",
+      "fruits": ["fr0.png", "fr1.png", "fr2.png", "fr3.png", "fr4.png", "fr5.png", "fr6.png", "fr7.png"],
+      "specials": ["sp_h.png", "sp_b.png", "sp_r.png"]
     }
   }
 }
