@@ -600,6 +600,18 @@ body.reduce-motion #hFill::before{animation:none}
 .rank-season .rs-label{color:#8A6DB0}
 .rank-season .rs-time{background:#6A2BB8;color:#fff;padding:2px 10px;border-radius:9px;
   font-variant-numeric:tabular-nums;font-weight:700;box-shadow:0 2px 0 var(--epic-d)}
+/* Klan entegrasyonu — satır pill + özet şeridi */
+.rclan{display:inline-block;font-size:9.5px;font-weight:800;color:#7C42B8;letter-spacing:.2px;
+  background:linear-gradient(135deg,rgba(140,90,190,.14),rgba(140,90,190,.22));
+  border:1px solid rgba(140,90,190,.35);padding:1px 7px;border-radius:999px;
+  margin-left:4px;vertical-align:1px;white-space:nowrap;max-width:110px;overflow:hidden;text-overflow:ellipsis}
+.rrow.you .rclan{color:#8A5A10;background:linear-gradient(135deg,rgba(255,178,32,.16),rgba(255,178,32,.26));border-color:rgba(220,150,20,.45)}
+.rank-clan{display:flex;align-items:center;gap:8px;margin:0 0 10px;padding:8px 12px;
+  background:linear-gradient(135deg,#F3E8FF,#FFE8F4);border-radius:14px;
+  box-shadow:0 3px 0 #D8C0E8;font-size:12.5px;font-weight:600;color:#6A4D8C}
+.rank-clan .rkc-ic{font-size:16px}
+.rank-clan .rkc-name{font-weight:800;color:#7C42B8;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rank-clan .rkc-meta{color:#9A7AB8;font-size:11.5px;white-space:nowrap}
 .srow{display:flex;align-items:center;gap:10px;background:#fff;border-radius:15px;padding:9px 11px;margin-bottom:8px;box-shadow:0 2px 0 #EFD5F2}
 .srow .sic{width:44px;height:44px;border-radius:13px;display:flex;align-items:center;justify-content:center;flex:none;font-size:22px}
 .srow .snm{flex:1;font-weight:600;font-size:14px}
@@ -891,6 +903,7 @@ body.reduce-motion #btnWheel.hasdot::after{animation:none!important}
   <button class="panel-x" data-close="ov-rank"><svg viewBox="0 0 24 24" fill="none"><path d="M5 5l14 14M19 5L5 19" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"/></svg></button>
   <h2 data-i="ranks">Liderlik</h2><div class="sub" data-i="rankSub">Haftalık yıldız sıralaması</div>
   <div id="rankSeason" class="rank-season"></div>
+  <div id="rankClan" class="rank-clan" style="display:none"></div>
   <div id="rankList"></div>
 </div></div>
 
@@ -3210,6 +3223,13 @@ Object.keys(I).forEach(l=>{
 const TIER_CONFETTI={silver:['#F4F5FA','#C9CDD8','#A9ABB6','#FFFFFF','#E8EAF2'],
   gold:['#FFEC9E','#FFD23D','#E8A417','#FFF6C9','#FFB84D'],
   diamond:['#7CE8D5','#B56CE8','#A8E8F0','#D8C8F0','#FFFFFF']};
+const CLAN2_I18N={
+  tr:{memberShort:'üye'},en:{memberShort:'member'},de:{memberShort:'Mitglieder'},
+  es:{memberShort:'miembros'},fr:{memberShort:'membres'},it:{memberShort:'membri'},
+  pt:{memberShort:'membros'},ru:{memberShort:'участников'}};
+Object.keys(I).forEach(l=>{
+  if(CLAN2_I18N[l])Object.assign(I[l],CLAN2_I18N[l]);
+  else if(CLAN2_I18N.en)Object.assign(I[l],CLAN2_I18N.en);});
 const TUTORIAL_STEPS={
   1:[ // Level 1: Basic matching
     {type:'highlight',text:'tutSwipe',dur:4000},
@@ -3748,7 +3768,8 @@ function applyThemeDom(){
         pf.appendChild(p);}
       document.body.appendChild(pf);}}
   else if(pf)pf.remove();
-  updateSeasonBadge();}
+  updateSeasonBadge();
+  renderMascot();} // maskot kostümü temayla değişsin
 function confettiBurst(cols){
   const palette=cols||['#FF6FB5','#7B61E8','#FFD23D','#4CC9A8','#B56CE8','#7CE8D5'];
   for(let i=0;i<110;i++)fxParts.push({x:rand(0,innerWidth),y:rand(-180,-10),
@@ -3855,7 +3876,60 @@ function drawKiraz(c,mood,blink){
     c.beginPath();c.arc(65,88,9,.25*Math.PI,.75*Math.PI);c.stroke();}
   c.fillStyle='rgba(255,120,130,.45)';
   c.beginPath();c.ellipse(36,90,6,4,0,0,TAU);c.ellipse(94,90,6,4,0,0,TAU);c.fill();
+  drawMascotCostume(c,resolveThemeId());
   c.restore();}
+/* Maskot tema kostümleri — aktif temaya göre Kiraz kostüm değiştirir */
+function drawMascotCostume(c,th){
+  if(th==='halloween'){
+    // Cadı şapkası: mor koni + geniş kenar + altın toka
+    c.save();c.translate(63,36);c.rotate(-.16);
+    const g=c.createLinearGradient(-20,-44,18,0);
+    g.addColorStop(0,'#8A50D8');g.addColorStop(1,'#3A1E63');
+    c.fillStyle=g;
+    c.beginPath();c.moveTo(-20,0);
+    c.quadraticCurveTo(-8,-26,12,-46);
+    c.quadraticCurveTo(17,-52,22,-45);
+    c.quadraticCurveTo(18,-20,20,0);
+    c.closePath();c.fill();
+    c.beginPath();c.ellipse(19,-46,8,5.5,.55,0,TAU);c.fill(); // bükülmüş uç
+    c.fillStyle='#2C1747';
+    c.beginPath();c.ellipse(0,2,31,7.5,0,0,TAU);c.fill();
+    c.fillStyle='#4A2A78';
+    c.beginPath();c.ellipse(0,-.5,31,7.5,0,0,TAU);c.fill();
+    c.fillStyle='#FFD23D';c.fillRect(-8,-4.5,15,8); // toka
+    c.fillStyle='#2C1747';c.fillRect(-4.5,-2.5,6,4);
+    c.restore();
+  }else if(th==='christmas'){
+    // Noel şapkası: kırmızı koni (sağa eğik) + kürk kenar + pompon
+    c.save();c.translate(66,36);c.rotate(.1);
+    const g=c.createLinearGradient(-22,-40,26,-6);
+    g.addColorStop(0,'#FF6B6B');g.addColorStop(1,'#C22430');
+    c.fillStyle=g;
+    c.beginPath();c.moveTo(-26,0);
+    c.quadraticCurveTo(-16,-30,10,-42);
+    c.quadraticCurveTo(30,-50,38,-36);
+    c.quadraticCurveTo(22,-26,22,0);
+    c.closePath();c.fill();
+    c.fillStyle='#FFF7F0';
+    c.beginPath();c.ellipse(0,1,33,8.5,0,0,TAU);c.fill(); // kürk kenar
+    c.beginPath();c.arc(40,-37,8.5,0,TAU);c.fill(); // pompon
+    c.fillStyle='rgba(210,180,170,.4)';
+    c.beginPath();c.ellipse(0,4.5,32,4.5,0,0,TAU);c.fill();
+    c.restore();
+  }else if(th==='valentine'){
+    // Kalp antenli kuşak + minik kanat detayı
+    c.save();
+    c.strokeStyle='#F06FA8';c.lineWidth=6;c.lineCap='round';
+    c.beginPath();c.arc(64,74,44,Math.PI*1.14,Math.PI*1.86);c.stroke(); // kuşak
+    c.strokeStyle='#F06FA8';c.lineWidth=3;
+    c.beginPath();c.moveTo(46,32);c.quadraticCurveTo(38,16,42,6);c.stroke();
+    c.beginPath();c.moveTo(82,32);c.quadraticCurveTo(92,18,90,8);c.stroke();
+    const miniHeart=(hx,hy,s,col)=>{c.fillStyle=col;c.beginPath();c.moveTo(hx,hy+s*.34);
+      c.bezierCurveTo(hx-s*.5,hy-s*.12,hx-s*.36,hy-s*.46,hx,hy-s*.2);
+      c.bezierCurveTo(hx+s*.36,hy-s*.46,hx+s*.5,hy-s*.12,hx,hy+s*.34);c.closePath();c.fill();};
+    miniHeart(42,4,12,'#E8455A');
+    miniHeart(90,6,12,'#FF6FB5');
+    c.restore();}}
 function renderMascot(){
   const m=$('#mascot');if(!m)return;
   drawKiraz(m.getContext('2d'),mascotMood,mascotBlink);}
@@ -4524,12 +4598,25 @@ function genBots(){
   const names=BOT_NAMES.slice();
   for(let i=names.length-1;i>0;i--){const j=(rng()*(i+1))|0;const tmp=names[i];names[i]=names[j];names[j]=tmp;}
   const maxS=Math.max(30,totalStars()*3);
-  return names.slice(0,12).map(n=>({name:n,stars:8+((rng()*rng()*maxS)|0),av:(rng()*6)|0}));}
+  // ~%40 bota klan etiketi — liderlik tablosunda klan rekabeti hissi
+  return names.slice(0,12).map(n=>({name:n,stars:8+((rng()*rng()*maxS)|0),av:(rng()*6)|0,
+    clan:rng()<.4?BOT_CLANS[(rng()*BOT_CLANS.length)|0]:null}));}
+const BOT_CLANS=['Elma Takımı','KirazYıldız','Meyve Kral','Şeker Ustalar','Patlat Ekibi','Jöle Canavarlar','VitaminCrew','Tatlı İsyan'];
 async function buildRanks(){
-  const me={name:clanMemberName(),stars:totalStars(),you:true,av:(Save.data.user&&Save.data.user.avatar)||0};
+  const myClan=Save.data.clan&&Save.data.clan.name?Save.data.clan.name:null;
+  const me={name:clanMemberName(),stars:totalStars(),you:true,av:(Save.data.user&&Save.data.user.avatar)||0,clan:myClan};
   // Render season countdown
   const ss=$('#rankSeason');
   if(ss)ss.innerHTML='<span class="rs-ic">🏆</span><span class="rs-label">'+t('seasonEnds')+'</span><span class="rs-time">'+weekResetCountdown()+'</span>';
+  // Klan özet şeridi — klanı olan oyuncuya
+  const rc=$('#rankClan');
+  if(rc){
+    if(myClan&&Save.data.clan&&Array.isArray(Save.data.clan.members)){
+      const cSum=Save.data.clan.members.reduce((a2,m)=>a2+(m.stars||0),0);
+      rc.style.display='flex';
+      rc.innerHTML='<span class="rkc-ic">👥</span><span class="rkc-name">'+myClan+'</span>'+
+        '<span class="rkc-meta">'+Save.data.clan.members.length+' '+t('memberShort')+' · '+fmt(cSum)+' ⭐ '+t('clanStars')+'</span>';}
+    else rc.style.display='none';}
   let list=null;
   if(Api.base){
     const r=await Api.req('scores',{token:Save.data.session,email:Save.data.user&&Save.data.user.email,
@@ -4558,7 +4645,7 @@ async function buildRanks(){
     ac.drawImage(BICONS[e.av||0],0,0,68,68);
     if(e.you){ac.strokeStyle='#FFB020';ac.lineWidth=6;rr(ac,3,3,62,62,16);ac.stroke();}
     row.appendChild(av);
-    row.insertAdjacentHTML('beforeend','<div class="rn">'+e.name+'</div>'+
+    row.insertAdjacentHTML('beforeend','<div class="rn">'+e.name+(e.clan?' <span class="rclan">👥 '+e.clan+'</span>':'')+'</div>'+
       '<div class="rs"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.2 6.6.8-4.9 4.6 1.3 6.6-5.9-3.3-5.9 3.3 1.3-6.6L2.5 9l6.6-.8z"/></svg>'+fmt(e.stars)+'</div>');
     box.appendChild(row);});}
 
