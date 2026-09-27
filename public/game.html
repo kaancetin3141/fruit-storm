@@ -52,6 +52,30 @@ body.reduce-motion #snowfall{display:none}
 /* Noel teması UI detayları: buzlu cam panel + serin tint */
 body.theme-christmas .panel{box-shadow:0 10px 34px rgba(30,42,84,.45),inset 0 0 0 1.5px rgba(220,234,252,.8),0 0 26px rgba(255,255,255,.28)}
 body.theme-christmas #tint{background:radial-gradient(circle at 50% 42%,rgba(235,244,255,.5),rgba(168,190,235,.22) 58%,transparent 76%)}
+body.theme-halloween #tint{background:radial-gradient(circle at 50% 40%,rgba(96,58,152,.30),rgba(24,10,46,.44) 68%,rgba(10,4,22,.58))}
+body.theme-halloween .panel{box-shadow:0 10px 34px rgba(20,8,40,.5),inset 0 0 0 1.5px rgba(150,100,220,.35),0 0 26px rgba(120,60,190,.22)}
+body.theme-halloween .boostBtn{background:linear-gradient(160deg,#4A2E73,#33204F);border-color:#7C4FB8}
+body.theme-halloween .boostBtn .cnt{background:#B56CE8;box-shadow:0 2px 0 #8A44B8}
+body.theme-halloween .qa-btn{background:linear-gradient(150deg,#45296E,#2C1A47);border-color:#7C4FB8;color:#E9D8FF}
+/* 🐠 Jöle balığı boosteri */
+.boostBtn.b-fish{background:linear-gradient(#DFFCF6,#9FE8DB);color:#0E6E5E}
+.boostBtn.b-fish .cnt{background:#19B3A6;box-shadow:0 2px 0 #0E8A7E}
+.boostBtn.b-fish .cnt.zero{background:#CDB8D8;box-shadow:0 2px 0 #B09BC2}
+.boostBtn.b-fish:active{box-shadow:0 1px 0 #7CCDBF}
+.boostBtn.b-fish.active{outline:3px solid #19B3A6;background:linear-gradient(#E9FFF9,#BFF3E8);color:#0A5A4D}
+.boostBtn.b-fish.active .bIc{animation:fishWiggle .8s ease-in-out infinite}
+@keyframes fishWiggle{0%,100%{transform:rotate(-8deg) scale(1.05)}50%{transform:rotate(10deg) scale(1.14)}}
+#fishLayer{position:fixed;inset:0;z-index:61;pointer-events:none;overflow:hidden}
+.fishFly{position:absolute;left:0;top:0;font-size:30px;line-height:1;filter:drop-shadow(0 3px 6px rgba(8,70,60,.45));will-change:transform,opacity}
+/* Sezon rozeti */
+#seasonBadge{position:fixed;top:54px;left:50%;transform:translateX(-50%);z-index:44;
+  background:linear-gradient(140deg,#5C2E91,#8E44AD);color:#FFE9A8;font-weight:800;font-size:12px;letter-spacing:.3px;
+  padding:6px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.22);
+  box-shadow:0 4px 14px rgba(92,46,145,.45),inset 0 1px 0 rgba(255,255,255,.25);
+  display:none;align-items:center;gap:6px;white-space:nowrap;pointer-events:none}
+#seasonBadge.show{display:flex;animation:seasonIn .55s cubic-bezier(.2,.9,.3,1.35)}
+@keyframes seasonIn{from{opacity:0;transform:translate(-50%,-16px)}to{opacity:1;transform:translate(-50%,0)}}
+@media(max-width:560px){#seasonBadge{font-size:10.5px;padding:5px 11px;top:52px}}
 body.theme-christmas .boostBtn{background:linear-gradient(160deg,#FDFEFF,#DCE8FA)}
 body.theme-christmas .p-card{box-shadow:0 4px 16px rgba(30,42,84,.38),inset 0 0 0 1px rgba(220,234,252,.6)}
 .screen.active{opacity:1;pointer-events:auto}
@@ -705,6 +729,7 @@ body.reduce-motion #btnWheel.hasdot::after{animation:none!important}
     <button class="boostBtn" id="bHammer"><span class="bIc">🔨</span><span class="cnt" id="cntHammer">0</span><span class="tip" data-i="hammerD">Bir taşı kır</span></button>
     <button class="boostBtn" id="bShuffle"><span class="bIc">🔀</span><span class="cnt" id="cntShuffle">0</span><span class="tip" data-i="shuffleD">Tahtayı karıştır</span></button>
     <button class="boostBtn" id="bMoves"><span class="bIc">⏱️</span><span class="cnt" id="cntMoves">0</span><span class="tip" data-i="moreMovesD">5 hamle ekle</span></button>
+    <button class="boostBtn b-fish" id="bFish"><span class="bIc">🐠</span><span class="cnt" id="cntFish">0</span><span class="tip" data-i="fishD">Dokun → 3 balık fırlat</span></button>
     <button class="boostBtn b-hint" id="bHint"><span class="bIc">💡</span><span class="cnt" id="cntHint">3</span><span class="tip" data-i="hintTip">İpucu göster</span></button>
   </div>
   <div id="topMission" class="chips m-only"></div>
@@ -734,9 +759,11 @@ body.reduce-motion #btnWheel.hasdot::after{animation:none!important}
   <div id="comboBanner"></div>
   <div id="comboHud"><div class="ch-count"><span class="ch-x">x</span><span class="ch-n">2</span></div><div class="ch-label" data-i="combo">KOMBO</div><div class="ch-mult">×1.5</div></div>
   <div id="hammerSwing">🔨</div>
+  <div id="fishLayer" aria-hidden="true"></div>
   <button id="autoBadge"><span class="dotp"></span><span data-i="demoOn">OTO OYNAT</span></button>
 </section>
 
+<div id="seasonBadge" aria-hidden="true"></div>
 <div id="intro"></div>
 
 <div class="overlay" id="ov-win"><div class="panel">
@@ -1080,16 +1107,16 @@ const Save={
     questDay:'',quests:[],clan:null,seenTut:false,tut:{},wheelDay:'',wheelStreak:0,wheelLastDay:'',
     achievements:{},stats:{levelsWon:0,totalCombos:0,bigMatches:0,specials:0,starsEarned:0,chocoEaten:0,chestsOpened:0},
     dailyBonusDay:'',dailyBonusStreak:0,dailyBonusLast:'',
-    settings:{sfx:true,voice:true,music:true,vib:true,lang:'tr',serverUrl:'',reduceMotion:false,activeTheme:'default'}},
+    settings:{sfx:true,voice:true,music:true,vib:true,lang:'tr',serverUrl:'',reduceMotion:false,activeTheme:'seasonal'}},
   load(){
     try{
       const d=JSON.parse(lsGet('meyve_v2')||'null');
-      if(d){Object.assign(this.data,d);this.data.settings=Object.assign({sfx:true,voice:true,music:true,vib:true,lang:'tr',serverUrl:'',reduceMotion:false,activeTheme:'default'},d.settings||{});}
+      if(d){Object.assign(this.data,d);this.data.settings=Object.assign({sfx:true,voice:true,music:true,vib:true,lang:'tr',serverUrl:'',reduceMotion:false,activeTheme:'seasonal'},d.settings||{});}
     }catch(e){}
     this.data.best=this.data.best||{};this.data.tut=this.data.tut||{};
     this.data.gold=+this.data.gold||0;
-    this.data.items=Object.assign({hammer:0,shuffle:0,moves:0},this.data.items||{});
-    for(const k of['hammer','shuffle','moves'])if(!Number.isFinite(this.data.items[k]))this.data.items[k]=0;
+    this.data.items=Object.assign({hammer:0,shuffle:0,moves:0,fish:0},this.data.items||{});
+    for(const k of['hammer','shuffle','moves','fish'])if(!Number.isFinite(this.data.items[k]))this.data.items[k]=0;
     this.data.lives=clamp(+this.data.lives||0,0,6);
     this.data.livesNext=+this.data.livesNext||0;
     this.data.gardenSpent=+this.data.gardenSpent||0;
@@ -1390,22 +1417,58 @@ const FRUITS=[
   {name:'Muz',color:'#F0C419',draw:drawLemon}];
 const EXT_FRUITS=[null,null,null,null,null,null,null,null];
 let THEME_LIST=[{id:'default',name:'Klasik'}]; // populated from config.json
+/* Sezonluk otomatik tema: tarih aralıkları (AA-GG) — window sarmalı destekli */
+const SEASON_WINDOWS={halloween:['09-20','11-10'],christmas:['12-01','01-06']};
+const SEASON_EMOJI={halloween:'🎃',christmas:'🎄'};
+function dateMD(){const d=new Date();const p=n=>String(n).padStart(2,'0');return p(d.getMonth()+1)+'-'+p(d.getDate());}
+function seasonalThemeId(){
+  const md=dateMD();
+  for(const id in SEASON_WINDOWS){
+    if(!THEME_LIST.some(t2=>t2.id===id))continue;
+    const w=SEASON_WINDOWS[id];
+    const inW=w[0]<=w[1]?(md>=w[0]&&md<=w[1]):(md>=w[0]||md<=w[1]);
+    if(inW)return id;}
+  return null;}
+function resolveThemeId(){
+  const raw=Save.data.settings.activeTheme||'default';
+  if(raw==='seasonal')return seasonalThemeId()||'default';
+  return raw;}
 function getThemePath(i){
-  const theme=Save.data.settings.activeTheme||'default';
+  const theme=resolveThemeId();
   return 'themes/'+theme+'/fr'+i+'.png';}
 function loadThemeList(){
   fetch('themes/config.json').then(r=>r.json()).then(cfg=>{
+    const before=resolveThemeId();
     THEME_LIST=Object.entries(cfg.themes).map(([id,v])=>({id:id,name:v.name||id}));
     // Populate settings select if it exists
     const sel=$('#themeSel');
     if(sel){
-      sel.innerHTML=THEME_LIST.map(t=>'<option value="'+t.id+'">'+t.name+'</option>').join('');
+      sel.innerHTML='<option value="seasonal">'+t('seasonAuto')+'</option>'+
+        THEME_LIST.map(t2=>'<option value="'+t2.id+'">'+t2.name+'</option>').join('');
       sel.value=Save.data.settings.activeTheme||'default';}
+    updateSeasonBadge();
+    // Sezonluk çözümleme değiştiyse (config geç geldi) sahne + asset'leri yeniden kur
+    const after=resolveThemeId();
+    if(before!==after){
+      for(let i=0;i<FRUITS.length;i++)EXT_FRUITS[i]=null;
+      EXT_SPECIALS={h:null,v:null,b:null,r:null};
+      MASTER_SPR=null;
+      tryLoadExtAssets();
+      buildBgScene();
+      applyThemeDom();}
   }).catch(()=>{});}
+function updateSeasonBadge(forceHide){
+  const b=$('#seasonBadge');if(!b)return;
+  const raw=Save.data.settings.activeTheme||'default';
+  const resolved=resolveThemeId();
+  const on=!forceHide&&raw==='seasonal'&&resolved!=='default';
+  b.classList.toggle('show',on);
+  if(on){const th=THEME_LIST.find(x=>x.id===resolved);
+    b.innerHTML=(SEASON_EMOJI[resolved]||'✨')+' '+t('seasonBadge')+': '+(th?th.name:resolved);}}
 // Special candy assets (striped, bomb, rainbow) loaded from theme folder
 let EXT_SPECIALS={h:null,v:null,b:null,r:null};
 function getSpecialPath(name){
-  const theme=Save.data.settings.activeTheme||'default';
+  const theme=resolveThemeId();
   return 'themes/'+theme+'/'+name+'.png';}
 function tryLoadExtAssets(){
   let pending=FRUITS.length+3; // 8 fruits + 3 special candies
@@ -1609,7 +1672,7 @@ let levelTime=0,lastTimeSec=-1,timeOver=false;
 let sel=null,hintMove=null,idleT=0,starVoiced=[false,false];
 let shakeT=0,shakeDur=1,shakeAmp=0;
 let inputLockUntil=0,runToken=0,needSnap=false;
-let hammerMode=false,hammerHover=null,movesBoostUsed=false,hintsLeft=3;
+let hammerMode=false,hammerHover=null,fishMode=false,fishHover=null,movesBoostUsed=false,hintsLeft=3;
 let tutPulse=false;
 const tweens=[],parts=[],floaters=[],fxParts=[];
 let bgClouds=[],bgParts=[],bgTimer=0;
@@ -1777,6 +1840,7 @@ function hitChest(r,c){
   gainXp(5,'chest');
   Save.data.stats.chestsOpened=(Save.data.stats.chestsOpened||0)+1;
   questAdd('qChest',1);
+  if(Math.random()<.35)dropItem(tl.px,tl.py-S*.6);
   checkAchievements();}
 async function explodeCells(seedCells,combo,exclude,fast){
   exclude=exclude||new Set();fast=!!fast;
@@ -2402,6 +2466,7 @@ function startLevel(n){
   got=[];sel=null;hintMove=null;idleT=0;starVoiced=[false,false];
   lastChip={};parts.length=0;floaters.length=0;needSnap=false;
   hammerMode=false;$('#bHammer').classList.remove('active');
+  fishMode=false;fishHover=null;if($('#bFish'))$('#bFish').classList.remove('active');
   movesBoostUsed=false;
   hintsLeft=3;
   tutPulse=(n===1&&!Save.data.tut.pulseDone);
@@ -2501,6 +2566,75 @@ async function hammerHit(r,c){
   if(levelWon()&&!finished){finished=true;await finishWin();return;}
   if(!findAnyMove())await shuffleBoard();
   busy=false;}
+function useFishMode(){
+  if(state!=='play'||busy||finished||pausedFlag)return;
+  if((Save.data.items.fish||0)<=0){toast(t('shopHint')+' 🐠 '+t('fish'));Sfx.bad();return;}
+  fishMode=!fishMode;
+  $('#bFish').classList.toggle('active',fishMode);
+  if(fishMode){sel=null;hammerMode=false;$('#bHammer').classList.remove('active');toast(t('usedFish'),2200);}}
+function pickFishTargets(origin){
+  const used=new Set([origin.r*COLS+origin.c]),targets=[];
+  const pref=[];
+  if(curLevel&&curLevel.collect&&curLevel.collect.length)
+    curLevel.collect.forEach(cl=>{if((got[cl.type]||0)<cl.need)pref.push(cl.type);});
+  for(let i=0;i<3;i++){
+    const arr=[];
+    for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){
+      const tl=board[r]&&board[r][c],k=r*COLS+c;
+      if(tl&&tl.type>=0&&!used.has(k))arr.push({r:r,c:c,type:tl.type,k:k,j:jelly[r]&&jelly[r][c]>0});}
+    if(!arr.length)break;
+    let pick=null;
+    const ja=arr.filter(a2=>a2.j);if(ja.length)pick=ja[irand(ja.length)];
+    if(!pick&&pref.length){const pa=arr.filter(a2=>pref.includes(a2.type));if(pa.length)pick=pa[irand(pa.length)];}
+    if(!pick)pick=arr[irand(arr.length)];
+    used.add(pick.k);targets.push(pick);}
+  return targets;}
+function playFishFly(from,to,delay){
+  setTimeout(()=>{
+    const layer=$('#fishLayer');if(!layer||!cv)return;
+    const rect=cv.getBoundingClientRect();
+    const x1=rect.left+ox+from.c*S+S/2,y1=rect.top+oy+from.r*S+S/2;
+    const x2=rect.left+ox+to.c*S+S/2,y2=rect.top+oy+to.r*S+S/2;
+    const el=document.createElement('div');
+    el.className='fishFly';el.textContent='🐠';
+    layer.appendChild(el);
+    const mx=(x1+x2)/2+(Math.random()*70-35),my=Math.min(y1,y2)-55-Math.random()*45;
+    const ang=Math.atan2(y2-my,x2-mx)+Math.PI;
+    const kf=[
+      {transform:'translate('+x1+'px,'+y1+'px) rotate('+ang+'rad) scale(.4)',opacity:0},
+      {transform:'translate('+((x1+mx)/2)+'px,'+((y1+my)/2)+'px) rotate('+ang+'rad) scale(1.18)',opacity:1,offset:.45},
+      {transform:'translate('+x2+'px,'+y2+'px) rotate('+ang+'rad) scale(.92)',opacity:1}];
+    const anim=el.animate(kf,{duration:640,easing:'cubic-bezier(.3,.7,.4,1)'});
+    anim.onfinish=()=>el.remove();anim.oncancel=()=>el.remove();
+  },delay);}
+async function fishHit(r,c){
+  if(r<0||r>=ROWS||c<0||c>=COLS)return;
+  fishMode=false;fishHover=null;$('#bFish').classList.remove('active');
+  Save.data.items.fish=Math.max(0,(Save.data.items.fish||0)-1);
+  Save.write();updateBoostBar();
+  busy=true;
+  const tok=runToken;
+  const targets=pickFishTargets({r:r,c:c});
+  toast(t('fishGo'),1400);
+  Sfx.whoosh();
+  targets.forEach((tg,i)=>playFishFly({r:r,c:c},tg,i*180));
+  await sleep(640+targets.length*180);
+  for(const tg of targets){
+    const tl=board[tg.r]&&board[tg.r][tg.c];
+    if(!tl)continue;
+    parts.push({kind:'shock',x:tl.px,y:tl.py,life:0,max:320});
+    juice(tl.px,tl.py,'#7CE8D5');
+    if(tl.type===-2)hitStone(tg.r,tg.c);
+    else if(tl.type===-4)hitChest(tg.r,tg.c);
+    else if(tl.type===-3)hitChoco(tg.r,tg.c);
+    else if(tl.locked>0)hitLock(tg.r,tg.c,true);
+    else await explodeCells([{r:tg.r,c:tg.c}],1);
+    await settleBoard(tok);}
+  await resolveBoard(null,tok);
+  shake(4,180);vibrate(25);
+  if(levelWon()&&!finished){finished=true;await finishWin();return;}
+  if(!findAnyMove())await shuffleBoard();
+  busy=false;}
 function useShuffle(){
   if(state!=='play'||busy||finished||pausedFlag)return;
   if((Save.data.items.shuffle||0)<=0){toast(t('shopHint')+' 🔀 '+t('shuffle'));Sfx.bad();return;}
@@ -2529,7 +2663,7 @@ function useHint(){
   updateBoostBar();}
 function updateBoostBar(){
   const it=Save.data.items;
-  [['hammer','#bHammer'],['shuffle','#bShuffle'],['moves','#bMoves']].forEach(p=>{
+  [['hammer','#bHammer'],['shuffle','#bShuffle'],['moves','#bMoves'],['fish','#bFish']].forEach(p=>{
     const b=$(p[1]);if(!b)return;
     const n=it[p[0]]||0;
     const c=b.querySelector('.cnt');
@@ -2537,11 +2671,13 @@ function updateBoostBar(){
     c.classList.toggle('zero',n===0);});
   const hb=$('#bHint');if(hb){
     const c=hb.querySelector('.cnt');c.textContent=hintsLeft;c.classList.toggle('zero',hintsLeft===0);}}
-function dropItem(){
-  const pool=['hammer','shuffle','moves'];
+function dropItem(x,y){
+  const pool=['hammer','shuffle','moves','fish'];
   const id=pool[irand(pool.length)];
   Save.data.items[id]=(Save.data.items[id]||0)+1;
   Save.write();
+  const ic={hammer:'🔨',shuffle:'🔀',moves:'⏱️',fish:'🐠'}[id]||'🎁';
+  if(typeof x==='number'&&typeof y==='number')floatText(x,y,ic+' +1');
   toast(t('itemGet')+': '+t(id)+' +1');
   updateBoostBar();}
 
@@ -2692,6 +2828,19 @@ function renderBoard(dt,now){
     ctx.moveTo(cx-S*.2,cy);ctx.lineTo(cx+S*.2,cy);
     ctx.moveTo(cx,cy-S*.2);ctx.lineTo(cx,cy+S*.2);
     ctx.stroke();ctx.restore();}
+  else if(fishMode&&fishHover){
+    ctx.save();
+    ctx.strokeStyle='#fff';ctx.lineWidth=3.5;
+    ctx.setLineDash([S*.2,S*.12]);ctx.lineDashOffset=now*.03;
+    rr(ctx,ox+fishHover.c*S+2,oy+fishHover.r*S+2,S-4,S-4,S*.22);ctx.stroke();
+    ctx.strokeStyle='rgba(25,179,166,.95)';ctx.lineWidth=2.5;
+    const fx2=cellPx(fishHover.c),fy2=cellPy(fishHover.r);
+    ctx.fillStyle='rgba(25,179,166,.95)';
+    ctx.beginPath();ctx.ellipse(fx2,fy2,S*.16,S*.10,0,0,TAU);ctx.fill();
+    ctx.beginPath();ctx.moveTo(fx2+S*.14,fy2);ctx.lineTo(fx2+S*.26,fy2-S*.09);ctx.lineTo(fx2+S*.26,fy2+S*.09);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#fff';
+    ctx.beginPath();ctx.arc(fx2-S*.06,fy2-S*.02,S*.02,0,TAU);ctx.fill();
+    ctx.restore();}
   if(sel){
     ctx.save();
     ctx.strokeStyle='rgba(255,255,255,.95)';ctx.lineWidth=3;
@@ -2904,6 +3053,18 @@ const CHEST3_I18N={
 Object.keys(I).forEach(l=>{
   if(CHEST3_I18N[l])Object.assign(I[l],CHEST3_I18N[l]);
   else if(CHEST3_I18N.en)Object.assign(I[l],CHEST3_I18N.en);});
+const FISH_I18N={
+  tr:{fish:'Jöle Balığı',fishD:'Dokun → 3 balık fırlat',usedFish:'Balık modu: bir taşa dokun',fishGo:'Balıklar saldırıyor! 🐠',seasonAuto:'Sezonluk (Otomatik) 🗓️',seasonBadge:'Sezon Teması'},
+  en:{fish:'Jelly Fish',fishD:'Tap → launch 3 fish',usedFish:'Fish mode: tap a tile',fishGo:'Fish attack! 🐠',seasonAuto:'Seasonal (Auto) 🗓️',seasonBadge:'Season Theme'},
+  de:{fish:'Gummifisch',fishD:'Tippen → 3 Fische losschicken',usedFish:'Fisch-Modus: Feld antippen',fishGo:'Fische im Angriff! 🐠',seasonAuto:'Saisonal (Auto) 🗓️',seasonBadge:'Saison-Thema'},
+  es:{fish:'Pez de Gelatina',fishD:'Toca → lanza 3 peces',usedFish:'Modo pez: toca una casilla',fishGo:'¡Ataque de peces! 🐠',seasonAuto:'Estacional (Auto) 🗓️',seasonBadge:'Tema de Temporada'},
+  fr:{fish:'Poisson Gelé',fishD:'Touche → lance 3 poissons',usedFish:'Mode poisson : touche une case',fishGo:'Attaque de poissons ! 🐠',seasonAuto:'Saisonnière (Auto) 🗓️',seasonBadge:'Thème de Saison'},
+  it:{fish:'Pesce Gelatina',fishD:'Tocca → lancia 3 pesci',usedFish:'Modalità pesce: tocca una casella',fishGo:'Attacco di pesci! 🐠',seasonAuto:'Stagionale (Auto) 🗓️',seasonBadge:'Tema Stagionale'},
+  pt:{fish:'Peixe de Gelatina',fishD:'Toque → lance 3 peixes',usedFish:'Modo peixe: toque uma peça',fishGo:'Ataque dos peixes! 🐠',seasonAuto:'Sazonal (Auto) 🗓️',seasonBadge:'Tema da Estação'},
+  ru:{fish:'Рыбка Желе',fishD:'Нажми → запусти 3 рыбки',usedFish:'Режим рыбки: коснитесь плитки',fishGo:'Рыбки атакуют! 🐠',seasonAuto:'Сезонная (Авто) 🗓️',seasonBadge:'Тема Сезона'}};
+Object.keys(I).forEach(l=>{
+  if(FISH_I18N[l])Object.assign(I[l],FISH_I18N[l]);
+  else if(FISH_I18N.en)Object.assign(I[l],FISH_I18N.en);});
 const LVL_I18N={
   tr:{lvlUp:'SEVİYE ATLADIN!',lvlUpSub:'Seviye {n} — Ödül kazandın!',xpTitle:'Oyuncu Seviyesi',xpSub:'Oyun oyna, XP kazan, seviye atla!'},
   en:{lvlUp:'LEVEL UP!',lvlUpSub:'Level {n} — Reward earned!',xpTitle:'Player Level',xpSub:'Play, earn XP, level up!'},
@@ -2976,7 +3137,7 @@ let bgNight=false;
 let bgXmas=false;
 function buildBgScene(){
   if(!dpr)return;
-  const th=Save.data.settings.activeTheme||'default';
+  const th=resolveThemeId();
   bgNight=(th==='halloween');
   bgXmas=(th==='christmas');
   if(bgXmas){buildChristmasScene();return;}
@@ -3325,8 +3486,9 @@ function buildChristmasScene(){
   bgClouds=[{x:w*.08,y:h*.07,s:.95,v:.008},{x:w*.5,y:h*.13,s:.7,v:.012},{x:w*.8,y:h*.2,s:.8,v:.006}];}
 function tierSeed(px){return Math.abs(Math.round(px))%4;}
 function applyThemeDom(){
-  const th=Save.data.settings.activeTheme||'default';
+  const th=resolveThemeId();
   document.body.classList.toggle('theme-christmas',th==='christmas');
+  document.body.classList.toggle('theme-halloween',th==='halloween');
   let sf=document.getElementById('snowfall');
   if(th==='christmas'){
     if(!sf){
@@ -3339,7 +3501,8 @@ function applyThemeDom(){
           'opacity:'+(0.35+Math.random()*.5).toFixed(2)+';';
         sf.appendChild(f);}
       document.body.appendChild(sf);}}
-  else if(sf)sf.remove();}
+  else if(sf)sf.remove();
+  updateSeasonBadge();}
 function confettiBurst(){
   const cols=['#FF6FB5','#7B61E8','#FFD23D','#4CC9A8','#B56CE8','#7CE8D5'];
   for(let i=0;i<110;i++)fxParts.push({x:rand(0,innerWidth),y:rand(-180,-10),
@@ -3634,8 +3797,9 @@ const SHOP=[
   {id:'hammer',price:150,color:'#F04E7E',ic:'🔨'},
   {id:'shuffle',price:100,color:'#7B61E8',ic:'🔀'},
   {id:'moves',price:200,color:'#4CC9A8',ic:'⏱️'},
+  {id:'fish',price:180,color:'#19B3A6',ic:'🐠'},
   {id:'fullLives',price:300,color:'#FF5A7E',ic:'💛'}];
-const SDESC={hammer:'hammerD',shuffle:'shuffleD',moves:'moreMovesD',fullLives:'fullLivesD'};
+const SDESC={hammer:'hammerD',shuffle:'shuffleD',moves:'moreMovesD',fish:'fishD',fullLives:'fullLivesD'};
 function renderShop(){
   const list=$('#shopList');list.innerHTML='';
   SHOP.forEach(it=>{
@@ -4162,10 +4326,12 @@ function showScreen(id){
   if(id==='scr-game'){$('#bg').classList.add('game-blur');bgParts.length=0;}else{$('#bg').classList.remove('game-blur');}
   $('#autoBadge').classList.toggle('show',autoPlay&&id==='scr-game');
   hammerMode=false;$('#bHammer').classList.remove('active');
+  fishMode=false;fishHover=null;if($('#bFish'))$('#bFish').classList.remove('active');
   $('#burn').className='';
   $('#comboHud').classList.remove('show');
   clearTimeout(comboHudTimer);
   Music.setTension(0);
+  updateSeasonBadge(id==='scr-game');
   updateLifeUI();updateBoostBar();
   if(id==='scr-menu'){setMascot('normal');
     $('#btnPlay').classList.toggle('pulse',wheelAvailable()||dailyBonusAvailable());
@@ -4437,6 +4603,7 @@ function wireInput(){
     const rc=posToGrid(e);
     if(rc.r<0||rc.r>=ROWS||rc.c<0||rc.c>=COLS)return;
     if(hammerMode){hammerHit(rc.r,rc.c);return;}
+    if(fishMode){fishHit(rc.r,rc.c);return;}
     if(busy||finished)return;
     if(performance.now()<inputLockUntil)return;
     const tl=board[rc.r][rc.c];
@@ -4454,9 +4621,10 @@ function wireInput(){
     ptr={down:true,id:e.pointerId,r:rc.r,c:rc.c,x:e.clientX,y:e.clientY};
     if(e.cancelable)e.preventDefault();});
   cv.addEventListener('pointermove',e=>{
-    if(hammerMode&&state==='play'){
+    if((hammerMode||fishMode)&&state==='play'){
       const rc=posToGrid(e);
-      hammerHover=(rc.r>=0&&rc.r<ROWS&&rc.c>=0&&rc.c<COLS)?rc:null;}});
+      const h=(rc.r>=0&&rc.r<ROWS&&rc.c>=0&&rc.c<COLS)?rc:null;
+      if(hammerMode)hammerHover=h;else fishHover=h;}});
   window.addEventListener('pointermove',e=>{
     if(!ptr.down||e.pointerId!==ptr.id)return;
     if(busy||finished||pausedFlag||hammerMode)return;
@@ -4673,6 +4841,7 @@ function wireUI(){
   $('#btnRetryL').addEventListener('click',()=>{Sfx.click();startLevel(curLevel.n);});
   $('#btnMapL').addEventListener('click',()=>{Sfx.click();showScreen('scr-map');});
   $('#bHammer').addEventListener('click',useHammerMode);
+  $('#bFish').addEventListener('click',useFishMode);
   $('#bShuffle').addEventListener('click',useShuffle);
   $('#bMoves').addEventListener('click',useMoves);
   $('#bHint').addEventListener('click',useHint);}
@@ -4700,7 +4869,7 @@ function frame(ts){
     if(autoPlay&&!busy&&!finished&&!pausedFlag){
       autoT+=dt;
       if(autoT>620){autoT=0;const m=bestMove();if(m)trySwap(m.r1,m.c1,m.r2,m.c2);}
-    }else if(!busy&&!finished&&!pausedFlag&&!hammerMode){
+    }else if(!busy&&!finished&&!pausedFlag&&!hammerMode&&!fishMode){
       idleT+=dt;
       const threshold=tutPulse?900:4500;
       if(idleT>threshold&&!hintMove){
