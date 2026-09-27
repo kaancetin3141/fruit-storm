@@ -1639,7 +1639,10 @@ function hitChoco(r,c){
   board[r][c]=null;
   addScore(60);floatText(tl.px,tl.py,'60');
   Sfx.crack();vibrate(20);shake(2,120);
-  juice(tl.px,tl.py,'#6B4226');debris(tl.px,tl.py,'#6B4226');}
+  juice(tl.px,tl.py,'#6B4226');debris(tl.px,tl.py,'#6B4226');
+  questAdd('qChoco',1);
+  Save.data.stats.chocoEaten=(Save.data.stats.chocoEaten||0)+1;
+  checkAchievements();}
 async function explodeCells(seedCells,combo,exclude,fast){
   exclude=exclude||new Set();fast=!!fast;
   const destroyed=new Set(),seen=new Set(),q=[],fx=[];
@@ -2690,6 +2693,18 @@ const CHOCO_I18N={
 Object.keys(I).forEach(l=>{
   if(CHOCO_I18N[l])Object.assign(I[l],CHOCO_I18N[l]);
   else if(CHOCO_I18N.en)Object.assign(I[l],CHOCO_I18N.en);});
+const CHOCO2_I18N={
+  tr:{qChoco:'Çikolata ye',aChoco:'Çikolata Avcısı (15 ye)'},
+  en:{qChoco:'Eat chocolate',aChoco:'Choco Hunter (15 eaten)'},
+  de:{qChoco:'Schokolade essen',aChoco:'Schoko-Jäger (15 gegessen)'},
+  es:{qChoco:'Come chocolate',aChoco:'Cazador de Chocolate (15)'},
+  fr:{qChoco:'Mange du chocolat',aChoco:'Chasseur de Chocolat (15 mangés)'},
+  it:{qChoco:'Mangia cioccolato',aChoco:'Cacciatore di Cioccolato (15 mangiati)'},
+  pt:{qChoco:'Coma chocolate',aChoco:'Caçador de Chocolate (15 comidos)'},
+  ru:{qChoco:'Съешь шоколад',aChoco:'Шоколадный Охотник (15 съедено)'}};
+Object.keys(I).forEach(l=>{
+  if(CHOCO2_I18N[l])Object.assign(I[l],CHOCO2_I18N[l]);
+  else if(CHOCO2_I18N.en)Object.assign(I[l],CHOCO2_I18N.en);});
 const TUTORIAL_STEPS={
   1:[ // Level 1: Basic matching
     {type:'highlight',text:'tutSwipe',dur:4000},
@@ -2746,8 +2761,11 @@ function drawTutorialFinger(now){
   ctx.fillText('👆',tutorial.fingerX,tutorial.fingerY-S*.3+bob);
   ctx.restore();}
 let sceneCv=null;
+let bgNight=false;
 function buildBgScene(){
   if(!dpr)return;
+  bgNight=(Save.data.settings.activeTheme==='halloween');
+  if(bgNight){buildHalloweenScene();return;}
   sceneCv=document.createElement('canvas');
   sceneCv.width=Math.round(innerWidth*dpr);sceneCv.height=Math.round(innerHeight*dpr);
   const c=sceneCv.getContext('2d');c.scale(dpr,dpr);
@@ -2848,8 +2866,111 @@ function buildBgScene(){
     c.fillStyle='rgba(255,255,255,.4)';c.beginPath();c.arc(fx-fs*.15,fy-fs*.15,fs*.18,0,TAU);c.fill();
     c.restore();}
   bgClouds=[{x:w*.1,y:h*.1,s:1,v:.008},{x:w*.55,y:h*.2,s:.75,v:.012},{x:w*.75,y:h*.05,s:.9,v:.006},{x:w*.3,y:h*.35,s:.65,v:.01}];}
+function buildHalloweenScene(){
+  if(!dpr)return;
+  sceneCv=document.createElement('canvas');
+  sceneCv.width=Math.round(innerWidth*dpr);sceneCv.height=Math.round(innerHeight*dpr);
+  const c=sceneCv.getContext('2d');c.scale(dpr,dpr);
+  const w=innerWidth,h=innerHeight;
+  // Gece gökyüzü: koyu mor-indigo gradyan
+  const sky=c.createLinearGradient(0,0,0,h);
+  sky.addColorStop(0,'#0C0521');sky.addColorStop(.3,'#1C0E3E');sky.addColorStop(.55,'#35175E');
+  sky.addColorStop(.75,'#4E2470');sky.addColorStop(1,'#2A1240');
+  c.fillStyle=sky;c.fillRect(0,0,w,h);
+  // Dolunay: halo + kraterler
+  const mx=w*.8,my=h*.13;
+  const mh=c.createRadialGradient(mx,my,30,mx,my,150);
+  mh.addColorStop(0,'rgba(255,244,200,.5)');mh.addColorStop(.5,'rgba(255,236,180,.15)');mh.addColorStop(1,'rgba(255,236,180,0)');
+  c.fillStyle=mh;c.beginPath();c.arc(mx,my,150,0,TAU);c.fill();
+  c.fillStyle='#FFF4CE';c.beginPath();c.arc(mx,my,58,0,TAU);c.fill();
+  c.fillStyle='rgba(230,210,150,.55)';
+  c.beginPath();c.arc(mx-18,my-10,11,0,TAU);c.arc(mx+14,my+16,8,0,TAU);c.arc(mx+22,my-18,6,0,TAU);c.arc(mx-8,my+24,5,0,TAU);c.fill();
+  // Yıldızlar
+  for(let i=0;i<70;i++){
+    const stx=rand(0,w),sty=rand(0,h*.55),sr=rand(.8,2.6);
+    c.globalAlpha=rand(.35,.95);
+    c.fillStyle='#FFF';
+    c.beginPath();c.arc(stx,sty,sr,0,TAU);c.fill();
+    if(Math.random()<.25){
+      c.strokeStyle='rgba(255,255,255,.5)';c.lineWidth=1;
+      c.beginPath();c.moveTo(stx-sr*2.4,sty);c.lineTo(stx+sr*2.4,sty);
+      c.moveTo(stx,sty-sr*2.4);c.lineTo(stx,sty+sr*2.4);c.stroke();}
+    c.globalAlpha=1;}
+  // Yarasa siluetleri
+  const bat=(bx,by,s)=>{
+    c.fillStyle='rgba(12,5,30,.85)';
+    c.beginPath();
+    c.moveTo(bx,by);
+    c.bezierCurveTo(bx-10*s,by-9*s,bx-22*s,by-4*s,bx-26*s,by+2*s);
+    c.bezierCurveTo(bx-16*s,by+1*s,bx-8*s,by+3*s,bx,by+7*s);
+    c.bezierCurveTo(bx+8*s,by+3*s,bx+16*s,by+1*s,bx+26*s,by+2*s);
+    c.bezierCurveTo(bx+22*s,by-4*s,bx+10*s,by-9*s,bx,by);
+    c.closePath();c.fill();
+    c.beginPath();c.arc(bx,by+1.5*s,4.5*s,0,TAU);c.fill();
+    c.beginPath();c.moveTo(bx-4*s,by-2*s);c.lineTo(bx-2.5*s,by-7*s);c.lineTo(bx-1*s,by-2.5*s);c.closePath();c.fill();
+    c.beginPath();c.moveTo(bx+4*s,by-2*s);c.lineTo(bx+2.5*s,by-7*s);c.lineTo(bx+1*s,by-2.5*s);c.closePath();c.fill();};
+  bat(w*.15,h*.14,1.2);bat(w*.28,h*.24,.9);bat(w*.5,h*.1,1.05);
+  bat(w*.62,h*.3,.75);bat(w*.9,h*.3,.9);bat(w*.4,h*.2,.7);
+  // Karanlık tepeler
+  const hill1=c.createLinearGradient(0,h*.55,0,h*.75);
+  hill1.addColorStop(0,'#241040');hill1.addColorStop(1,'#160A2C');
+  c.fillStyle=hill1;
+  c.beginPath();c.moveTo(0,h*.62);
+  c.bezierCurveTo(w*.2,h*.5,w*.42,h*.6,w*.6,h*.55);
+  c.bezierCurveTo(w*.78,h*.5,w*.92,h*.58,w,h*.55);
+  c.lineTo(w,h);c.lineTo(0,h);c.fill();
+  const hill2=c.createLinearGradient(0,h*.7,0,h*.9);
+  hill2.addColorStop(0,'#12081F');hill2.addColorStop(1,'#0A0416');
+  c.fillStyle=hill2;
+  c.beginPath();c.moveTo(0,h*.74);
+  c.bezierCurveTo(w*.25,h*.64,w*.55,h*.78,w*.8,h*.7);
+  c.bezierCurveTo(w*.92,h*.66,w,h*.72,w,h*.72);
+  c.lineTo(w,h);c.lineTo(0,h);c.fill();
+  // Ürkütücü ağaç siluetleri
+  const tree=(tx,ty,s)=>{
+    c.strokeStyle='rgba(8,3,16,.95)';c.lineCap='round';
+    c.lineWidth=9*s;
+    c.beginPath();c.moveTo(tx,ty);c.bezierCurveTo(tx-4*s,ty-40*s,tx+6*s,ty-60*s,tx+2*s,ty-95*s);c.stroke();
+    c.lineWidth=5*s;
+    c.beginPath();c.moveTo(tx,ty-45*s);c.bezierCurveTo(tx-16*s,ty-58*s,tx-24*s,ty-66*s,tx-30*s,ty-80*s);c.stroke();
+    c.beginPath();c.moveTo(tx+1*s,ty-62*s);c.bezierCurveTo(tx+14*s,ty-72*s,tx+22*s,ty-80*s,tx+26*s,ty-94*s);c.stroke();
+    c.lineWidth=3*s;
+    c.beginPath();c.moveTo(tx-18*s,ty-64*s);c.lineTo(tx-26*s,ty-58*s);c.stroke();
+    c.beginPath();c.moveTo(tx+14*s,ty-76*s);c.lineTo(tx+20*s,ty-68*s);c.stroke();
+    c.beginPath();c.moveTo(tx+2*s,ty-88*s);c.lineTo(tx-4*s,ty-100*s);c.stroke();
+    c.beginPath();c.moveTo(tx+2*s,ty-88*s);c.lineTo(tx+9*s,ty-102*s);c.stroke();};
+  tree(w*.12,h*.72,1.1);tree(w*.87,h*.76,.9);
+  // Parlayan balkabakları
+  const pump=(px2,py2,s)=>{
+    const pg=c.createRadialGradient(px2,py2,2,px2,py2,36*s);
+    pg.addColorStop(0,'rgba(255,140,40,.5)');pg.addColorStop(1,'rgba(255,140,40,0)');
+    c.fillStyle=pg;c.beginPath();c.arc(px2,py2,36*s,0,TAU);c.fill();
+    c.fillStyle='#E8702A';
+    c.beginPath();c.ellipse(px2,py2,16*s,12*s,0,0,TAU);c.fill();
+    c.fillStyle='#3A1A08';
+    c.beginPath();c.moveTo(px2-6*s,py2-4*s);c.lineTo(px2-3*s,py2-8*s);c.lineTo(px2-1*s,py2-3*s);c.closePath();
+    c.moveTo(px2+6*s,py2-4*s);c.lineTo(px2+3*s,py2-8*s);c.lineTo(px2+1*s,py2-3*s);c.closePath();
+    c.moveTo(px2-7*s,py2+3*s);c.lineTo(px2+7*s,py2+3*s);c.lineTo(px2,py2+8*s);c.closePath();c.fill();
+    c.strokeStyle='#3A1A08';c.lineWidth=3*s;
+    c.beginPath();c.moveTo(px2,py2-12*s);c.lineTo(px2+3*s,py2-18*s);c.stroke();};
+  pump(w*.24,h*.7,1);pump(w*.68,h*.74,.8);pump(w*.45,h*.8,.65);
+  // Zemin şeker serpintisi (halloween renkleri)
+  const sprinkleCols=['#FF8C28','#B56CE8','#7CE87C','#FFD23D','#FF5A7E','#fff'];
+  for(let i=0;i<30;i++){
+    c.fillStyle=sprinkleCols[irand(sprinkleCols.length)];
+    c.globalAlpha=rand(.5,.9);
+    const sx=rand(0,w),sy=rand(h*.8,h*.98),sw=rand(2,5),sh=rand(3,7),sr2=rand(0,TAU);
+    c.save();c.translate(sx,sy);c.rotate(sr2);c.fillRect(-sw/2,-sh/2,sw,sh);c.restore();c.globalAlpha=1;}
+  // Hayalet parıltıları
+  for(let i=0;i<5;i++){
+    const gx=rand(w*.05,w*.95),gy=rand(h*.35,h*.6),gs=rand(14,26);
+    c.save();c.globalAlpha=.28;
+    c.fillStyle='#D8C8F0';c.beginPath();c.arc(gx,gy,gs/2,0,TAU);c.fill();
+    c.fillStyle='rgba(255,255,255,.5)';c.beginPath();c.arc(gx-gs*.15,gy-gs*.15,gs*.18,0,TAU);c.fill();
+    c.restore();}
+  bgClouds=[{x:w*.1,y:h*.08,s:1.1,v:.01},{x:w*.55,y:h*.16,s:.85,v:.014},{x:w*.8,y:h*.06,s:.95,v:.007},{x:w*.3,y:h*.3,s:.7,v:.011}];}
 function drawCloud(c,x,y,s){
-  c.fillStyle='rgba(255,255,255,.9)';
+  c.fillStyle=bgNight?'rgba(58,36,96,.85)':'rgba(255,255,255,.9)';
   c.beginPath();
   c.arc(x,y,22*s,0,TAU);c.arc(x+24*s,y-8*s,18*s,0,TAU);
   c.arc(x+46*s,y,20*s,0,TAU);c.arc(x+22*s,y+8*s,17*s,0,TAU);
@@ -2869,7 +2990,7 @@ function updateBg(dt,now){
   if((state==='menu'||state==='auth'||state==='map')&&bgParts.length<20){
     bgTimer-=dt;
     if(bgTimer<=0){bgTimer=520;
-      bgParts.push({ic:BICONS[irand(6)],x:rand(20,innerWidth-20),y:-50,
+      bgParts.push({ic:BICONS[irand(BICONS.length||6)],x:rand(20,innerWidth-20),y:-50,
         vy:rand(.02,.045),s:rand(28,50),rot:rand(0,TAU),vr:rand(-.0008,.0008),
         sway:rand(0,TAU),alpha:rand(.4,.85)});}}
   for(let i=bgParts.length-1;i>=0;i--){
@@ -2969,7 +3090,8 @@ const QDEFS={
   qScore:{icon:'score',target:15000,gold:120},
   qHammer:{icon:'hammer',target:3,gold:75},
   qBigMatch:{icon:'bigmatch',target:2,gold:85},
-  qCascade:{icon:'cascade',target:1,gold:95}};
+  qCascade:{icon:'cascade',target:1,gold:95},
+  qChoco:{icon:'choco',target:8,gold:90}};
 const QICONS={
   jelly:'<svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="4" fill="#E83E6E" opacity=".8"/><rect x="7" y="6.5" width="10" height="4" rx="2" fill="#fff" opacity=".6"/></svg>',
   spark:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.2 5.8L20 10l-5.8 2.2L12 18l-2.2-5.8L4 10l5.8-2.2z"/></svg>',
@@ -2979,7 +3101,8 @@ const QICONS={
   score:'<svg viewBox="0 0 24 24" fill="none"><path d="M4 19h16M6 16v-5M10 16V7M14 16v-8M18 16V4" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>',
   hammer:'<svg viewBox="0 0 24 24" fill="none"><path d="M14 3l7 7-3 3-7-7z" fill="currentColor"/><path d="M11 6L3 14l4 4 8-8" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linejoin="round"/></svg>',
   bigmatch:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.2 5.8L20 10l-5.8 2.2L12 18l-2.2-5.8L4 10l5.8-2.2z"/><circle cx="12" cy="10" r="2.5" fill="#fff"/></svg>',
-  cascade:'<svg viewBox="0 0 24 24" fill="none"><path d="M6 4l4 4-4 4M14 12l4 4-4 4M4 20h16" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>'};
+  cascade:'<svg viewBox="0 0 24 24" fill="none"><path d="M6 4l4 4-4 4M14 12l4 4-4 4M4 20h16" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  choco:'<svg viewBox="0 0 24 24" fill="none"><rect x="5" y="3" width="14" height="18" rx="2" fill="#6B4226"/><path d="M5 9h14M5 15h14M12 3v18" stroke="#3A1F0E" stroke-width="1.6"/><rect x="6.5" y="4" width="11" height="3" rx="1.5" fill="#9A6538" opacity=".7"/></svg>'};
 function todayKey(){const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();}
 function questInit(){
   const tk=todayKey();
@@ -3016,7 +3139,8 @@ const ACHIEVEMENTS={
   aBigMatch5:{icon:'💥',target:5,stat:'bigMatches',gold:100},
   aSpecial20:{icon:'✨',target:20,stat:'specials',gold:120},
   aStars30:{icon:'⭐',target:30,stat:'starsEarned',gold:150},
-  aWheel7:{icon:'🔥',target:7,stat:'wheelStreak',gold:100}};
+  aWheel7:{icon:'🔥',target:7,stat:'wheelStreak',gold:100},
+  aChoco:{icon:'🍫',target:15,stat:'chocoEaten',gold:110}};
 function checkAchievements(){
   const st=Save.data.stats||{};
   let unlocked=[];
@@ -4056,6 +4180,7 @@ function wireUI(){
     EXT_SPECIALS={h:null,v:null,b:null,r:null};
     MASTER_SPR=null; // invalidate cache
     tryLoadExtAssets();
+    buildBgScene(); // tema arka planı (halloween gece modu)
     toast(t('themeChanged'),2000);
   });
   $('#langQuick').addEventListener('click',()=>{
