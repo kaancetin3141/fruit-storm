@@ -1332,7 +1332,7 @@ body.reduce-motion .mnode.celebrate .dot,body.reduce-motion .mnode.celebrate .do
 <div id="splash">
   <div class="sp-bubbles" aria-hidden="true"><i style="--s:12px;--d:7s;--dl:0s;left:8%"></i><i style="--s:18px;--d:9s;--dl:1.6s;left:22%"></i><i style="--s:10px;--d:6.4s;--dl:.8s;left:44%"></i><i style="--s:16px;--d:8.2s;--dl:2.4s;left:63%"></i><i style="--s:12px;--d:7.6s;--dl:3.1s;left:82%"></i><i style="--s:9px;--d:6.9s;--dl:4s;left:92%"></i></div>
   <div class="sp-fruits" aria-hidden="true"><i style="left:13%;top:21%;font-size:34px;--r:-10deg;--d:3.6s">🍓</i><i style="right:15%;top:17%;font-size:30px;--r:9deg;--d:4.2s;--dl:.4s">🍇</i><i style="left:19%;bottom:25%;font-size:28px;--r:7deg;--d:3.9s;--dl:.8s">🍋</i><i style="right:19%;bottom:27%;font-size:33px;--r:-8deg;--d:4.5s;--dl:1.2s">🍊</i><i style="left:44%;top:11%;font-size:26px;--r:5deg;--d:3.3s;--dl:1.6s">🍉</i></div>
-  <div class="sp-logo"><span class="sp-w1"><b style="--i:0">M</b><b style="--i:1">E</b><b style="--i:2">Y</b><b style="--i:3">V</b><b style="--i:4">E</b></span><br><span class="sp-w2"><b style="--i:5">P</b><b style="--i:6">A</b><b style="--i:7">T</b><b style="--i:8">L</b><b style="--i:9">A</b><b style="--i:10">T</b><b style="--i:11">!</b></span></div>
+  <div class="sp-logo"><span class="sp-w1"><b style="--i:0">F</b><b style="--i:1">R</b><b style="--i:2">U</b><b style="--i:3">I</b><b style="--i:4">T</b></span><br><span class="sp-w2"><b style="--i:5">S</b><b style="--i:6">T</b><b style="--i:7">O</b><b style="--i:8">R</b><b style="--i:9">M</b><b style="--i:10">!</b></span></div>
   <div class="sp-bar"><i></i><em aria-hidden="true">🍒</em></div>
   <div class="sp-txt">Yükleniyor…</div>
 </div>
@@ -1627,7 +1627,8 @@ body.reduce-motion .mnode.celebrate .dot,body.reduce-motion .mnode.celebrate .do
   </div>
   <div class="set-group">
     <div class="set-row"><div class="ic" id="icSfx"></div><div class="lb" data-i="sound">Ses Efektleri</div><label class="sw"><input type="checkbox" id="swSfx"><i></i></label></div>
-    <div class="set-row"><div class="ic" id="icVoice"></div><div class="lb"><span data-i="voice">Seslendirme</span><small data-i="voiceSub">Sweet! Tasty! Perfect!</small></div><label class="sw"><input type="checkbox" id="swVoice"><i></i></label></div>
+    <!-- v52: seslendirme geçici kapalı (Voice.MASTER=false) — yenilenince bu satırı göster -->
+    <div class="set-row" style="display:none"><div class="ic" id="icVoice"></div><div class="lb"><span data-i="voice">Seslendirme</span><small data-i="voiceSub">Sweet! Tasty! Perfect!</small></div><label class="sw"><input type="checkbox" id="swVoice"><i></i></label></div>
     <div class="set-row"><div class="ic" id="icMusic"></div><div class="lb" data-i="music">Müzik</div><label class="sw"><input type="checkbox" id="swMusic"><i></i></label></div>
     <div class="set-row"><div class="ic" id="icVib"></div><div class="lb" data-i="vib">Titreşim</div><label class="sw"><input type="checkbox" id="swVib"><i></i></label></div>
     <div class="set-row"><div class="ic" id="icMotion"></div><div class="lb"><span data-i="motion">Hareketi Azalt</span><small data-i="motionSub">Animasyonları azaltır</small></div><label class="sw"><input type="checkbox" id="swMotion"><i></i></label></div>
@@ -1926,11 +1927,11 @@ const Save={
     questDay:'',quests:[],clan:null,seenTut:false,tut:{},wheelDay:'',wheelStreak:0,wheelLastDay:'',
     achievements:{},stats:{levelsWon:0,totalCombos:0,bigMatches:0,specials:0,starsEarned:0,chocoEaten:0,chestsOpened:0},
     dailyBonusDay:'',dailyBonusStreak:0,dailyBonusLast:'',
-    settings:{sfx:true,voice:true,music:true,vib:true,lang:'tr',serverUrl:'',reduceMotion:false,activeTheme:'seasonal'}},
+    settings:{sfx:true,voice:false,music:true,vib:true,lang:'tr',serverUrl:'',reduceMotion:false,activeTheme:'seasonal'}},
   load(){
     try{
       const d=JSON.parse(lsGet('meyve_v2')||'null');
-      if(d){Object.assign(this.data,d);this.data.settings=Object.assign({sfx:true,voice:true,music:true,vib:true,lang:'tr',serverUrl:'',reduceMotion:false,activeTheme:'seasonal'},d.settings||{});}
+      if(d){Object.assign(this.data,d);this.data.settings=Object.assign({sfx:true,voice:false,music:true,vib:true,lang:'tr',serverUrl:'',reduceMotion:false,activeTheme:'seasonal'},d.settings||{});}
     }catch(e){}
     this.data.best=this.data.best||{};this.data.tut=this.data.tut||{};
     this.data.gold=+this.data.gold||0;
@@ -2030,13 +2031,14 @@ const Sfx={
   lose(){this.tone({f:330,f2:250,type:'triangle',dur:.4,vol:.15});this.tone({f:262,f2:200,type:'triangle',dur:.5,vol:.15,delay:.3});}
 };
 const Voice={
+  MASTER:false, // v52: seslendirme GEÇİCİ kapalı (yenilenecek) — hiçbir ses yüklenmez/konuşulmaz; geri getirmek için MASTER:true + ayar satırındaki display:none kaldır
   on:true,last:0,voice:null,
   pick(){
-    if(!('speechSynthesis' in window))return;
+    if(!this.MASTER||!('speechSynthesis' in window))return;
     const vs=speechSynthesis.getVoices();
     this.voice=vs.find(v=>/^en/i.test(v.lang)&&/google|samantha|zira|female/i.test(v.name))||vs.find(v=>/^en/i.test(v.lang))||null;},
   say(word,minGap){
-    if(!this.on)return;
+    if(!this.MASTER||!this.on)return;
     const n=performance.now();if(n-this.last<(minGap||850))return;this.last=n;
     if('speechSynthesis' in window){
       try{
@@ -2049,7 +2051,7 @@ const Voice={
     }
     Sfx.sparkle();}
 };
-if('speechSynthesis' in window){Voice.pick();speechSynthesis.addEventListener&&speechSynthesis.addEventListener('voiceschanged',()=>Voice.pick());}
+if(Voice.MASTER&&'speechSynthesis' in window){Voice.pick();speechSynthesis.addEventListener&&speechSynthesis.addEventListener('voiceschanged',()=>Voice.pick());}
 const Music={
   on:true,playing:false,int:null,step:0,next:0,g:null,tension:0,stepDur:.28,
   calm:[[293.66,369.99,440],[261.63,329.63,392],[220,277.18,329.63],[246.94,311.13,369.99]],
