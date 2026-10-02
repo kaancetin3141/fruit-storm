@@ -239,9 +239,9 @@ body.reduce-motion #xpFill::before{animation:none}
 #menuTopBar .icon-btn{flex:none}
 #menuLogo{font-size:clamp(40px,11vw,72px);position:relative}
 .logo-fruit{position:absolute;z-index:1;filter:drop-shadow(0 8px 8px rgba(80,40,110,.35))}
-#lf1{width:92px;left:-52px;top:-24px;animation:bob 3.4s ease-in-out infinite,fruitGlow 4s ease-in-out infinite}
-#lf2{width:72px;right:-44px;top:4px;animation:bob 2.9s .5s ease-in-out infinite,fruitGlow 4s 1.3s ease-in-out infinite}
-#lf3{width:80px;left:-36px;bottom:-28px;animation:bob 3.8s .9s ease-in-out infinite,fruitGlow 4s 2.6s ease-in-out infinite}
+#lf1{width:92px;left:-64px;top:-28px;animation:bob 3.4s ease-in-out infinite,fruitGlow 4s ease-in-out infinite}
+#lf2{width:72px;right:-50px;top:2px;animation:bob 2.9s .5s ease-in-out infinite,fruitGlow 4s 1.3s ease-in-out infinite}
+#lf3{width:80px;left:-48px;bottom:-42px;animation:bob 3.8s .9s ease-in-out infinite,fruitGlow 4s 2.6s ease-in-out infinite}
 @keyframes bob{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-10px) rotate(5deg)}}
 @keyframes fruitGlow{0%,100%{filter:drop-shadow(0 8px 8px rgba(80,40,110,.35)) drop-shadow(0 0 0 rgba(255,201,61,0))}50%{filter:drop-shadow(0 8px 8px rgba(80,40,110,.35)) drop-shadow(0 0 12px rgba(255,201,61,.6))}}
 #menuSub{color:#6A3E7E;font-size:12px;font-weight:600;background:rgba(255,255,255,.8);padding:4px 14px;border-radius:14px;text-align:center;backdrop-filter:blur(4px)}
@@ -255,32 +255,6 @@ body.reduce-motion #xpFill::before{animation:none}
 .qa-btn .qa-ic{font-size:22px;line-height:1}
 .qa-btn.hasdot::after{content:'';position:absolute;top:-3px;right:-3px;width:12px;height:12px;
   border-radius:50%;background:var(--red);border:2px solid #fff;animation:pulseDot2 1s infinite}
-#mascot{position:absolute;right:calc(10px + var(--sar));bottom:calc(72px + var(--sab));width:76px;height:76px;
-  pointer-events:none;z-index:5;filter:drop-shadow(0 4px 4px rgba(80,40,110,.35))}
-/* Oyun içi maskot yardımcısı + konuşma balonu */
-#gameMascot{display:none;position:absolute;left:calc(6px + var(--sal));bottom:calc(42px + var(--sab));
-  z-index:6;pointer-events:none;flex-direction:column;align-items:flex-start}
-#scr-game.active #gameMascot{display:flex}
-#gameMascot .gm-cv{width:74px;height:74px;animation:mascotBob 3.4s ease-in-out infinite;
-  filter:drop-shadow(0 4px 5px rgba(80,40,110,.4))}
-body.reduce-motion #gameMascot .gm-cv{animation:none}
-@keyframes mascotBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
-.mascot-hype{animation:mascotHype .55s cubic-bezier(.2,1.7,.4,1) !important}
-@keyframes mascotHype{0%{transform:scale(1)}35%{transform:scale(1.22) rotate(-7deg)}65%{transform:scale(.94) rotate(4deg)}100%{transform:scale(1) rotate(0)}}
-/* Maskot tıkla-coş easter egg — canvas tıklanabilir, konteyner giriş alanını asla bloklamaz */
-#mascot,#gameMascot .gm-cv{pointer-events:auto;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.gm-bubble{position:absolute;bottom:calc(100% + 7px);left:2px;max-width:170px;min-width:66px;
-  background:linear-gradient(160deg,#FFFDFE,#FFEBF5);border:2px solid #fff;border-radius:14px 14px 14px 4px;
-  padding:7px 10px;font-size:11.5px;line-height:1.3;font-weight:700;color:#6A2A56;white-space:normal;
-  box-shadow:0 4px 0 rgba(122,36,86,.22),0 8px 18px rgba(60,20,60,.28);
-  opacity:0;transform:scale(.5);transform-origin:bottom left;pointer-events:none;
-  transition:opacity .18s,transform .28s cubic-bezier(.2,1.5,.4,1)}
-.gm-bubble.show{opacity:1;transform:scale(1)}
-.gm-bubble::after{content:'';position:absolute;bottom:-6px;left:8px;width:11px;height:11px;
-  background:#FFEBF5;border-right:2px solid #fff;border-bottom:2px solid #fff;
-  transform:rotate(45deg);border-radius:2px}
-@media(max-width:560px){#gameMascot .gm-cv{width:60px;height:60px}
-  .gm-bubble{max-width:132px;font-size:10.5px;padding:6px 8px}}
 /* Klansız oyuncu için Klan Kur CTA şeridi */
 .rank-clan.cta{flex-direction:row;flex-wrap:wrap;border:2px dashed #E9B7DC;background:linear-gradient(120deg,rgba(255,240,250,.96),rgba(243,222,255,.96));
   box-shadow:0 3px 0 rgba(196,132,196,.35);cursor:default}
@@ -554,7 +528,7 @@ body.reduce-motion .pre-emoji{animation:none}
 @media (max-width:400px){#topScore{display:none}}
 @media (max-height:660px){
   #menuLogo{font-size:clamp(40px,11vw,64px)}
-  #lf1{width:76px;left:-44px;top:-22px}#lf2{width:62px;right:-38px}#lf3{width:68px;left:-32px;bottom:-24px}
+  #lf1{width:76px;left:-52px;top:-26px}#lf2{width:62px;right:-44px}#lf3{width:68px;left:-40px;bottom:-30px}
   #scr-menu{gap:8px}.btn.big{font-size:20px;padding:13px 44px}
 }
 .overlay{position:fixed;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;
@@ -950,8 +924,6 @@ body.reduce-motion .os-row.just-done::after{animation:none;opacity:0}
   border:1.5px solid var(--g-brd);box-shadow:var(--g-shadow)}
 #intro .cond{background:rgba(224,247,239,.92)}
 #intro .tut{background:rgba(248,234,251,.78)}
-.gm-bubble{background:rgba(255,255,255,.8);-webkit-backdrop-filter:var(--g-blur-sm);backdrop-filter:var(--g-blur-sm)}
-.gm-bubble::after{background:rgba(255,255,255,.8)}
 .lvlup-pop{background:rgba(106,43,184,.72);border:1px solid rgba(255,255,255,.3);
   -webkit-backdrop-filter:var(--g-blur-sm);backdrop-filter:var(--g-blur-sm)}
 .comboHudGlass,#comboHud .ch-mult{background:rgba(106,43,184,.62)}
@@ -982,6 +954,61 @@ body.theme-valentine .qa-btn{background:rgba(255,220,233,.55);border-color:rgba(
 body.theme-christmas .boostBtn{background:rgba(255,255,255,.55)}
 body.theme-halloween .boostBtn{background:rgba(74,46,115,.55);border-color:rgba(124,79,184,.5);color:#E9D8FF}
 body.theme-valentine .boostBtn{background:rgba(255,233,242,.6);border-color:rgba(240,111,168,.4)}
+/* ================= 📱 MOBİL CILA (≤560px) — dokunma hedefleri, çip dengesi, tahta odak ================= */
+@media (max-width:560px){
+  /* Dokunma deneyimi: çift-dokunma zoom gecikmesi + tap highlight yok */
+  button,.btn,.qa-btn,.bb-btn,.boostBtn,.mnode .dot,.panel-x,.icon-btn,.chip{
+    touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+  /* Üst çip sırası: kırpılma yok, nefes var */
+  #menuTopBar{gap:6px}
+  #profileChip{min-width:0;flex:0 1 auto;max-width:46vw}
+  #profName{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:88px}
+  #menuResources{gap:5px}
+  .res-chip{padding:6px 8px;font-size:13px;gap:4px}
+  .res-chip svg{width:15px;height:15px}
+  /* Logo: meyveler yazının üstüne binmesin */
+  #menuLogo{font-size:clamp(34px,10vw,56px)}
+  #lf1{width:58px;left:-58px;top:-30px}
+  #lf2{width:48px;right:-54px;top:-2px}
+  #lf3{width:52px;left:-48px;bottom:-40px}
+  #menuSub{font-size:11px;padding:4px 12px}
+  /* Quick actions: 6+2 dağınık sıra yerine dengeli 4+4 */
+  #menuQuickActions{gap:7px;max-width:240px;margin-left:auto;margin-right:auto}
+  /* Harita başlığı: sezon rozetinin altına taşmadan tek kompakt sıra */
+  #scr-map .map-head{padding-top:calc(86px + var(--sat));gap:5px;flex-wrap:nowrap}
+  #mapTitle{font-size:17px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #mapHeadRight{gap:4px;flex-wrap:nowrap}
+  #mapHeadRight .icon-btn{width:36px;height:36px;border-radius:11px}
+  #lifeTotal,#starTotal{padding:5px 8px;font-size:12.5px;border-radius:10px;gap:4px}
+  #lifeTotal svg,#starTotal svg{width:14px;height:14px}
+  /* Oyun üst şeridi: skor küçük ekranda da GÖRÜNÜR, kompakt haplar */
+  #gameTop{gap:6px}
+  #lvChip{font-size:13px;padding:6px 10px;border-radius:11px}
+  #topScore{display:inline-block;font-size:12.5px;padding:7px 10px}
+  #topMoves,#topTime{min-width:52px;padding:5px 8px;border-radius:11px}
+  #topMoves b,#topTime b{font-size:18px}
+  /* Görev çipleri: küçük ama okunur */
+  #topMission{gap:5px;padding:0 max(8px,var(--sar))}
+  #topMission .chip{font-size:11px;padding:3px 8px}
+  /* Boost bar: başparmak dostu 44px dokunma hedefi */
+  #boostBar{gap:6px;padding:3px max(8px,var(--sar)) 4px}
+  .boostBtn{padding:8px 10px;min-height:44px;border-radius:14px}
+  .boostBtn .bIc{font-size:19px}
+  /* Alt skor çubuğu: koyu zeminde kaybolan bar yerine cam şerit */
+  #hBarWrap{height:16px;background:rgba(255,255,255,.3);border:1.5px solid rgba(255,255,255,.45);
+    box-shadow:var(--g-chip);-webkit-backdrop-filter:var(--g-blur-sm);backdrop-filter:var(--g-blur-sm)}
+  /* Skor satırı: ortalanmış cam hap */
+  #hScore{width:fit-content;margin:5px auto calc(6px + var(--sab));font-size:12.5px;padding:4px 14px;
+    border-radius:11px;background:rgba(46,18,62,.55);border:1px solid rgba(255,255,255,.25);
+    -webkit-backdrop-filter:var(--g-blur-sm);backdrop-filter:var(--g-blur-sm)}
+  /* Alt bar: daha rahat dokunma alanı */
+  .bottom-bar{padding:5px 0 calc(5px + var(--sab))}
+  .bb-btn{padding:7px 4px}
+  .bb-btn .bb-ic{font-size:23px}
+  .bb-btn .bb-lb{font-size:9.5px}
+  /* Paneller: mobilde başlık dengesi */
+  .panel h2{font-size:23px}
+}
 </style>
 </head>
 <body>
@@ -1042,7 +1069,6 @@ body.theme-valentine .boostBtn{background:rgba(255,233,242,.6);border-color:rgba
     <button class="qa-btn" id="btnAchievements" title="Başarımlar"><span class="qa-ic">🏅</span></button>
     <button class="qa-btn" id="btnShop" title="Market"><span class="qa-ic">🛒</span></button>
   </div>
-  <canvas id="mascot" class="mascot-cv" width="184" height="184"></canvas>
   <nav id="bottomBar" class="bottom-bar">
     <button class="bb-btn" id="bbHome" title="Ana Menü"><span class="bb-ic">🏠</span><span class="bb-lb">Menü</span></button>
     <button class="bb-btn" id="bbPlay2" title="Oyna"><span class="bb-ic">▶️</span><span class="bb-lb">Oyna</span></button>
@@ -1108,7 +1134,6 @@ body.theme-valentine .boostBtn{background:rgba(255,233,242,.6);border-color:rgba
   <div id="hScore" class="m-only">0 / 0</div>
   <div id="comboBanner"></div>
   <div id="comboHud"><div class="ch-count"><span class="ch-x">x</span><span class="ch-n">2</span></div><div class="ch-label" data-i="combo">KOMBO</div><div class="ch-mult">×1.5</div></div>
-  <div id="gameMascot" aria-hidden="true"><div class="gm-bubble" id="gmBubble"></div><canvas id="gameMascotCv" class="gm-cv mascot-cv" width="184" height="184"></canvas></div>
   <div id="hammerSwing">🔨</div>
   <div id="fishLayer" aria-hidden="true"></div>
   <div id="chestLayer" aria-hidden="true"></div>
@@ -1338,15 +1363,15 @@ pt:{login:'Entrar',register:'Cadastrar',loginBtn:'Entrar',regBtn:'Cadastrar',nic
 ru:{login:'Войти',register:'Регистрация',loginBtn:'Войти',regBtn:'Регистрация',nick:'Ник',email:'Почта',pass:'Пароль',or:'или',guest:'Играть гостем',localSrv:'Локальная демо · офлайн',tagline:'Совмещай · Каскады · Собирай звёзды',play:'ИГРАТЬ',levels:'Уровни',moves:'ХОДЫ',time:'ВРЕМЯ',target:'ЦЕЛЬ',score:'ОЧКИ',collect:'СОБРАТЬ',jelly:'ЖЕЛЕ',settings:'Настройки',sound:'Звуки',voice:'Голоса',voiceSub:'Sweet! Tasty! Perfect!',music:'Музыка',vib:'Вибрация',lang:'Язык',server:'URL сервера',testSrv:'Проверить связь',demo:'Демо-режим',demoSub:'Игра играет сама',reset:'Сбросить прогресс',about:'Meyve Patlat! v4.5',close:'Закрыть',logout:'Выход',winSub:'Великолепно!',next:'ДАЛЬШЕ',retry:'Ещё раз',toMap:'Карта',loseTitle:'Время/ходы вышли!',loseSub:'Продолжить?',tryAgain:'ЕЩЁ РАЗ',paused:'ПАУЗА',resume:'ПРОДОЛЖИТЬ',restart:'Заново',quit:'К карте',sugarRush:'САХАРНЫЙ ЗАВАЛ!',needField:'Заполните все поля',badMail:'Неверная почта',shortPass:'Минимум 4 символа',noUser:'Аккаунт не найден',wrongPass:'Неверный пароль',exists:'Почта уже занята',welcome:'Добро пожаловать',srvLocal:'Нет сервера — демо-режим',srvOk:'Связь установлена',srvFail:'Сервер недоступен',resetQ:'Точно? Ещё раз',resetDone:'Сброшено',bye:'Вы вышли',hint1:'Меняй фрукты — собирай 3+!',locked:'Сначала пройди прошлый уровень!',shuffled:'Нет ходов — перемешиваю!',bonusTxt:'Бонус! Ходы взрываются!',best:'Рекорд',newRec:'НОВЫЙ РЕКОРД!',demoOn:'АВТО · стоп',hard:'СЛОЖНЫЙ',epic:'ОЧЕНЬ СЛОЖНЫЙ',hardTxt:'СЛОЖНЫЙ УРОВЕНЬ!',epicTxt:'ОЧЕНЬ СЛОЖНЫЙ УРОВЕНЬ!',tutIce:'Заморожен: собирай рядом',tutStone:'Камень: разрушается сборами рядом',tutJelly:'Собирай на желе',tutTime:'УРОВЕНЬ НА ВРЕМЯ! Часы +5с!',quests:'Задания',ranks:'Рейтинг',clan:'Клан',shop:'Магазин',garden:'Сад',gardenSub:'Трать звёзды, украшай сад!',questSub:'3 задания в день',rankSub:'Недельный рейтинг',shopSub:'Улучшай за золото',claim:'ЗАБРАТЬ',claimed:'Забрано',allDone:'На сегодня всё!',goldPlus:'Золото получено',qJelly:'Очисти желе',qSpecial:'Создай особые конфеты',qWin:'Побеждай уровни',qStar:'Зарабатывай звёзды',qCombo:'Делай комбо (x2+)',qScore:'Набирай очки',lives:'Жизни',livesSub:'1 жизнь каждые 3 часа',refill:'Наполнить жизни — 300',noLives:'Жизни кончились! Ждите или купите',lifeFull:'Жизни полны!',hammer:'Молот',hammerD:'Разбей одну плитку',shuffle:'Перемешать',shuffleD:'Перемешать поле',moreMoves:'+5 Ходов',moreMovesD:'Добавить 5 ходов',fullLives:'Наполнить жизни',fullLivesD:'Заполняет все жизни',buy:'КУПИТЬ',needGold:'Мало золота!',itemGet:'Получено',bought:'Куплено!',usedHammer:'Режим молота: коснитесь плитки',movesUsed:'+5 ходов!',oncePerLevel:'Один раз за уровень',shopHint:'Доступно в магазине!',clanName:'Название клана',createClan:'Создать клан',clanSug:'Предложения',members:'Участники',chat:'Чат',leaveClan:'Покинуть клан',send:'Отправить',chatPh:'Напишите сообщение...',clanCreated:'Клан создан!',clanLeft:'Клан покинут',clanStars:'всего звёзд',clanOnline:'Демо — участники = боты',continue:'ПРОДОЛЖИТЬ',contMoves:'+5 ходов',contTime:'+15 секунд',timeNoMoves:'Нет бонусов ходов на уровнях времени',continueOk:'Продолжено — удачи!',gNeed:'Мало звёзд!',gDone:'Сад завершён!',gFountain:'Фонтан',gBench:'Скамейка',gTree:'Фруктовое дерево',gFlowers:'Клумба',gSwing:'Качели',gGreen:'Теплица',gArch:'Радужная арка',gStatue:'Золотая статуя',winCond:'ЦЕЛЬ',condScore:'наберите очки',condCollect:'соберите фрукты',condJelly:'Очисти всё желе',condTime:'очка до конца времени',tutL1:'👆 Свайп: собери 3 одинаковых фрукта!',tutL2:'✨ Собери 4 → полосатая конфета!',tutL3:'⏰ Уровень на время! Часы +5с',tutL4:'🌈 Собери 5 → радужная конфета!'}
 };
 const BACK_MENU={tr:'Ana Menüye Dön',en:'Back to Main Menu',de:'Zum Hauptmenü',es:'Menú Principal',fr:'Menu Principal',it:'Menu Principale',pt:'Menu Principal',ru:'В главное меню'};
-const MASCOT2_I18N={
-  tr:{mGo:'Hadi başlayalım!',mCombo:'Vay be, zincir!',mLow:'Az hamle kaldı!',mWin:'Harikaydın!',mLose:'Bir daha dene!',noClan:'Henüz klanın yok',noClanSub:'Klan kur, yıldızların klanına yazılsın!',mOrder:'Sipariş tamamlandı!',mTap1:'Oha! Gıdıklandım!',mTap2:'Bir zincir kur bakalım!',mTap3:'Elmaları patlat!'},
-  en:{mGo:'Let\u2019s go!',mCombo:'What a chain!',mLow:'Running low on moves!',mWin:'You were amazing!',mLose:'Try again!',noClan:'No clan yet',noClanSub:'Create a clan — your stars count for it!',mOrder:'Order complete!',mTap1:'Eek! Tickles!',mTap2:'Make a chain!',mTap3:'Blast those fruits!'},
-  de:{mGo:'Los geht\u2019s!',mCombo:'Was für eine Kette!',mLow:'Wenige Züge übrig!',mWin:'Du warst super!',mLose:'Versuch\u2019s nochmal!',noClan:'Noch kein Klan',noClanSub:'Gründe einen Klan — deine Sterne zählen!',mOrder:'Bestellung erfüllt!',mTap1:'Hihi! Das kitzelt!',mTap2:'Bilde eine Kette!',mTap3:'Knall die Früchte!'},
-  es:{mGo:'¡Vamos!',mCombo:'¡Vaya cadena!',mLow:'¡Quedan pocos movimientos!',mWin:'¡Fuiste increíble!',mLose:'¡Inténtalo otra vez!',noClan:'Aún sin clan',noClanSub:'¡Crea un clan y suma tus estrellas!',mOrder:'¡Pedido completo!',mTap1:'¡Ja! ¡Cosquillas!',mTap2:'¡Haz una cadena!',mTap3:'¡Explota esas frutas!'},
-  fr:{mGo:'C\u2019est parti !',mCombo:'Quelle chaîne !',mLow:'Plus que quelques coups !',mWin:'Tu as été formidable !',mLose:'Réessaie !',noClan:'Pas encore de clan',noClanSub:'Crée un clan — tes étoiles comptent !',mOrder:'Commande terminée !',mTap1:'Hihi ! Ça chatouille !',mTap2:'Fais une chaîne !',mTap3:'Fais tout exploser !'},
-  it:{mGo:'Andiamo!',mCombo:'Che catena!',mLow:'Poche mosse!',mWin:'Sei stato fantastico!',mLose:'Riprova!',noClan:'Ancora nessun clan',noClanSub:'Crea un clan — le tue stelle contano!',mOrder:'Ordine completato!',mTap1:'Ehi! Solletico!',mTap2:'Fai una catena!',mTap3:'Fai esplodere tutto!'},
-  pt:{mGo:'Vamos lá!',mCombo:'Que sequência!',mLow:'Poucas jogadas!',mWin:'Você foi incrível!',mLose:'Tente de novo!',noClan:'Ainda sem clã',noClanSub:'Crie um clã — suas estrelas contam!',mOrder:'Pedido completo!',mTap1:'Ei! Cócegas!',mTap2:'Faça uma sequência!',mTap3:'Exploda essas frutas!'},
-  ru:{mGo:'Поехали!',mCombo:'Вот это цепочка!',mLow:'Мало ходов!',mWin:'Было здорово!',mLose:'Попробуй ещё!',noClan:'Клана пока нет',noClanSub:'Создай клан — твои звёзды идут в него!',mOrder:'Заказ выполнен!',mTap1:'Ой! Щекотно!',mTap2:'Собери цепочку!',mTap3:'Взрывай фрукты!'}};
+const CLANCTA_I18N={
+  tr:{noClan:'Henüz klanın yok',noClanSub:'Klan kur, yıldızların klanına yazılsın!'},
+  en:{noClan:'No clan yet',noClanSub:'Create a clan — your stars count for it!'},
+  de:{noClan:'Noch kein Klan',noClanSub:'Gründe einen Klan — deine Sterne zählen!'},
+  es:{noClan:'Aún sin clan',noClanSub:'¡Crea un clan y suma tus estrellas!'},
+  fr:{noClan:'Pas encore de clan',noClanSub:'Crée un clan — tes étoiles comptent !'},
+  it:{noClan:'Ancora nessun clan',noClanSub:'Crea un clan — le tue stelle contano!'},
+  pt:{noClan:'Ainda sem clã',noClanSub:'Crie um clã — suas estrelas contam!'},
+  ru:{noClan:'Клана пока нет',noClanSub:'Создай клан — твои звёзды идут в него!'}};
 const WHEEL_I18N={
   tr:{wheel:'Çark',wheelSub:'Her gün bir bedava çevirme!',spin:'ÇEVİR!',wheelDone:'Bugün çevrildi',streak:'Seri'},
   en:{wheel:'Wheel',wheelSub:'One free spin every day!',spin:'SPIN!',wheelDone:'Spun today',streak:'Streak'},
@@ -1484,7 +1509,7 @@ Object.keys(I).forEach(l=>{
   Object.assign(I[l],SEASON_I18N[l]||SEASON_I18N.en);
   Object.assign(I[l],SHIELD_I18N[l]||SHIELD_I18N.en);
   Object.assign(I[l],ACH_I18N[l]||ACH_I18N.en);
-  Object.assign(I[l],MASCOT2_I18N[l]||MASCOT2_I18N.en);});
+  Object.assign(I[l],CLANCTA_I18N[l]||CLANCTA_I18N.en);});
 const t=k=>(I[Save.data.settings.lang]&&I[Save.data.settings.lang][k])||I.en[k]||I.tr[k]||k;
 function applyI18n(){
   document.documentElement.lang=Save.data.settings.lang;
@@ -2312,7 +2337,6 @@ async function explodeCells(seedCells,combo,exclude,fast){
       const oc=curLevel.collect.find(q=>q.type===tl.type);
       if(oc&&got[tl.type]>=oc.need&&!orderDone[tl.type]){
         orderDone[tl.type]=true;
-        setMascot('excited',1700);sayMascot.show('mOrder',4500);
         parts.push({kind:'shock',x:tl.px,y:tl.py,life:0,max:380});Sfx.sparkle();
         questAdd('qOrder',1);}}
     gained+=Math.round(60*mult+(tl.special?30:0));
@@ -2387,7 +2411,6 @@ function updateComboHud(n){
   hud.querySelector('.ch-n').style.color=col;
   hud.classList.add('show');
   hud.classList.remove('bump');void hud.offsetWidth;hud.classList.add('bump');
-  if(n>=3){setMascot('excited',1600);sayMascot.show('mCombo',6500);}
   if(n>=4)questAdd('qCascade',1);
   Save.data.stats.totalCombos=(Save.data.stats.totalCombos||0)+1;
   // Combo milestone gold rewards: x3→+5, x5→+10, x7→+20
@@ -2812,12 +2835,11 @@ async function finishWin(){
   if(curLevel.n%3===0||Math.random()<.25)setTimeout(dropItem,1600);
   Sfx.win();Voice.say('Sweet victory!');
   if(stars===3)setTimeout(()=>Voice.say('Perfect!'),1200);
-  setMascot('happy',2600);sayMascot.show('mWin',3000);
   // 3 yıldız = mükemmel — taçlı kutlama rozeti
   const wpEl=$('#ov-win .panel');
   const oldPf=wpEl.querySelector('.win-perfect');if(oldPf)oldPf.remove();
   if(stars===3){const pf=document.createElement('div');pf.className='win-perfect';pf.textContent='👑 '+t('perfect');wpEl.prepend(pf);}
-  $('#winTitle').textContent=t('levels')+' '+curLevel.n+' — OK!';
+  $('#winTitle').textContent=t('level')+' '+curLevel.n+' — OK!';
   $('#bestVal').textContent=fmt(Save.data.best[curLevel.n]||score);
   $('#newRec').style.display=newRec?'block':'none';
   const sv=$$('#ov-win .wstar');
@@ -2863,7 +2885,6 @@ function finishLose(){
     Save.write();}
   updateLifeUI();
   Sfx.lose();
-  setMascot('worried',3000);sayMascot.show('mLose',3000);
   $('#loseScore').textContent=fmt(score)+((curLevel.mode==='score'||curLevel.mode==='time')?' / '+fmt(curLevel.target):'');
   const lc=$('#loseChips');lc.innerHTML='';
   renderChips(lc,false);
@@ -2953,8 +2974,8 @@ function startLevel(n){
   showScreen('scr-game');
   layout();
   snapAll();
-  $('#lvChip').textContent=t('levels')+' '+n;
-  $('#pauseLvl').textContent=t('levels')+' '+n;
+  $('#lvChip').textContent=t('level')+' '+n;
+  $('#pauseLvl').textContent=t('level')+' '+n;
   // Zorluk çerçeveleri — epic altın parıltı, hard mor çerçeve
   const bdEl=$('#board');
   bdEl.classList.toggle('board-epic',curLevel.diff==='epic');
@@ -2967,7 +2988,6 @@ function startLevel(n){
   $('#pTarget').textContent=fmt(curLevel.target);
   if(isTime)renderTimeUI();
   updateMoves();updateMissionUI();refreshScoreUI();updateBoostBar();
-  lowMovesWarned=false;
   showPreLevel();
   const tok=runToken;
   (async()=>{
@@ -3021,8 +3041,6 @@ function beginLevel(){
   ov.classList.remove('show');
   clearTimeout(showPreLevel._at);
   Sfx.click();Sfx.pop(2,2);
-  setMascot('happy',2000);sayMascot.show('mGo',1500);
-  lowMovesWarned=false;
   inputLockUntil=performance.now()+250;
   const lv=curLevel.n,isTime=curLevel.mode==='time';
   if(isTime&&!Save.data.tut.time){Save.data.tut.time=1;Save.write();setTimeout(()=>toast(t('tutTime'),3200),2200);}
@@ -4228,7 +4246,7 @@ function applyThemeDom(){
       document.body.appendChild(pf);}}
   else if(pf)pf.remove();
   updateSeasonBadge();
-  renderMascot();} // maskot kostümü temayla değişsin
+}
 function confettiBurst(cols){
   const palette=cols||['#FF6FB5','#7B61E8','#FFD23D','#4CC9A8','#B56CE8','#7CE8D5'];
   for(let i=0;i<110;i++)fxParts.push({x:rand(0,innerWidth),y:rand(-180,-10),
@@ -4278,184 +4296,6 @@ function updateFx(dt){
     fctx.save();fctx.translate(p.x,p.y);fctx.rotate(p.rot);
     fctx.fillStyle=p.color;fctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);
     fctx.restore();}}
-
-/* ============ MASKOT ============ */
-let mascotMood='normal',mascotBlink=false;
-function drawKiraz(c,mood,blink){
-  c.clearRect(0,0,184,184);
-  c.save();c.translate(28,28);
-  const g=c.createRadialGradient(48,64,10,64,80,54);
-  g.addColorStop(0,'#FF8A70');g.addColorStop(.45,'#E03524');g.addColorStop(1,'#8E1608');
-  c.fillStyle=g;c.beginPath();c.arc(64,80,42,0,TAU);c.fill();
-  c.strokeStyle='rgba(120,20,10,.6)';c.lineWidth=3;c.stroke();
-  const s=c.createRadialGradient(46,60,2,46,60,20);
-  s.addColorStop(0,'rgba(255,255,255,.85)');s.addColorStop(1,'rgba(255,255,255,0)');
-  c.fillStyle=s;c.beginPath();c.ellipse(46,62,16,10,-.5,0,TAU);c.fill();
-  c.strokeStyle='#5D4022';c.lineWidth=6;c.lineCap='round';
-  c.beginPath();c.moveTo(64,40);c.quadraticCurveTo(66,26,72,20);c.stroke();
-  const lg=c.createLinearGradient(72,14,104,24);
-  lg.addColorStop(0,'#9CCC65');lg.addColorStop(1,'#33691E');
-  c.fillStyle=lg;
-  c.beginPath();c.moveTo(72,20);c.quadraticCurveTo(88,8,104,18);c.quadraticCurveTo(88,30,72,20);c.fill();
-  c.fillStyle='#8E1608';
-  c.beginPath();c.ellipse(50,120,10,5,0,0,TAU);c.ellipse(78,120,10,5,0,0,TAU);c.fill();
-  c.strokeStyle='#C22E18';c.lineWidth=7;c.lineCap='round';
-  if(mood==='excited'){
-    // Kollar havada — coşku!
-    c.beginPath();c.moveTo(26,76);c.quadraticCurveTo(8,66,6,46);c.stroke();
-    c.beginPath();c.moveTo(102,76);c.quadraticCurveTo(120,66,122,46);c.stroke();
-  }else if(mood==='happy'){
-    c.beginPath();c.moveTo(26,80);c.quadraticCurveTo(12,68,16,58);c.stroke();
-    c.beginPath();c.moveTo(102,80);c.quadraticCurveTo(116,68,112,58);c.stroke();
-  }else{
-    c.beginPath();c.moveTo(26,82);c.quadraticCurveTo(14,86,12,94);c.stroke();
-    c.beginPath();c.moveTo(102,82);c.quadraticCurveTo(114,86,116,94);c.stroke();}
-  const ey=70;
-  c.fillStyle='#fff';
-  const eh=blink?2:(mood==='worried'?10:12);
-  c.beginPath();c.ellipse(50,ey,9,eh,0,0,TAU);c.fill();
-  c.beginPath();c.ellipse(80,ey,9,eh,0,0,TAU);c.fill();
-  if(!blink){
-    if(mood==='excited'){
-      // Yıldız parıltılı gözler
-      const starEye=(sx,sy)=>{
-        c.save();c.translate(sx,sy);
-        const sg=c.createRadialGradient(0,0,1,0,0,8.5);
-        sg.addColorStop(0,'#FFF6C4');sg.addColorStop(.55,'#FFD23D');sg.addColorStop(1,'#FFAA20');
-        c.fillStyle=sg;
-        c.beginPath();
-        for(let i2=0;i2<5;i2++){
-          const a1=-Math.PI/2+i2*TAU/5,a2=a1+TAU/10;
-          c.lineTo(Math.cos(a1)*7.5,Math.sin(a1)*7.5);
-          c.lineTo(Math.cos(a2)*3.1,Math.sin(a2)*3.1);}
-        c.closePath();c.fill();
-        c.strokeStyle='#E08A00';c.lineWidth=1.2;c.stroke();
-        c.fillStyle='rgba(255,255,255,.95)';
-        c.beginPath();c.arc(-1.6,-2.2,1.4,0,TAU);c.fill();
-        c.restore();};
-      starEye(50,ey);starEye(80,ey);
-    }else{
-      c.fillStyle='#2A1420';
-      if(mood==='happy'){
-        c.strokeStyle='#2A1420';c.lineWidth=4;c.lineCap='round';
-        c.beginPath();c.arc(50,ey+3,6,Math.PI,0);c.stroke();
-        c.beginPath();c.arc(80,ey+3,6,Math.PI,0);c.stroke();
-      }else{
-        c.beginPath();c.arc(50,ey+1,4.5,0,TAU);c.fill();
-        c.beginPath();c.arc(80,ey+1,4.5,0,TAU);c.fill();
-        c.fillStyle='#fff';
-        c.beginPath();c.arc(51.5,ey-.5,1.5,0,TAU);c.fill();
-        c.beginPath();c.arc(81.5,ey-.5,1.5,0,TAU);c.fill();}}}
-  c.strokeStyle='#5A0E06';c.lineWidth=4;c.lineCap='round';
-  if(mood==='excited'){
-    // Kocaman gülüş
-    c.fillStyle='#7A1420';
-    c.beginPath();c.moveTo(51,88);
-    c.quadraticCurveTo(65,108,79,88);
-    c.quadraticCurveTo(65,94,51,88);c.closePath();c.fill();
-    c.fillStyle='#FF8A9E';
-    c.beginPath();c.ellipse(65,95,6,3.4,0,0,Math.PI);c.fill();
-    // yanak allığı güçlü
-    c.fillStyle='rgba(255,110,130,.6)';
-    c.beginPath();c.ellipse(34,88,7.5,4.5,0,0,TAU);c.ellipse(96,88,7.5,4.5,0,0,TAU);c.fill();
-  }else if(mood==='happy'){
-    c.fillStyle='#7A1420';
-    c.beginPath();c.arc(65,92,10,0,Math.PI);c.closePath();c.fill();
-    c.fillStyle='#FF8A9E';
-    c.beginPath();c.arc(65,97,4,0,Math.PI);c.fill();
-  }else if(mood==='worried'){
-    c.beginPath();c.arc(65,98,6,Math.PI,0);c.stroke();
-  }else{
-    c.beginPath();c.arc(65,88,9,.25*Math.PI,.75*Math.PI);c.stroke();}
-  c.fillStyle='rgba(255,120,130,.45)';
-  c.beginPath();c.ellipse(36,90,6,4,0,0,TAU);c.ellipse(94,90,6,4,0,0,TAU);c.fill();
-  drawMascotCostume(c,resolveThemeId());
-  c.restore();}
-/* Maskot tema kostümleri — aktif temaya göre Kiraz kostüm değiştirir */
-function drawMascotCostume(c,th){
-  if(th==='halloween'){
-    // Cadı şapkası: mor koni + geniş kenar + altın toka
-    c.save();c.translate(63,36);c.rotate(-.16);
-    const g=c.createLinearGradient(-20,-44,18,0);
-    g.addColorStop(0,'#8A50D8');g.addColorStop(1,'#3A1E63');
-    c.fillStyle=g;
-    c.beginPath();c.moveTo(-20,0);
-    c.quadraticCurveTo(-8,-26,12,-46);
-    c.quadraticCurveTo(17,-52,22,-45);
-    c.quadraticCurveTo(18,-20,20,0);
-    c.closePath();c.fill();
-    c.beginPath();c.ellipse(19,-46,8,5.5,.55,0,TAU);c.fill(); // bükülmüş uç
-    c.fillStyle='#2C1747';
-    c.beginPath();c.ellipse(0,2,31,7.5,0,0,TAU);c.fill();
-    c.fillStyle='#4A2A78';
-    c.beginPath();c.ellipse(0,-.5,31,7.5,0,0,TAU);c.fill();
-    c.fillStyle='#FFD23D';c.fillRect(-8,-4.5,15,8); // toka
-    c.fillStyle='#2C1747';c.fillRect(-4.5,-2.5,6,4);
-    c.restore();
-  }else if(th==='christmas'){
-    // Noel şapkası: kırmızı koni (sağa eğik) + kürk kenar + pompon
-    c.save();c.translate(66,36);c.rotate(.1);
-    const g=c.createLinearGradient(-22,-40,26,-6);
-    g.addColorStop(0,'#FF6B6B');g.addColorStop(1,'#C22430');
-    c.fillStyle=g;
-    c.beginPath();c.moveTo(-26,0);
-    c.quadraticCurveTo(-16,-30,10,-42);
-    c.quadraticCurveTo(30,-50,38,-36);
-    c.quadraticCurveTo(22,-26,22,0);
-    c.closePath();c.fill();
-    c.fillStyle='#FFF7F0';
-    c.beginPath();c.ellipse(0,1,33,8.5,0,0,TAU);c.fill(); // kürk kenar
-    c.beginPath();c.arc(40,-37,8.5,0,TAU);c.fill(); // pompon
-    c.fillStyle='rgba(210,180,170,.4)';
-    c.beginPath();c.ellipse(0,4.5,32,4.5,0,0,TAU);c.fill();
-    c.restore();
-  }else if(th==='valentine'){
-    // Kalp antenli kuşak + minik kanat detayı
-    c.save();
-    c.strokeStyle='#F06FA8';c.lineWidth=6;c.lineCap='round';
-    c.beginPath();c.arc(64,74,44,Math.PI*1.14,Math.PI*1.86);c.stroke(); // kuşak
-    c.strokeStyle='#F06FA8';c.lineWidth=3;
-    c.beginPath();c.moveTo(46,32);c.quadraticCurveTo(38,16,42,6);c.stroke();
-    c.beginPath();c.moveTo(82,32);c.quadraticCurveTo(92,18,90,8);c.stroke();
-    const miniHeart=(hx,hy,s,col)=>{c.fillStyle=col;c.beginPath();c.moveTo(hx,hy+s*.34);
-      c.bezierCurveTo(hx-s*.5,hy-s*.12,hx-s*.36,hy-s*.46,hx,hy-s*.2);
-      c.bezierCurveTo(hx+s*.36,hy-s*.46,hx+s*.5,hy-s*.12,hx,hy+s*.34);c.closePath();c.fill();};
-    miniHeart(42,4,12,'#E8455A');
-    miniHeart(90,6,12,'#FF6FB5');
-    c.restore();}}
-function renderMascot(){
-  $$('.mascot-cv').forEach(m=>{if(m)drawKiraz(m.getContext('2d'),mascotMood,mascotBlink);});
-  $$('.mascot-cv').forEach(m=>{m.classList.toggle('mascot-hype',mascotMood==='excited');});}
-setInterval(()=>{
-  if(mascotMood!=='happy'&&mascotMood!=='excited'){
-    mascotBlink=true;renderMascot();
-    setTimeout(()=>{mascotBlink=false;renderMascot();},150);}
-},3400);
-function setMascot(mood,dur){
-  mascotMood=mood;renderMascot();
-  clearTimeout(setMascot._t);
-  if(dur)setMascot._t=setTimeout(()=>{mascotMood='normal';renderMascot();},dur);}
-/* Oyun içi maskot konuşma balonu — tuşa-göre kısa mesajlar, spam önleyen cooldown */
-const sayMascot={_cd:{},
-  show(key,cd){
-    if(state!=='play'||pausedFlag)return;
-    const now=performance.now();
-    if(this._cd[key]&&now<this._cd[key])return;
-    this._cd[key]=now+(cd||5000);
-    const b=$('#gmBubble');if(!b)return;
-    b.textContent=t(key);b.classList.add('show');
-    clearTimeout(this._t);
-    this._t=setTimeout(()=>b.classList.remove('show'),2200);}};
-
-/* Maskot tıkla-coş easter egg — dokununca coşar, oyunda rastgele şaklar */
-const MASCOT_TAPS=['mTap1','mTap2','mTap3'];
-document.addEventListener('pointerdown',e=>{
-  const cv=e.target&&e.target.classList&&e.target.classList.contains('mascot-cv')?e.target:null;
-  if(!cv)return;
-  setMascot('excited',2000);
-  Sfx.pop(2,2);vibrate(12);
-  if(state==='play'&&!pausedFlag)sayMascot.show(MASCOT_TAPS[irand(MASCOT_TAPS.length)],1200);
-});
 
 /* ============ GÖREVLER ============ */
 const QDEFS={
@@ -4937,7 +4777,7 @@ function drawGardenScene(){
     c.beginPath();c.arc(sx2,h*.7,7,0,TAU);c.fill();
     c.fillRect(sx2-5,h*.74,10,16);
     c.fillStyle='#D6A018';c.fillRect(sx2-9,h*.88,18,4);}
-  c.save();c.translate(w*.15,h*.9);c.scale(.5,.5);drawKiraz(c,'happy',false);c.restore();}
+}
 // Ambient animation overlay for garden (clouds, butterflies, sparkles, swaying)
 let gardenAnimRAF=0;
 function drawGardenAnim(now){
@@ -5219,12 +5059,12 @@ function showScreen(id){
   Music.setTension(0);
   updateSeasonBadge(id==='scr-game');
   updateLifeUI();updateBoostBar();
-  if(id==='scr-menu'){setMascot('normal');
+  if(id==='scr-menu'){
     $('#btnPlay').classList.toggle('pulse',wheelAvailable()||dailyBonusAvailable());
     $('#btnDaily').classList.toggle('hasdot',dailyBonusAvailable());
     $('#btnWheel').classList.toggle('hasdot',wheelAvailable());
     $('#btnQuests').classList.toggle('hasdot',questClaimable()>0);
-    const ln=$('#menuLevelNum');if(ln)ln.textContent=t('levels')+' '+Save.data.unlocked;}}
+    const ln=$('#menuLevelNum');if(ln)ln.textContent=t('level')+' '+Save.data.unlocked;}}
 function toast(msg,dur){
   const el=$('#toast');el.textContent=msg;el.classList.add('show');
   clearTimeout(toast._t);toast._t=setTimeout(()=>el.classList.remove('show'),dur||2000);}
@@ -5247,18 +5087,13 @@ function showCombo(n){
   el.classList.remove('pop');void el.offsetWidth;el.classList.add('pop');
   Voice.say(pickWord(k).replace('!',''));
   questAdd('qCombo',1);}
-let lowMovesWarned=false;
 function updateMoves(){
   const tm=$('#topMoves');
   tm.querySelector('b').textContent=moves;
   $('#pMoves').textContent=moves;
   const isScore=curLevel&&curLevel.mode!=='time';
   tm.classList.toggle('danger',moves<=3&&isScore);
-  tm.classList.toggle('warn',moves<=5&&moves>3&&isScore);
-  // Maskot endişesi — hamleler azalınca (bölüm başına bir uyarı)
-  if(moves>3)lowMovesWarned=false;
-  if(moves<=3&&!lowMovesWarned&&state==='play'&&!finished&&!pausedFlag){
-    lowMovesWarned=true;setMascot('worried',2800);sayMascot.show('mLow',4000);}}
+  tm.classList.toggle('warn',moves<=5&&moves>3&&isScore);}
 function makeChip(iconFn,txt,done,bump,key){
   const ch=document.createElement('span');
   ch.className='chip'+(done?' done':'')+(bump&&lastChip[key]!==undefined&&lastChip[key]!==txt?' bump':'');
@@ -5343,7 +5178,7 @@ function condText(){
   return fmt(curLevel.target)+' '+t('condScore');}
 function showIntro(){
   const el=$('#intro');
-  el.innerHTML='<b>'+t('levels')+' '+curLevel.n+'</b>';
+  el.innerHTML='<b>'+t('level')+' '+curLevel.n+'</b>';
   if(curLevel.diff!=='normal'){
     const d=document.createElement('div');
     d.className='dTag '+curLevel.diff;
@@ -5509,8 +5344,8 @@ function renderPauseStats(){
 function setLang(l){
   Save.data.settings.lang=l;Save.write();applyI18n();setAuthMode(authMode);
   if(curLevel){
-    $('#lvChip').textContent=t('levels')+' '+curLevel.n;
-    $('#pauseLvl').textContent=t('levels')+' '+curLevel.n;
+    $('#lvChip').textContent=t('level')+' '+curLevel.n;
+    $('#pauseLvl').textContent=t('level')+' '+curLevel.n;
     if(curLevel.mode==='time')renderTimeUI();}
   if($('#ov-set').classList.contains('show'))openSettings(settingsFrom);}
 function makeAppIcon(size){
@@ -5688,7 +5523,6 @@ function wireUI(){
     }else{moves+=5;updateMoves();}
     finished=false;
     hideOverlays();
-    setMascot('happy',1800);
     inputLockUntil=performance.now()+350;
     toast(t('continueOk'));});
   $('#btnShield').addEventListener('click',()=>{
@@ -5700,7 +5534,6 @@ function wireUI(){
     }else{moves+=5;updateMoves();}
     finished=false;
     hideOverlays();
-    setMascot('happy',1800);
     inputLockUntil=performance.now()+350;
     toast(t('shieldUsed'));});
   $('#btnSettings').addEventListener('click',()=>{Sfx.click();openSettings('menu');});
@@ -5846,7 +5679,6 @@ function frame(ts){
   selEl.value=Save.data.settings.lang;
   applyI18n();
   buildMenuFruits();
-  renderMascot();
   injectPWA();
   wireUI();
   wireInput();
