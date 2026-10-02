@@ -1159,6 +1159,66 @@ body.reduce-motion #scr-auth.active .auth-card>*,body.reduce-motion #scr-auth.ac
 body.reduce-motion #tabPill{transition:none!important}
 body.reduce-motion #splash.hide .sp-logo,body.reduce-motion #splash.hide .sp-bar,body.reduce-motion #splash.hide .sp-txt,
 body.reduce-motion #splash.hide .sp-fruits i{transition:none!important;transform:none!important;opacity:1}
+/* ============================================================
+   🌟 TÜM EKRAN KOREOGRAFİLERİ (v52) — menü/harita/oyun girişleri,
+   harita düğüm stagger'ı, hover mikro etkileşimler + taşma düzeltmeleri
+   ============================================================ */
+/* Splash arkasındaki ekranlar da animasyonu bekler */
+body.boot-wait #scr-menu.active>*,body.boot-wait #scr-game.active>*,
+body.boot-wait #scr-map.active .mnode{animation:none!important}
+/* --- MENÜ: logo zıplar, OYNA patlar, hızlı aksiyonlar kaskad --- */
+#scr-menu.active #menuTopBar{animation:menuRow .5s cubic-bezier(.2,.8,.3,1.15) both}
+#scr-menu.active #menuLogo{animation:authCardIn .55s cubic-bezier(.2,.9,.3,1.26) .06s both}
+#scr-menu.active #menuSub{animation:menuRow .45s .14s both}
+#scr-menu.active #menuLevelInfo{animation:menuRow .45s .2s both}
+#scr-menu.active #btnPlay{animation:playPop .6s cubic-bezier(.2,.9,.3,1.35) .26s both,btnPulse 1.6s ease-in-out 1.3s infinite}
+#scr-menu.active #menuQuickActions{animation:menuRow .45s .36s both}
+#scr-menu.active #menuQuickActions .qa-btn{animation:qaPop .42s cubic-bezier(.2,.9,.3,1.35) both}
+#scr-menu.active #menuQuickActions .qa-btn:nth-child(1){animation-delay:.44s}
+#scr-menu.active #menuQuickActions .qa-btn:nth-child(2){animation-delay:.48s}
+#scr-menu.active #menuQuickActions .qa-btn:nth-child(3){animation-delay:.52s}
+#scr-menu.active #menuQuickActions .qa-btn:nth-child(4){animation-delay:.56s}
+#scr-menu.active #menuQuickActions .qa-btn:nth-child(5){animation-delay:.6s}
+#scr-menu.active #menuQuickActions .qa-btn:nth-child(6){animation-delay:.64s}
+#scr-menu.active #menuQuickActions .qa-btn:nth-child(7){animation-delay:.68s}
+#scr-menu.active #menuQuickActions .qa-btn:nth-child(8){animation-delay:.72s}
+#scr-menu.active #bottomBar{animation:hudBottomIn .5s .5s cubic-bezier(.2,.8,.3,1.1) both}
+@keyframes menuRow{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes playPop{0%{opacity:0;transform:scale(.55) rotate(-4deg)}62%{opacity:1;transform:scale(1.1) rotate(1.5deg)}100%{opacity:1;transform:scale(1) rotate(0)}}
+@keyframes qaPop{0%{opacity:0;transform:scale(.4) translateY(12px)}66%{opacity:1;transform:scale(1.14) translateY(-2px)}100%{opacity:1;transform:scale(1) translateY(0)}}
+/* --- HARİTA: düğümler sırayla pop + masaüstünde hover kaldırma --- */
+.mnode{animation:mnodeIn .5s cubic-bezier(.2,.9,.3,1.3) both;animation-delay:calc(var(--i,0)*55ms)}
+@keyframes mnodeIn{0%{opacity:0;transform:scale(.35) translateY(16px)}62%{opacity:1;transform:scale(1.13) translateY(-3px)}100%{opacity:1;transform:scale(1) translateY(0)}}
+.mnode .dot{transition:transform .18s}
+@media(hover:hover){
+  .mnode:not(.locked):hover .dot{transform:scale(1.09)}
+  .qa-btn:hover{transform:translateY(-2px) scale(1.05)}
+  .bb-btn:hover{transform:translateY(-2px)}
+}
+/* --- OYUN: HUD koreografisi — üst şerit, boost bar, yan paneller --- */
+#scr-game.active #gameTop{animation:hudTopIn .45s cubic-bezier(.2,.8,.3,1.12) both}
+#scr-game.active #boostBar{animation:hudBottomIn .45s .1s cubic-bezier(.2,.8,.3,1.12) both}
+#scr-game.active #topMission{animation:hudTopIn .45s .16s both}
+#scr-game.active #sidePanel>*{animation:sideIn .45s cubic-bezier(.2,.8,.3,1.15) both}
+#scr-game.active #sidePanel>*:nth-child(1){animation-delay:.12s}
+#scr-game.active #sidePanel>*:nth-child(2){animation-delay:.18s}
+#scr-game.active #sidePanel>*:nth-child(3){animation-delay:.24s}
+#scr-game.active #sidePanel>*:nth-child(4){animation-delay:.3s}
+@keyframes hudTopIn{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes hudBottomIn{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+@keyframes sideIn{from{opacity:0;transform:translateX(-22px)}to{opacity:1;transform:translateX(0)}}
+/* --- GÜNLÜK BONUS: 7 gün taşması düzeltmesi (hücreler küçülsün) --- */
+.daily-cell{min-width:0;padding:2px 1px}
+.daily-cell .dc-day{font-size:8px;white-space:nowrap}
+.daily-cell .dc-reward{font-size:12px;white-space:nowrap}
+/* --- reduce-motion: v52 hareketleri kapalı --- */
+body.reduce-motion .mnode,body.reduce-motion #scr-menu.active #menuTopBar,
+body.reduce-motion #scr-menu.active #menuLogo,body.reduce-motion #scr-menu.active #menuSub,
+body.reduce-motion #scr-menu.active #menuLevelInfo,body.reduce-motion #scr-menu.active #btnPlay,
+body.reduce-motion #scr-menu.active #menuQuickActions,body.reduce-motion #scr-menu.active #menuQuickActions .qa-btn,
+body.reduce-motion #scr-menu.active #bottomBar,body.reduce-motion #scr-game.active #gameTop,
+body.reduce-motion #scr-game.active #boostBar,body.reduce-motion #scr-game.active #topMission,
+body.reduce-motion #scr-game.active #sidePanel>*{animation:none!important}
 </style>
 </head>
 <body class="boot-wait">
@@ -1708,6 +1768,18 @@ const AUTHX_I18N={
   ru:{authHi:'🎯 Добро пожаловать в головоломное королевство!'}};
 Object.keys(I).forEach(l=>{
   Object.assign(I[l],AUTHX_I18N[l]||AUTHX_I18N.en);});
+/* Kazanma başlığı (v52) — "OK!" placeholder'ı yerine 8 dil */
+const WINX_I18N={
+  tr:{winDone:'Tamamlandı!'},
+  en:{winDone:'Complete!'},
+  de:{winDone:'Abgeschlossen!'},
+  es:{winDone:'¡Completado!'},
+  fr:{winDone:'Terminé !'},
+  it:{winDone:'Completato!'},
+  pt:{winDone:'Concluído!'},
+  ru:{winDone:'Пройдено!'}};
+Object.keys(I).forEach(l=>{
+  Object.assign(I[l],WINX_I18N[l]||WINX_I18N.en);});
 
 function applyI18n(){
   document.documentElement.lang=Save.data.settings.lang;
@@ -3096,7 +3168,7 @@ async function finishWin(){
   const wpEl=$('#ov-win .panel');
   const oldPf=wpEl.querySelector('.win-perfect');if(oldPf)oldPf.remove();
   if(stars===3){const pf=document.createElement('div');pf.className='win-perfect';pf.textContent='👑 '+t('perfect');wpEl.prepend(pf);}
-  $('#winTitle').textContent=t('level')+' '+curLevel.n+' — OK!';
+  $('#winTitle').textContent=t('level')+' '+curLevel.n+' — '+t('winDone');
   $('#bestVal').textContent=fmt(Save.data.best[curLevel.n]||score);
   $('#newRec').style.display=newRec?'block':'none';
   const sv=$$('#ov-win .wstar');
@@ -5496,6 +5568,7 @@ function renderMap(){
     const div=document.createElement('div');
     div.className='mnode '+st+(lv.diff!=='normal'?' '+lv.diff:'');
     div.style.setProperty('--x',xs[(i-1)%3]);
+    div.style.setProperty('--i',i-1);
     let html='<div class="dot">'+(st==='locked'
       ?'<svg class="lockIc" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="2.5" fill="currentColor"/><path d="M8 10V7a4 4 0 018 0v3" stroke="currentColor" stroke-width="2.6" fill="none" stroke-linecap="round"/></svg>'
       :'<span>'+i+'</span>')+'</div>';
@@ -5924,13 +5997,13 @@ function wireUI(){
     $('#ov-pause').classList.remove('show');
     inputLockUntil=performance.now()+350;});
   $('#btnRestart').addEventListener('click',()=>{Sfx.click();startLevel(curLevel.n);});
-  $('#btnQuit').addEventListener('click',()=>{Sfx.click();pausedFlag=false;showScreen('scr-map');});
+  $('#btnQuit').addEventListener('click',()=>{Sfx.click();pausedFlag=false;hideOverlays();showScreen('scr-map');});
   $('#btnPauseHome').addEventListener('click',()=>{Sfx.click();pausedFlag=true;$('#ov-pause').classList.remove('show');toast(t('backMenu'));showScreen(Save.data.user?'scr-menu':'scr-auth');});
-  $('#btnNext').addEventListener('click',()=>{Sfx.click();Ads.maybeInterstitial();startLevel(curLevel.n+1);});
-  $('#btnRetryW').addEventListener('click',()=>{Sfx.click();Ads.maybeInterstitial();startLevel(curLevel.n);});
-  $('#btnMapW').addEventListener('click',()=>{Sfx.click();showScreen('scr-map');Ads.maybeInterstitial();});
-  $('#btnRetryL').addEventListener('click',()=>{Sfx.click();Ads.maybeInterstitial();startLevel(curLevel.n);});
-  $('#btnMapL').addEventListener('click',()=>{Sfx.click();showScreen('scr-map');Ads.maybeInterstitial();});
+  $('#btnNext').addEventListener('click',()=>{Sfx.click();hideOverlays();Ads.maybeInterstitial();startLevel(curLevel.n+1);});
+  $('#btnRetryW').addEventListener('click',()=>{Sfx.click();hideOverlays();Ads.maybeInterstitial();startLevel(curLevel.n);});
+  $('#btnMapW').addEventListener('click',()=>{Sfx.click();hideOverlays();showScreen('scr-map');Ads.maybeInterstitial();});
+  $('#btnRetryL').addEventListener('click',()=>{Sfx.click();hideOverlays();Ads.maybeInterstitial();startLevel(curLevel.n);});
+  $('#btnMapL').addEventListener('click',()=>{Sfx.click();hideOverlays();showScreen('scr-map');Ads.maybeInterstitial();});
   $('#bHammer').addEventListener('click',useHammerMode);
   $('#bFish').addEventListener('click',useFishMode);
   $('#bShuffle').addEventListener('click',useShuffle);
