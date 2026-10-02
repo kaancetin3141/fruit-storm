@@ -789,8 +789,6 @@ body.reduce-motion #btnWheel.hasdot::after{animation:none!important}
 #splash .sp-logo{font-weight:700;font-size:clamp(40px,12vw,72px);line-height:.95;letter-spacing:1px;text-align:center}
 #splash .sp-w1{color:#FF5A9E;text-shadow:0 3px 0 #fff,0 6px 0 rgba(122,36,86,.35)}
 #splash .sp-w2{color:#B56CE8;text-shadow:0 3px 0 #fff,0 6px 0 rgba(122,36,86,.35)}
-#splash .sp-fruit{font-size:48px;animation:spBob 1.4s ease-in-out infinite}
-@keyframes spBob{0%,100%{transform:translateY(0) rotate(-8deg)}50%{transform:translateY(-12px) rotate(8deg)}}
 #splash .sp-bar{width:160px;height:8px;background:rgba(255,255,255,.3);border-radius:5px;overflow:hidden}
 #splash .sp-bar i{display:block;width:0%;height:100%;background:linear-gradient(90deg,#FFE066,#FF8A65);
   border-radius:5px;animation:spLoad 1.6s ease-out forwards}
@@ -1037,33 +1035,166 @@ body.theme-valentine .boostBtn{background:rgba(255,233,242,.6);border-color:rgba
   /* Paneller: mobilde başlık dengesi */
   .panel h2{font-size:23px}
 }
+/* ============================================================
+   🎬 GİRİŞ EKRANI PAKETİ (v51) — splash + auth giriş koreografisi,
+   kayan sekme hapı, parlak şeker butonlar, süzülen meyveler.
+   En sonda: glass skin override'larının üstüne geçer.
+   ============================================================ */
+/* Splash görünürken auth kartı animasyonu bekler (boot-wait kalkınca oynar) */
+body.boot-wait #scr-auth .auth-card,body.boot-wait #scr-auth .auth-card>*{animation:none!important}
+/* --- SPLASH: harf harf yaylanarak düşen logo --- */
+#splash{overflow:hidden}
+#splash .sp-logo b{display:inline-block;animation:spDrop .62s cubic-bezier(.2,.9,.3,1.35) both;animation-delay:calc(var(--i)*55ms)}
+@keyframes spDrop{0%{opacity:0;transform:translateY(-46px) scale(.4) rotate(-14deg)}62%{opacity:1;transform:translateY(5px) scale(1.14) rotate(3deg)}100%{opacity:1;transform:translateY(0) scale(1) rotate(0)}}
+#splash .sp-txt{animation:spTxt 1.15s ease-in-out infinite}
+@keyframes spTxt{0%,100%{opacity:.55}50%{opacity:1}}
+/* --- SPLASH: süzülen meyveler + yükselen kabarcıklar --- */
+#splash .sp-fruits{position:absolute;inset:0;pointer-events:none}
+#splash .sp-fruits i{position:absolute;animation:spFloat var(--d,3.8s) ease-in-out var(--dl,0s) infinite;
+  filter:drop-shadow(0 7px 12px rgba(60,20,80,.32))}
+@keyframes spFloat{0%,100%{transform:translateY(0) rotate(var(--r,0deg))}50%{transform:translateY(-17px) rotate(calc(var(--r,0deg) + 11deg))}}
+#splash .sp-bubbles{position:absolute;inset:0;pointer-events:none}
+#splash .sp-bubbles i{position:absolute;bottom:-34px;width:var(--s,13px);height:var(--s,13px);border-radius:50%;
+  background:radial-gradient(circle at 32% 30%,rgba(255,255,255,.8),rgba(255,255,255,.14) 58%,transparent 76%);
+  animation:spRise var(--d,7.5s) linear var(--dl,0s) infinite}
+@keyframes spRise{0%{transform:translateY(0);opacity:0}14%{opacity:.7}100%{transform:translateY(-110vh);opacity:0}}
+/* --- SPLASH: yükleme çubuğu — parlama süpürmesi + çubuğu süren kiraz --- */
+#splash .sp-bar{position:relative}
+#splash .sp-bar i{position:relative;overflow:hidden}
+#splash .sp-bar i::after{content:'';position:absolute;top:0;bottom:0;left:-46px;width:36px;
+  background:linear-gradient(105deg,transparent,rgba(255,255,255,.9),transparent);
+  animation:spShine 1.15s linear .35s infinite}
+@keyframes spShine{to{left:176px}}
+#splash .sp-bar em{position:absolute;top:50%;left:2%;font-style:normal;font-size:17px;line-height:1;
+  transform:translate(-50%,-56%);animation:spRide 1.6s ease-out forwards;
+  filter:drop-shadow(0 2px 3px rgba(60,20,80,.4))}
+@keyframes spRide{0%{left:2%}62%{left:78%}100%{left:98%}}
+/* --- SPLASH: çıkış — logo büyüyerek söner, meyveler yukarı uçar --- */
+#splash.hide .sp-logo,#splash.hide .sp-bar,#splash.hide .sp-txt{transition:transform .5s ease,opacity .45s ease;transform:scale(1.2);opacity:0}
+#splash.hide .sp-fruits i{animation:none;transition:transform .55s ease,opacity .5s ease;transform:translateY(-90px) scale(1.45);opacity:0}
+#splash.hide .sp-bubbles i{animation:none;opacity:0}
+/* --- AUTH: kart çevresinde süzülen meyve arkadaşlar (kartın arkasında) --- */
+.auth-float{position:absolute;inset:0;pointer-events:none;z-index:0}
+.auth-float i{position:absolute;animation:authF var(--d,4.2s) ease-in-out var(--dl,0s) infinite;
+  filter:drop-shadow(0 9px 14px rgba(60,20,80,.35));opacity:.96}
+.auth-float i:nth-child(1){left:11%;top:19%;font-size:38px;--r:-9deg;--d:4.4s}
+.auth-float i:nth-child(2){right:12%;top:27%;font-size:32px;--r:8deg;--d:3.8s;--dl:.5s}
+.auth-float i:nth-child(3){left:15%;bottom:20%;font-size:31px;--r:7deg;--d:4.8s;--dl:1s}
+.auth-float i:nth-child(4){right:14%;bottom:24%;font-size:36px;--r:-7deg;--d:4.1s;--dl:1.5s}
+@keyframes authF{0%,100%{transform:translateY(0) rotate(var(--r,0deg))}50%{transform:translateY(-15px) rotate(calc(var(--r,0deg) + 10deg))}}
+/* --- AUTH: kart giriş koreografisi (showScreen her tetiklenişte oynar) --- */
+#scr-auth .auth-card{position:relative;z-index:1}
+#scr-auth.active .auth-card{animation:authCardIn .55s cubic-bezier(.2,.9,.3,1.26) both}
+@keyframes authCardIn{from{opacity:0;transform:translateY(30px) scale(.93)}to{opacity:1;transform:translateY(0) scale(1)}}
+#scr-auth.active .auth-card>*{animation:authRow .46s cubic-bezier(.2,.8,.3,1.18) both}
+#scr-auth.active .auth-card>*:nth-child(1){animation-delay:.12s}
+#scr-auth.active .auth-card>*:nth-child(2){animation-delay:.17s}
+#scr-auth.active .auth-card>*:nth-child(3){animation-delay:.22s}
+#scr-auth.active .auth-card>*:nth-child(4){animation-delay:.27s}
+#scr-auth.active .auth-card>*:nth-child(5){animation-delay:.32s}
+#scr-auth.active .auth-card>*:nth-child(6){animation-delay:.37s}
+#scr-auth.active .auth-card>*:nth-child(7){animation-delay:.42s}
+#scr-auth.active .auth-card>*:nth-child(8){animation-delay:.47s}
+#scr-auth.active .auth-card>*:nth-child(9){animation-delay:.52s}
+#scr-auth.active .auth-card>*:nth-child(10){animation-delay:.57s}
+#scr-auth.active .auth-card>*:nth-child(11){animation-delay:.62s}
+@keyframes authRow{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+#scr-auth.active #authTools button{animation:authRow .45s cubic-bezier(.2,.9,.3,1.3) both}
+#scr-auth.active #authTools button:nth-child(2){animation-delay:.09s}
+#authTools{z-index:2}
+/* --- AUTH: karşılama alt başlığı + canlı sunucu noktası --- */
+.auth-hi{margin:-6px 0 0;text-align:center;font-size:13.5px;font-weight:600;color:#A678B8;letter-spacing:.2px}
+#srvDot .d{animation:srvPing 2.2s ease-out infinite}
+@keyframes srvPing{0%{box-shadow:0 0 0 0 rgba(90,196,107,.55)}70%{box-shadow:0 0 0 9px rgba(90,196,107,0)}100%{box-shadow:0 0 0 0 rgba(90,196,107,0)}}
+/* --- AUTH: kayan sekme hapı (sliding pill) --- */
+.tabs{position:relative;isolation:isolate}
+#tabPill{position:absolute;top:4px;bottom:4px;left:4px;width:calc(50% - 6px);border-radius:11px;z-index:0;
+  background:linear-gradient(180deg,#fff,#FFF7FD);
+  box-shadow:0 2px 8px rgba(122,36,86,.2),inset 0 0 0 1px rgba(255,255,255,.95),inset 0 -6px 12px rgba(255,182,224,.25);
+  transition:transform .34s cubic-bezier(.3,1.35,.4,1)}
+#authTabs.reg #tabPill{transform:translateX(calc(100% + 4px))}
+#scr-auth .tabs button{position:relative;z-index:1;background:transparent;box-shadow:none;color:var(--ink2);transition:color .2s,transform .12s}
+#scr-auth .tabs button.on{background:transparent;box-shadow:none;color:var(--ink);font-weight:700}
+#scr-auth .tabs button:active{transform:scale(.95)}
+@media(hover:hover){#scr-auth .tabs button:hover{color:var(--ink)}}
+/* --- AUTH: şeker parlaklıklı butonlar — cam parlama + periyodik ışık süpürmesi --- */
+#btnAuth,#btnGuest{position:relative;overflow:hidden;isolation:isolate}
+#btnAuth::before,#btnGuest::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:linear-gradient(180deg,rgba(255,255,255,.36),rgba(255,255,255,.05) 46%,rgba(0,0,0,.14))}
+#btnAuth::after,#btnGuest::after{content:'';position:absolute;top:-30%;bottom:-30%;left:-58px;width:38px;z-index:1;
+  background:linear-gradient(105deg,transparent,rgba(255,255,255,.8),transparent);
+  transform:skewX(-18deg);animation:btnSweep 3.6s ease-in-out infinite;pointer-events:none}
+#btnGuest::after{animation-delay:1.8s}
+@keyframes btnSweep{0%,64%{left:-58px}86%,100%{left:calc(100% + 26px)}}
+#btnAuth .b-ic,#btnGuest .b-ic{position:relative;z-index:1;font-size:1.08em;text-shadow:none}
+#btnAuthTx,#btnGuest span[data-i]{position:relative;z-index:1}
+#btnAuth:active,#btnGuest:active{transform:translateY(4px) scale(.985)}
+/* --- AUTH: alanlar — odakta mikro kaldırma + altınlaşan etiket --- */
+.field{position:relative}
+.field input{transition:border-color .2s,box-shadow .2s,transform .16s}
+.field input:focus{transform:translateY(-1px)}
+.field label{transition:color .2s}
+.field:focus-within label{color:#C9821E}
+.f-wrap{position:relative}
+.f-ic{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:15px;pointer-events:none;filter:grayscale(.15) opacity(.85)}
+.f-wrap input{padding-left:38px;width:100%}
+/* --- GİRİŞ EKRANI: mobil ince ayar --- */
+@media(max-width:560px){
+  .auth-hi{font-size:12.5px}
+  .auth-float i:nth-child(1){left:6%;top:14%;font-size:30px}
+  .auth-float i:nth-child(2){right:7%;top:21%;font-size:25px}
+  .auth-float i:nth-child(3){left:8%;bottom:15%;font-size:25px}
+  .auth-float i:nth-child(4){right:8%;bottom:17%;font-size:28px}
+  #splash .sp-fruits i{font-size:24px!important}
+}
+/* --- GİRİŞ EKRANI: reduce-motion — tüm hareket kapatılır --- */
+body.reduce-motion #splash .sp-logo b,body.reduce-motion #splash .sp-fruits i,
+body.reduce-motion #splash .sp-bar i::after,body.reduce-motion #splash .sp-bar em,
+body.reduce-motion #splash .sp-txt,body.reduce-motion #splash .sp-bubbles i,
+body.reduce-motion .auth-float i,body.reduce-motion #btnAuth::after,body.reduce-motion #btnGuest::after,
+body.reduce-motion #srvDot .d{animation:none!important}
+body.reduce-motion #splash .sp-bubbles{display:none}
+body.reduce-motion #scr-auth .auth-card,body.reduce-motion #scr-auth.active .auth-card,
+body.reduce-motion #scr-auth.active .auth-card>*,body.reduce-motion #scr-auth.active #authTools button{animation:none!important}
+body.reduce-motion #tabPill{transition:none!important}
+body.reduce-motion #splash.hide .sp-logo,body.reduce-motion #splash.hide .sp-bar,body.reduce-motion #splash.hide .sp-txt,
+body.reduce-motion #splash.hide .sp-fruits i{transition:none!important;transform:none!important;opacity:1}
 </style>
 </head>
-<body>
-<div id="splash"><div class="sp-logo"><span class="sp-w1">MEYVE</span><br><span class="sp-w2">PATLAT!</span></div><div class="sp-fruit">🍒</div><div class="sp-bar"><i></i></div><div class="sp-txt">Yükleniyor…</div></div>
+<body class="boot-wait">
+<div id="splash">
+  <div class="sp-bubbles" aria-hidden="true"><i style="--s:12px;--d:7s;--dl:0s;left:8%"></i><i style="--s:18px;--d:9s;--dl:1.6s;left:22%"></i><i style="--s:10px;--d:6.4s;--dl:.8s;left:44%"></i><i style="--s:16px;--d:8.2s;--dl:2.4s;left:63%"></i><i style="--s:12px;--d:7.6s;--dl:3.1s;left:82%"></i><i style="--s:9px;--d:6.9s;--dl:4s;left:92%"></i></div>
+  <div class="sp-fruits" aria-hidden="true"><i style="left:13%;top:21%;font-size:34px;--r:-10deg;--d:3.6s">🍓</i><i style="right:15%;top:17%;font-size:30px;--r:9deg;--d:4.2s;--dl:.4s">🍇</i><i style="left:19%;bottom:25%;font-size:28px;--r:7deg;--d:3.9s;--dl:.8s">🍋</i><i style="right:19%;bottom:27%;font-size:33px;--r:-8deg;--d:4.5s;--dl:1.2s">🍊</i><i style="left:44%;top:11%;font-size:26px;--r:5deg;--d:3.3s;--dl:1.6s">🍉</i></div>
+  <div class="sp-logo"><span class="sp-w1"><b style="--i:0">M</b><b style="--i:1">E</b><b style="--i:2">Y</b><b style="--i:3">V</b><b style="--i:4">E</b></span><br><span class="sp-w2"><b style="--i:5">P</b><b style="--i:6">A</b><b style="--i:7">T</b><b style="--i:8">L</b><b style="--i:9">A</b><b style="--i:10">T</b><b style="--i:11">!</b></span></div>
+  <div class="sp-bar"><i></i><em aria-hidden="true">🍒</em></div>
+  <div class="sp-txt">Yükleniyor…</div>
+</div>
 <canvas id="bg"></canvas>
 <div id="orbs" aria-hidden="true"><i class="o1"></i><i class="o2"></i><i class="o3"></i></div>
 <div id="tint"></div>
 <div id="burn"></div>
 
 <section id="scr-auth" class="screen">
+  <div class="auth-float" aria-hidden="true"><i>🍒</i><i>🍇</i><i>🍓</i><i>🍊</i></div>
   <div id="authTools">
     <button id="langQuick">TR</button>
     <button class="icon-btn" id="btnAuthSettings"></button>
   </div>
   <div class="auth-card">
     <h1 class="logo"><span class="w1">MEYVE</span> <span class="w2">PATLAT!</span></h1>
-    <div class="tabs">
+    <div class="auth-hi" data-i="authHi">🎯 Bulmaca krallığına hoş geldin!</div>
+    <div class="tabs" id="authTabs">
+      <span id="tabPill" aria-hidden="true"></span>
       <button id="tabLogin" class="on" data-i="login">Giriş Yap</button>
       <button id="tabReg" data-i="register">Kayıt Ol</button>
     </div>
-    <div class="field" id="regName"><label data-i="nick">Takma ad</label><input id="inName" maxlength="14" data-ip="nick"></div>
-    <div class="field"><label data-i="email">E-posta</label><input id="inMail" type="email" autocomplete="email"></div>
-    <div class="field"><label data-i="pass">Şifre</label><input id="inPass" type="password"></div>
+    <div class="field" id="regName"><label data-i="nick">Takma ad</label><div class="f-wrap"><span class="f-ic">👤</span><input id="inName" maxlength="14" data-ip="nick"></div></div>
+    <div class="field"><label data-i="email">E-posta</label><div class="f-wrap"><span class="f-ic">📧</span><input id="inMail" type="email" autocomplete="email"></div></div>
+    <div class="field"><label data-i="pass">Şifre</label><div class="f-wrap"><span class="f-ic">🔑</span><input id="inPass" type="password"></div></div>
     <div id="authStatus"></div>
-    <button class="btn b-green" id="btnAuth" data-i="loginBtn" style="width:100%">Giriş Yap</button>
+    <button class="btn b-green" id="btnAuth" style="width:100%"><span class="b-ic">🔓</span><span id="btnAuthTx" data-i="loginBtn">Giriş Yap</span></button>
     <div class="divider" data-i="or">veya</div>
-    <button class="btn b-brown" id="btnGuest" data-i="guest" style="width:100%;font-size:15px">Misafir olarak oyna</button>
+    <button class="btn b-brown" id="btnGuest" style="width:100%;font-size:15px"><span class="b-ic">🚀</span><span data-i="guest">Misafir olarak oyna</span></button>
     <div id="srvDot"><span class="d"></span><span data-i="localSrv">Yerel Demo · çevrimdışı</span></div>
   </div>
 </section>
@@ -1565,6 +1696,19 @@ Object.keys(I).forEach(l=>{
   Object.assign(I[l],CLANCTA_I18N[l]||CLANCTA_I18N.en);
   Object.assign(I[l],AD_I18N[l]||AD_I18N.en);});
 const t=k=>(I[Save.data.settings.lang]&&I[Save.data.settings.lang][k])||I.en[k]||I.tr[k]||k;
+/* Giriş ekranı karşılama alt başlığı (v51) — 8 dil */
+const AUTHX_I18N={
+  tr:{authHi:'🎯 Bulmaca krallığına hoş geldin!'},
+  en:{authHi:'🎯 Welcome to the puzzle kingdom!'},
+  de:{authHi:'🎯 Willkommen im Puzzle-Königreich!'},
+  es:{authHi:'🎯 ¡Bienvenido al reino del puzzle!'},
+  fr:{authHi:'🎯 Bienvenue dans le royaume des casse-têtes !'},
+  it:{authHi:'🎯 Benvenuto nel regno dei puzzle!'},
+  pt:{authHi:'🎯 Bem-vindo ao reino dos quebra-cabeças!'},
+  ru:{authHi:'🎯 Добро пожаловать в головоломное королевство!'}};
+Object.keys(I).forEach(l=>{
+  Object.assign(I[l],AUTHX_I18N[l]||AUTHX_I18N.en);});
+
 function applyI18n(){
   document.documentElement.lang=Save.data.settings.lang;
   $$('[data-i]').forEach(el=>{el.textContent=t(el.dataset.i);});
@@ -5415,8 +5559,9 @@ function setAuthMode(m){
   authMode=m;
   $('#tabLogin').classList.toggle('on',m==='login');
   $('#tabReg').classList.toggle('on',m!=='login');
+  $('#authTabs').classList.toggle('reg',m!=='login');
   $('#regName').style.display=m==='reg'?'flex':'none';
-  $('#btnAuth').textContent=t(m==='login'?'loginBtn':'regBtn');
+  const tx=$('#btnAuthTx');if(tx)tx.textContent=t(m==='login'?'loginBtn':'regBtn');
   $('#authStatus').textContent='';}
 async function doAuth(){
   Sfx.ensure();Sfx.click();
@@ -5855,7 +6000,7 @@ function frame(ts){
   if(window.visualViewport)visualViewport.addEventListener('resize',()=>setTimeout(layout,120));
   if(document.fonts&&document.fonts.load)document.fonts.load('600 15px Fredoka');
   // Hide splash after a minimum display time (lets the loading bar animate)
-  setTimeout(()=>{const sp=$('#splash');if(sp)sp.classList.add('hide');setTimeout(()=>{if(sp&&sp.parentNode)sp.parentNode.removeChild(sp);},600);},1700);
+  setTimeout(()=>{const sp=$('#splash');if(sp)sp.classList.add('hide');document.body.classList.remove('boot-wait');setTimeout(()=>{if(sp&&sp.parentNode)sp.parentNode.removeChild(sp);},600);},1700);
   if(Save.data.session&&Save.data.user){
     Api.req('load',{token:Save.data.session,email:Save.data.user.email}).then(r=>{
       if(r.ok&&r.progress){
