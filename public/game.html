@@ -17,8 +17,6 @@
   --red:#F04E7E; --red-d:#C22E5E; --green:#F26BB5; --green-d:#C24488;
   --orange:#FFB84D; --orange-d:#D68F1F; --gold:#FFC93D; --blue:#7B61E8; --blue-d:#5645B8;
   --epic:#6A2BB8; --epic-d:#4A187F;
-  --royal-wood:#8A5A33; --royal-wood-d:#5E3A1D; --royal-gold:#E3AC2E; --royal-gold-d:#B8860B;
-  --royal-gold-l:#FFEF9F; --royal-cream:#FFFDF6; --royal-cream2:#FFF3DC; --royal-brown:#7A4D0A;
   --sat:env(safe-area-inset-top,0px); --sab:env(safe-area-inset-bottom,0px);
   --sal:env(safe-area-inset-left,0px); --sar:env(safe-area-inset-right,0px);
 }
@@ -93,8 +91,6 @@ body.theme-halloween .qa-btn{background:linear-gradient(150deg,#45296E,#2C1A47);
   box-shadow:0 4px 14px rgba(92,46,145,.45),inset 0 1px 0 rgba(255,255,255,.25);
   display:none;align-items:center;gap:6px;white-space:nowrap;pointer-events:none}
 #seasonBadge.show{display:flex;animation:seasonIn .55s cubic-bezier(.2,.9,.3,1.35)}
-/* Panel açıkken sezon rozetini gizle (başlık şeritlerini kapatmasın) */
-body:has(.overlay.show) #seasonBadge{opacity:0;transition:opacity .2s}
 /* Kademe yükseltme pulse — profil rozeti */
 #profileChip.tier-pop{animation:tierPop 1.25s cubic-bezier(.2,.9,.3,1.4)}
 @keyframes tierPop{0%{transform:scale(1)}28%{transform:scale(1.16) rotate(-2.5deg);filter:brightness(1.3) saturate(1.2)}
@@ -129,11 +125,11 @@ body.theme-valentine .p-card{box-shadow:0 4px 16px rgba(120,30,70,.3),inset 0 0 
 .screen.active{opacity:1;pointer-events:auto;visibility:visible}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;color:#fff;font-weight:600;
   font-size:17px;border-radius:18px;padding:13px 26px;
-  box-shadow:0 5px 0 var(--sh,#333),0 8px 14px rgba(74,36,86,.3),inset 0 2.5px 0 rgba(255,255,255,.35),inset 0 -3px 0 rgba(0,0,0,.15);text-shadow:0 2px 0 rgba(0,0,0,.16);
+  box-shadow:0 5px 0 var(--sh,#333),0 8px 14px rgba(74,36,86,.3);text-shadow:0 2px 0 rgba(0,0,0,.16);
   transition:transform .08s,box-shadow .08s,filter .15s}
-.btn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--sh),inset 0 2.5px 0 rgba(255,255,255,.35),inset 0 -3px 0 rgba(0,0,0,.15)}
-@media(hover:hover){.btn:hover{filter:brightness(1.07);transform:translateY(-2px);box-shadow:0 7px 0 var(--sh,#333),0 10px 18px rgba(74,36,86,.32),inset 0 2.5px 0 rgba(255,255,255,.35),inset 0 -3px 0 rgba(0,0,0,.15)}
-  .panel .btn:hover{transform:translateY(-1px);box-shadow:0 6px 0 var(--sh,#333),0 8px 16px rgba(74,36,86,.25),inset 0 2.5px 0 rgba(255,255,255,.35),inset 0 -3px 0 rgba(0,0,0,.15)}}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--sh)}
+@media(hover:hover){.btn:hover{filter:brightness(1.07);transform:translateY(-2px);box-shadow:0 7px 0 var(--sh,#333),0 10px 18px rgba(74,36,86,.32)}
+  .panel .btn:hover{transform:translateY(-1px);box-shadow:0 6px 0 var(--sh,#333),0 8px 16px rgba(74,36,86,.25)}}
 .b-green{background:var(--green);--sh:var(--green-d)}
 .b-orange{background:var(--orange);--sh:var(--orange-d);color:#5A3A00;text-shadow:none}
 .b-red{background:var(--red);--sh:var(--red-d)}
@@ -141,10 +137,10 @@ body.theme-valentine .p-card{box-shadow:0 4px 16px rgba(120,30,70,.3),inset 0 0 
 .b-brown{background:var(--ink2);--sh:#5A3668}
 .btn.big{font-size:23px;padding:16px 52px;border-radius:22px;
   background-image:linear-gradient(180deg,rgba(255,255,255,.3) 0%,rgba(255,255,255,0) 50%,rgba(0,0,0,.15) 100%);
-  border:3px solid #FFEF9F;box-shadow:0 6px 0 var(--sh,#333),0 10px 18px rgba(74,36,86,.35),0 0 0 3px rgba(138,90,51,.55),inset 0 2.5px 0 rgba(255,255,255,.4),inset 0 -3px 0 rgba(0,0,0,.15)}
+  border-bottom:4px solid rgba(0,0,0,.2)}
 .btn.big.pulse{animation:btnPulse 1.6s ease-in-out infinite}
-@keyframes btnPulse{0%,100%{transform:scale(1);box-shadow:0 6px 0 var(--sh,#333),0 10px 18px rgba(74,36,86,.35),0 0 0 3px rgba(138,90,51,.55),inset 0 2.5px 0 rgba(255,255,255,.4),inset 0 -3px 0 rgba(0,0,0,.15)}
-  50%{transform:scale(1.04);box-shadow:0 6px 0 var(--sh,#333),0 12px 26px rgba(74,36,86,.5),0 0 0 3px rgba(138,90,51,.55),inset 0 2.5px 0 rgba(255,255,255,.4),inset 0 -3px 0 rgba(0,0,0,.15)}}
+@keyframes btnPulse{0%,100%{transform:scale(1);box-shadow:0 5px 0 var(--sh,#333),0 8px 14px rgba(74,36,86,.3)}
+  50%{transform:scale(1.04);box-shadow:0 5px 0 var(--sh,#333),0 10px 22px rgba(74,36,86,.45)}}
 .icon-btn{width:44px;height:44px;border-radius:14px;background:rgba(255,255,255,.94);color:var(--ink2);
   display:flex;align-items:center;justify-content:center;box-shadow:0 4px 0 #E8C8F0;flex:none;position:relative}
 .icon-btn:active{transform:translateY(3px);box-shadow:0 1px 0 #E8C8F0}
@@ -156,44 +152,36 @@ body.theme-valentine .p-card{box-shadow:0 4px 16px rgba(120,30,70,.3),inset 0 0 
   filter:drop-shadow(0 4px 8px rgba(74,36,86,.5))}
 .logo .w1{color:#FF5A9E;text-shadow:0 2px 0 #fff,0 4px 0 #fff,0 6px 0 rgba(122,36,86,.5),0 8px 16px rgba(74,36,86,.4)}
 .logo .w2{color:#B56CE8;text-shadow:0 2px 0 #fff,0 4px 0 #fff,0 6px 0 rgba(122,36,86,.5),0 8px 16px rgba(74,36,86,.4)}
-#scr-auth{align-items:center;justify-content:center;padding:calc(104px + var(--sat)) calc(14px + var(--sar)) 14px calc(14px + var(--sal))}
+#scr-auth{align-items:center;justify-content:center;padding:calc(14px + var(--sat)) calc(14px + var(--sar)) 14px calc(14px + var(--sal))}
 #authTools{position:absolute;top:calc(14px + var(--sat));right:calc(14px + var(--sar));display:flex;gap:9px}
-#langQuick{width:44px;height:44px;border-radius:50%;background:linear-gradient(180deg,var(--royal-gold-l),#F2B23A);color:var(--royal-brown);
-  box-shadow:0 3.5px 0 var(--royal-gold-d),inset 0 2px 0 rgba(255,255,255,.7);font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;border:2.5px solid #FFFFFF}
-#langQuick:active{transform:translateY(2.5px);box-shadow:0 1px 0 var(--royal-gold-d)}
-#authTools .icon-btn{border-radius:50%;background:linear-gradient(180deg,var(--royal-gold-l),#F2B23A);color:var(--royal-brown);
-  box-shadow:0 3.5px 0 var(--royal-gold-d),inset 0 2px 0 rgba(255,255,255,.7);border:2.5px solid #FFFFFF}
-#authTools .icon-btn:active{transform:translateY(2.5px);box-shadow:0 1px 0 var(--royal-gold-d)}
-.auth-stack{display:flex;flex-direction:column;align-items:center;gap:9px;width:min(92vw,380px)}
-.auth-stack .logo{font-size:clamp(34px,9vw,44px);animation:logoBounce 2.4s ease-in-out infinite}
-#authTag{color:#FFF7E0;font-size:12.5px;font-weight:700;letter-spacing:.6px;text-shadow:0 2px 0 rgba(74,36,10,.5);
-  background:linear-gradient(180deg,rgba(138,79,201,.92),rgba(94,47,143,.92));border:2px solid #F5D890;border-radius:999px;padding:5px 18px;
-  box-shadow:0 3px 0 rgba(60,28,10,.4),inset 0 1.5px 0 rgba(255,255,255,.25);text-align:center}
-.auth-card{width:100%;max-height:calc(100dvh - var(--sat) - var(--sab) - 190px);overflow-y:auto;
-  background:linear-gradient(180deg,var(--royal-cream) 0%,var(--royal-cream2) 100%);border:3px solid var(--royal-gold);border-radius:28px;padding:16px 18px 14px;
-  box-shadow:0 12px 0 var(--royal-wood),0 16px 0 rgba(0,0,0,.16),0 26px 44px rgba(60,30,10,.35),inset 0 0 0 3px #FFFFFF,inset 0 0 0 5.5px #F5D890;display:flex;flex-direction:column;gap:10px}
+#langQuick{width:44px;height:44px;border-radius:14px;background:rgba(255,255,255,.94);color:var(--ink2);
+  box-shadow:0 4px 0 #E8C8F0;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center}
+.auth-card{width:min(92vw,380px);max-height:calc(100dvh - var(--sat) - var(--sab) - 20px);overflow-y:auto;
+  background:rgba(255,255,255,.94);backdrop-filter:blur(8px);border-radius:28px;padding:24px 22px 20px;
+  box-shadow:0 12px 0 rgba(90,45,110,.3),0 24px 40px rgba(80,40,110,.3);display:flex;flex-direction:column;gap:12px}
+.auth-card .logo{font-size:32px;animation:logoBounce 2.4s ease-in-out infinite}
 @keyframes logoBounce{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-4px) rotate(1deg)}}
-.tabs{display:flex;background:#F0DCB0;border-radius:14px;padding:4px;gap:4px;box-shadow:inset 0 2px 3px rgba(122,77,10,.25)}
-.tabs button{flex:1;padding:9px;border-radius:11px;font-weight:700;color:#9A7432;font-size:15px;transition:background .15s}
-.tabs button.on{background:linear-gradient(180deg,var(--royal-gold-l),#F2B23A);color:var(--royal-brown);box-shadow:0 2.5px 0 var(--royal-gold-d),inset 0 1.5px 0 rgba(255,255,255,.7);text-shadow:0 1px 0 rgba(255,255,255,.5)}
+.tabs{display:flex;background:#F3DFF5;border-radius:14px;padding:4px;gap:4px}
+.tabs button{flex:1;padding:9px;border-radius:11px;font-weight:600;color:var(--ink2);font-size:15px}
+.tabs button.on{background:#fff;color:var(--ink);box-shadow:0 2px 6px rgba(122,36,86,.18)}
 .field{display:flex;flex-direction:column;gap:5px}
-.field label{font-size:12.5px;font-weight:700;color:#9A6D1E;letter-spacing:.3px}
-.field input{border:2.5px solid #E8C87A;background:#FFFDF6;border-radius:13px;padding:11px 14px;font-size:15px;outline:none;transition:border-color .2s,box-shadow .2s;color:var(--ink);box-shadow:inset 0 2px 3px rgba(122,77,10,.12)}
-.field input:focus{border-color:var(--royal-gold);box-shadow:0 0 0 4px rgba(255,201,61,.3),inset 0 2px 3px rgba(122,77,10,.12)}
+.field label{font-size:12.5px;font-weight:600;color:#A678B8}
+.field input{border:2px solid #EFD5F2;background:#FFFDFE;border-radius:13px;padding:11px 14px;font-size:15px;outline:none;transition:border-color .2s,box-shadow .2s}
+.field input:focus{border-color:var(--gold);box-shadow:0 0 0 4px rgba(255,201,61,.25)}
 #regName{display:none}
 #authStatus{min-height:18px;font-size:13px;font-weight:600;color:var(--red);text-align:center}
-.divider{display:flex;align-items:center;gap:10px;color:#B8925A;font-size:12px;font-weight:700}
-.divider::before,.divider::after{content:'';flex:1;border-top:2px solid #EFD9A8}
-#srvDot{display:flex;align-items:center;justify-content:center;gap:7px;font-size:12px;color:#9A7432;font-weight:600}
+.divider{display:flex;align-items:center;gap:10px;color:#C9A8D4;font-size:12px;font-weight:600}
+.divider::before,.divider::after{content:'';flex:1;border-top:2px solid #EFD5F2}
+#srvDot{display:flex;align-items:center;justify-content:center;gap:7px;font-size:12px;color:#A678B8;font-weight:600}
 #srvDot .d{width:8px;height:8px;border-radius:50%;background:#5AC46B;box-shadow:0 0 0 3px rgba(90,196,107,.25)}
 #scr-menu{align-items:center;justify-content:center;gap:8px;padding:calc(56px + var(--sat)) calc(12px + var(--sar)) calc(64px + var(--sab)) calc(12px + var(--sal))}
 #menuTopBar{position:absolute;top:calc(10px + var(--sat));left:calc(12px + var(--sal));right:calc(12px + var(--sar));
   display:flex;align-items:center;gap:8px;z-index:6}
-#profileChip{display:flex;align-items:center;gap:7px;background:linear-gradient(180deg,var(--royal-cream),#FFEDC4);border-radius:999px;
-  padding:4px 14px 4px 5px;box-shadow:0 3px 0 var(--royal-gold-d),0 5px 10px rgba(60,30,10,.3),inset 0 2px 0 rgba(255,255,255,.7);font-weight:700;font-size:13px;max-width:34vw;
-  border:2.5px solid var(--royal-gold);transition:transform .15s;color:var(--ink)}
+#profileChip{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.94);border-radius:18px;
+  padding:4px 12px 4px 4px;box-shadow:0 3px 0 #E8C8F0;font-weight:600;font-size:13px;max-width:34vw;
+  border:2px solid #F3DFF5;transition:transform .15s}
 #profileChip:active{transform:scale(.96)}
-@media(hover:hover){#profileChip:hover{transform:translateY(-1px);box-shadow:0 4px 0 var(--royal-gold-d),0 7px 14px rgba(60,30,10,.3),inset 0 2px 0 rgba(255,255,255,.7)}}
+@media(hover:hover){#profileChip:hover{transform:translateY(-1px);box-shadow:0 4px 0 #E8C8F0,0 6px 14px rgba(122,36,86,.15)}}
 #profileChip canvas{width:30px;height:30px;border-radius:10px;flex:none}
 #profileChip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .prof-lv{flex:none!important;font-size:10.5px!important;font-weight:800!important;letter-spacing:.3px;
@@ -242,34 +230,29 @@ body.reduce-motion #xpFill::before{animation:none}
   30%{transform:translate(-50%,0) scale(1)}
   78%{opacity:1}100%{opacity:0;transform:translate(-50%,-46px) scale(1)}}
 #menuResources{display:flex;gap:6px;flex:1;justify-content:center}
-.res-chip{display:flex;align-items:center;gap:4px;background:linear-gradient(180deg,var(--royal-cream),#FFEDC4);border-radius:999px;
-  padding:5px 12px;font-weight:700;font-size:14px;box-shadow:0 3px 0 var(--royal-gold-d),inset 0 2px 0 rgba(255,255,255,.7);border:2.5px solid var(--royal-gold);color:var(--royal-brown);font-variant-numeric:tabular-nums}
-.res-chip svg{width:16px;height:16px;flex:none;filter:drop-shadow(0 1px 0 rgba(255,255,255,.6))}
-.res-chip.lives{color:var(--red-d)}
-.res-chip.gold{color:#D89400}
-.res-chip.stars{color:#C77F14}
+.res-chip{display:flex;align-items:center;gap:4px;background:rgba(255,255,255,.94);border-radius:14px;
+  padding:5px 10px;font-weight:700;font-size:14px;box-shadow:0 3px 0 #E8C8F0;border:2px solid #F3DFF5}
+.res-chip svg{width:16px;height:16px;flex:none}
+.res-chip.lives{color:var(--red)}
+.res-chip.gold{color:#E8A400}
+.res-chip.stars{color:var(--orange-d)}
 #menuTopBar .icon-btn{flex:none}
 #menuLogo{font-size:clamp(40px,11vw,72px);position:relative}
 .logo-fruit{position:absolute;z-index:1;filter:drop-shadow(0 8px 8px rgba(80,40,110,.35))}
-#lf1{width:88px;left:-58px;top:-38px;animation:bob 3.4s ease-in-out infinite,fruitGlow 4s ease-in-out infinite}
-#lf2{width:66px;right:-46px;top:-14px;animation:bob 2.9s .5s ease-in-out infinite,fruitGlow 4s 1.3s ease-in-out infinite}
-#lf3{width:74px;left:-52px;bottom:-42px;animation:bob 3.8s .9s ease-in-out infinite,fruitGlow 4s 2.6s ease-in-out infinite}
-@media(max-width:480px){
-  #lf1{width:58px;left:-34px;top:-40px}
-  #lf2{width:44px;right:-30px;top:-16px}
-  #lf3{width:50px;left:-34px;bottom:-46px}
-}
+#lf1{width:92px;left:-52px;top:-24px;animation:bob 3.4s ease-in-out infinite,fruitGlow 4s ease-in-out infinite}
+#lf2{width:72px;right:-44px;top:4px;animation:bob 2.9s .5s ease-in-out infinite,fruitGlow 4s 1.3s ease-in-out infinite}
+#lf3{width:80px;left:-36px;bottom:-28px;animation:bob 3.8s .9s ease-in-out infinite,fruitGlow 4s 2.6s ease-in-out infinite}
 @keyframes bob{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-10px) rotate(5deg)}}
 @keyframes fruitGlow{0%,100%{filter:drop-shadow(0 8px 8px rgba(80,40,110,.35)) drop-shadow(0 0 0 rgba(255,201,61,0))}50%{filter:drop-shadow(0 8px 8px rgba(80,40,110,.35)) drop-shadow(0 0 12px rgba(255,201,61,.6))}}
-#menuSub{color:#FFF7E0;font-size:12px;font-weight:700;background:linear-gradient(180deg,rgba(138,79,201,.9),rgba(94,47,143,.9));padding:5px 16px;border-radius:999px;text-align:center;border:2px solid #F5D890;box-shadow:0 3px 0 rgba(60,28,10,.4),inset 0 1.5px 0 rgba(255,255,255,.25);text-shadow:0 1.5px 0 rgba(74,36,10,.5)}
-#menuLevelInfo{background:linear-gradient(180deg,var(--royal-gold-l),#F2B23A);border-radius:999px;padding:5px 20px;font-size:14.5px;font-weight:800;color:var(--royal-brown);box-shadow:0 3px 0 var(--royal-gold-d),inset 0 2px 0 rgba(255,255,255,.7);border:2.5px solid #FFFFFF;letter-spacing:.5px;text-shadow:0 1px 0 rgba(255,255,255,.5)}
-#menuQuickActions{display:flex;gap:9px;flex-wrap:wrap;justify-content:center;max-width:360px}
-.qa-btn{width:50px;height:50px;border-radius:50%;background:linear-gradient(180deg,var(--royal-gold-l) 0%,#FFE3A0 60%,#F2B23A 100%);border:2.5px solid var(--royal-gold);
-  display:flex;align-items:center;justify-content:center;box-shadow:0 4px 0 var(--royal-gold-d),0 6px 12px rgba(60,30,10,.3),inset 0 2.5px 0 rgba(255,255,255,.85);
+#menuSub{color:#6A3E7E;font-size:12px;font-weight:600;background:rgba(255,255,255,.8);padding:4px 14px;border-radius:14px;text-align:center;backdrop-filter:blur(4px)}
+#menuLevelInfo{background:rgba(255,255,255,.85);border-radius:12px;padding:4px 16px;font-size:14px;font-weight:700;color:var(--ink);box-shadow:0 2px 0 #E8C8F0;border:2px solid #F3DFF5}
+#menuQuickActions{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;max-width:340px}
+.qa-btn{width:44px;height:44px;border-radius:14px;background:rgba(255,255,255,.94);border:2px solid #F3DFF5;
+  display:flex;align-items:center;justify-content:center;box-shadow:0 3px 0 #E8C8F0;
   cursor:pointer;transition:transform .12s;position:relative}
-.qa-btn:active{transform:scale(.92) translateY(2px);box-shadow:0 1.5px 0 var(--royal-gold-d),inset 0 2.5px 0 rgba(255,255,255,.85)}
-@media(hover:hover){.qa-btn:hover{transform:translateY(-2px) scale(1.06);box-shadow:0 6px 0 var(--royal-gold-d),0 9px 16px rgba(60,30,10,.35),inset 0 2.5px 0 rgba(255,255,255,.85);filter:brightness(1.05)}}
-.qa-btn .qa-ic{font-size:24px;line-height:1;filter:drop-shadow(0 1.5px 1px rgba(122,77,10,.35))}
+.qa-btn:active{transform:scale(.9) translateY(2px);box-shadow:0 1px 0 #E8C8F0}
+@media(hover:hover){.qa-btn:hover{transform:translateY(-2px) scale(1.06);box-shadow:0 5px 0 #E8C8F0,0 8px 14px rgba(122,36,86,.2);border-color:#FFD9EE;filter:brightness(1.05)}}
+.qa-btn .qa-ic{font-size:22px;line-height:1}
 .qa-btn.hasdot::after{content:'';position:absolute;top:-3px;right:-3px;width:12px;height:12px;
   border-radius:50%;background:var(--red);border:2px solid #fff;animation:pulseDot2 1s infinite}
 #mascot{position:absolute;right:calc(10px + var(--sar));bottom:calc(72px + var(--sab));width:76px;height:76px;
@@ -309,26 +292,24 @@ body.reduce-motion #gameMascot .gm-cv{animation:none}
 body.reduce-motion .rank-clan.cta .btn{animation:none}
 @keyframes ctaPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
 .bottom-bar{position:fixed;bottom:0;left:0;right:0;z-index:10;display:flex;justify-content:space-around;
-  align-items:stretch;background:linear-gradient(180deg,#9A6637 0%,#6B4423 100%);backdrop-filter:blur(10px);
-  padding:6px 0 calc(6px + var(--sab));box-shadow:0 -4px 14px rgba(0,0,0,.3),inset 0 3px 0 #E3AC2E,inset 0 5px 0 rgba(255,239,159,.45);border-top:2px solid #5E3A1D}
-.bb-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
-  background:none;border:none;color:#fff;cursor:pointer;padding:4px 4px;flex:1;max-width:64px;
+  align-items:stretch;background:rgba(74,36,86,.92);backdrop-filter:blur(10px);
+  padding:4px 0 calc(4px + var(--sab));box-shadow:0 -4px 12px rgba(0,0,0,.2)}
+.bb-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
+  background:none;border:none;color:#fff;cursor:pointer;padding:6px 4px;flex:1;max-width:64px;
   border-radius:12px;transition:background .15s,transform .1s;position:relative}
 .bb-btn:active{transform:scale(.92)}
-@media(hover:hover){.bb-btn:hover{background:rgba(255,239,159,.14)}}
-.bb-btn .bb-ic{font-size:19px;line-height:1;width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;
-  background:linear-gradient(180deg,var(--royal-gold-l),#F2B23A);border:2px solid #FFF;
-  box-shadow:0 3px 0 rgba(94,58,29,.75),inset 0 2px 0 rgba(255,255,255,.8);filter:drop-shadow(0 1.5px 1px rgba(122,77,10,.35))}
-.bb-btn .bb-lb{font-size:9px;font-weight:700;color:#FFE8B8;letter-spacing:.4px;text-shadow:0 1.5px 0 rgba(74,40,10,.6)}
+@media(hover:hover){.bb-btn:hover{background:rgba(255,255,255,.12)}}
+.bb-btn .bb-ic{font-size:22px;line-height:1}
+.bb-btn .bb-lb{font-size:9px;font-weight:600;color:rgba(255,255,255,.85);letter-spacing:.3px}
 .bb-btn.hasdot::after{content:'';position:absolute;top:2px;right:14px;width:10px;height:10px;
   border-radius:50%;background:var(--red);border:2px solid #fff;animation:pulseDot2 1s infinite}
 #scr-map .map-head{display:flex;align-items:center;gap:7px;padding:calc(10px + var(--sat)) calc(12px + var(--sar)) 8px calc(12px + var(--sal));flex-wrap:wrap}
 #mapTitle{font-size:22px;font-weight:700;text-shadow:0 2px 0 rgba(255,255,255,.7)}
 #mapHeadRight{margin-left:auto;display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end}
-#starTotal,#lifeTotal{display:flex;align-items:center;gap:5px;background:linear-gradient(180deg,var(--royal-cream),#FFEDC4);
-  border-radius:999px;padding:6px 12px;font-weight:700;font-size:15px;box-shadow:0 3px 0 var(--royal-gold-d),inset 0 2px 0 rgba(255,255,255,.7);border:2.5px solid var(--royal-gold);color:var(--royal-brown)}
-#starTotal{color:#C77F14}
-#lifeTotal{color:var(--red-d)}
+#starTotal,#lifeTotal{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.94);
+  border-radius:12px;padding:6px 11px;font-weight:700;font-size:15px;box-shadow:0 3px 0 #E8C8F0}
+#starTotal{color:var(--orange-d)}
+#lifeTotal{color:var(--red)}
 #starTotal svg,#lifeTotal svg{width:17px;height:17px}
 #starTotal svg{color:var(--gold)}
 #mapScroll{flex:1;overflow-y:auto;overscroll-behavior:contain;scroll-behavior:smooth;position:relative}
@@ -579,21 +560,17 @@ body.reduce-motion .pre-emoji{animation:none}
 .overlay{position:fixed;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;
   background:rgba(60,25,85,.55);backdrop-filter:blur(4px);opacity:0;pointer-events:none;visibility:hidden;transition:opacity .25s,visibility .25s}
 .overlay.show{opacity:1;pointer-events:auto;visibility:visible}
-.panel{background:linear-gradient(180deg,var(--royal-cream) 0%,var(--royal-cream2) 100%);border:3px solid var(--royal-gold);border-radius:26px;padding:24px 20px 20px;width:min(92vw,380px);
+.panel{background:var(--cream);border-radius:26px;padding:24px 20px 20px;width:min(92vw,380px);
   max-height:calc(100dvh - var(--sat) - var(--sab) - 24px);overflow-y:auto;
-  box-shadow:0 12px 0 var(--royal-wood),0 16px 0 rgba(0,0,0,.16),0 26px 44px rgba(60,30,10,.35),inset 0 0 0 3px #FFFFFF,inset 0 0 0 5.5px #F5D890;position:relative;
+  box-shadow:0 12px 0 rgba(90,45,110,.45);position:relative;
   transform:scale(.8);transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
 .overlay.show .panel{transform:scale(1)}
-.panel h2{font-size:23px;font-weight:700;width:max-content;max-width:100%;margin:-4px auto 10px;
-  color:#FFE08A;text-shadow:0 2px 0 rgba(74,36,10,.65),0 1px 0 rgba(0,0,0,.4);
-  background:linear-gradient(180deg,#8A4FC9 0%,#5E2F8F 55%,#4A187F 100%);
-  border:2px solid #F5D890;border-radius:15px;padding:7px 26px;
-  box-shadow:0 4px 0 rgba(60,28,10,.4),inset 0 2px 0 rgba(255,255,255,.22);letter-spacing:.5px}
+.panel h2{font-size:26px;font-weight:700;margin-bottom:4px;text-align:center}
 .panel .sub{color:#A678B8;font-size:14px;font-weight:500;margin-bottom:12px;text-align:center}
-.panel-x{position:absolute;top:10px;right:10px;width:42px;height:42px;border-radius:50%;
-  background:linear-gradient(180deg,var(--royal-gold-l),#F2B23A);color:var(--royal-brown);display:flex;align-items:center;justify-content:center;
-  box-shadow:0 3.5px 0 var(--royal-gold-d),inset 0 2px 0 rgba(255,255,255,.7);z-index:5;border:2.5px solid #FFFFFF}
-.panel-x:active{transform:translateY(2.5px);box-shadow:0 1px 0 var(--royal-gold-d)}
+.panel-x{position:absolute;top:10px;right:10px;width:44px;height:44px;border-radius:14px;
+  background:#fff;color:var(--ink2);display:flex;align-items:center;justify-content:center;
+  box-shadow:0 3px 0 #E8C8F0;z-index:5;border:2px solid #F3DFF5}
+.panel-x:active{transform:translateY(2px)}
 .panel-x svg{width:20px;height:20px}
 .pause-stats{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:0 0 12px}
 .pause-stats .ps-cell{background:rgba(243,223,242,.7);border-radius:12px;padding:7px 10px;text-align:center}
@@ -817,11 +794,200 @@ body.reduce-motion #btnWheel.hasdot::after{animation:none!important}
   border-radius:5px;animation:spLoad 1.6s ease-out forwards}
 @keyframes spLoad{0%{width:0}60%{width:75%}100%{width:100%}}
 #splash .sp-txt{color:rgba(255,255,255,.85);font-size:14px;font-weight:600;letter-spacing:1px}
+/* ============================================================
+   🧊 GLASS SKIN — glassmorphism kaplama (v50)
+   Buzlu cam paneller + yarı saydam şeker butonları + cam çipler.
+   En sonda tanımlı: cascade ile önceki sabit gölgeleri ezer.
+   ============================================================ */
+:root{
+  --g-brd:rgba(255,255,255,.78);
+  --g-brd-soft:rgba(255,255,255,.48);
+  --g-blur:blur(22px) saturate(1.6);
+  --g-blur-sm:blur(12px) saturate(1.4);
+  --g-hi:inset 0 1px 0 rgba(255,255,255,.85),inset 0 0 0 1px rgba(255,255,255,.20);
+  --g-shadow:0 18px 44px rgba(70,28,92,.24),0 3px 12px rgba(70,28,92,.10);
+  --g-chip:0 4px 14px rgba(70,28,92,.13);
+}
+/* --- Arka plan ambient cam küreleri (derinlik) --- */
+#orbs{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+#orbs i{position:absolute;border-radius:50%;will-change:transform;opacity:.5;filter:blur(2px)}
+#orbs .o1{width:34vmax;height:34vmax;left:-10vmax;top:-12vmax;
+  background:radial-gradient(circle at 32% 30%,rgba(255,255,255,.5),rgba(255,255,255,.08) 55%,rgba(255,255,255,0) 72%);
+  border:1.5px solid rgba(255,255,255,.25);animation:orbFloat 26s ease-in-out infinite}
+#orbs .o2{width:24vmax;height:24vmax;right:-8vmax;top:22vh;
+  background:radial-gradient(circle at 35% 32%,rgba(255,214,242,.42),rgba(255,214,242,.06) 58%,transparent 74%);
+  border:1.5px solid rgba(255,255,255,.2);animation:orbFloat 32s 3s ease-in-out infinite reverse}
+#orbs .o3{width:28vmax;height:28vmax;left:14vw;bottom:-14vmax;
+  background:radial-gradient(circle at 30% 28%,rgba(255,201,61,.28),rgba(255,181,230,.1) 55%,transparent 75%);
+  border:1.5px solid rgba(255,255,255,.18);animation:orbFloat 38s 6s ease-in-out infinite}
+@keyframes orbFloat{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(4vmax,-3vmax) scale(1.06)}66%{transform:translate(-3vmax,3vmax) scale(.96)}}
+body.reduce-motion #orbs{display:none}
+body.theme-halloween #orbs .o1{background:radial-gradient(circle at 32% 30%,rgba(150,100,220,.35),rgba(150,100,220,.06) 55%,transparent 72%)}
+body.theme-christmas #orbs .o1{background:radial-gradient(circle at 32% 30%,rgba(220,234,252,.5),rgba(220,234,252,.08) 55%,transparent 72%)}
+body.theme-valentine #orbs .o2{background:radial-gradient(circle at 35% 32%,rgba(255,160,205,.45),rgba(255,160,205,.07) 58%,transparent 74%)}
+/* --- Ana paneller: buzlu cam --- */
+.panel{background:linear-gradient(168deg,rgba(255,255,255,.82) 0%,rgba(255,243,252,.64) 52%,rgba(252,231,248,.58) 100%);
+  -webkit-backdrop-filter:var(--g-blur);backdrop-filter:var(--g-blur);
+  border:1.5px solid var(--g-brd);border-radius:28px;
+  box-shadow:var(--g-shadow),var(--g-hi)}
+.panel-x{border-radius:50%;background:rgba(255,255,255,.6);border:1.5px solid var(--g-brd);
+  box-shadow:var(--g-chip);-webkit-backdrop-filter:var(--g-blur-sm);backdrop-filter:var(--g-blur-sm)}
+.panel-x:active{transform:translateY(1px) scale(.96);box-shadow:0 1px 6px rgba(70,28,92,.2)}
+/* --- Overlay: daha güçlü dondurulmuş sis --- */
+.overlay{background:rgba(52,20,74,.40);
+  -webkit-backdrop-filter:blur(10px) saturate(1.35);backdrop-filter:blur(10px) saturate(1.35)}
+/* --- Butonlar: yarı saydam şeker camı --- */
+.btn{border:1.5px solid rgba(255,255,255,.45);
+  background-image:linear-gradient(172deg,rgba(255,255,255,.34) 0%,rgba(255,255,255,.07) 42%,rgba(0,0,0,.07) 100%);
+  box-shadow:0 4px 16px rgba(70,28,92,.24),0 2px 0 var(--sh,rgba(0,0,0,.18)),var(--g-hi);
+  text-shadow:0 1px 0 rgba(0,0,0,.12);
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.btn:active{transform:translateY(3px) scale(.985);
+  box-shadow:0 1px 0 var(--sh,rgba(0,0,0,.18)),0 2px 8px rgba(70,28,92,.28),var(--g-hi)}
+@media(hover:hover){
+  .btn:hover{transform:translateY(-2px);filter:brightness(1.06) saturate(1.05);
+    box-shadow:0 8px 22px rgba(70,28,92,.3),0 3px 0 var(--sh,rgba(0,0,0,.18)),var(--g-hi)}
+  .panel .btn:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(70,28,92,.24),0 2px 0 var(--sh,rgba(0,0,0,.18)),var(--g-hi)}}
+.btn.b-green{background:linear-gradient(172deg,rgba(255,255,255,.32) 0%,rgba(255,255,255,.05) 40%,rgba(0,0,0,.08) 100%),linear-gradient(170deg,#FF8FC9 0%,#F26BB5 55%,#E05AA4 100%)}
+.btn.b-orange{background:linear-gradient(172deg,rgba(255,255,255,.36) 0%,rgba(255,255,255,.06) 40%,rgba(0,0,0,.06) 100%),linear-gradient(170deg,#FFD08A 0%,#FFB84D 55%,#F5A93A 100%)}
+.btn.b-red{background:linear-gradient(172deg,rgba(255,255,255,.32) 0%,rgba(255,255,255,.05) 40%,rgba(0,0,0,.08) 100%),linear-gradient(170deg,#FF7BA4 0%,#F04E7E 55%,#DC4470 100%)}
+.btn.b-blue{background:linear-gradient(172deg,rgba(255,255,255,.32) 0%,rgba(255,255,255,.05) 40%,rgba(0,0,0,.08) 100%),linear-gradient(170deg,#9C89F2 0%,#7B61E8 55%,#6A54D2 100%)}
+.btn.b-brown{background:linear-gradient(172deg,rgba(255,255,255,.3) 0%,rgba(255,255,255,.05) 40%,rgba(0,0,0,.1) 100%),linear-gradient(170deg,#9668A8 0%,#7A4D8C 55%,#6B4280 100%)}
+.btn.big{border:2px solid rgba(255,255,255,.55);
+  box-shadow:0 6px 22px rgba(70,28,92,.3),0 3px 0 var(--sh,rgba(0,0,0,.18)),var(--g-hi)}
+@keyframes btnPulse{0%,100%{transform:scale(1);box-shadow:0 4px 16px rgba(70,28,92,.26),0 2px 0 var(--sh,rgba(0,0,0,.18)),var(--g-hi)}
+  50%{transform:scale(1.04);box-shadow:0 9px 28px rgba(70,28,92,.42),0 2px 0 var(--sh,rgba(0,0,0,.18)),var(--g-hi)}}
+.icon-btn,#langQuick{background:rgba(255,255,255,.5);border:1.5px solid var(--g-brd-soft);
+  box-shadow:var(--g-chip);-webkit-backdrop-filter:var(--g-blur-sm);backdrop-filter:var(--g-blur-sm)}
+.icon-btn:active{transform:translateY(2px);box-shadow:0 1px 6px rgba(70,28,92,.2)}
+/* --- Giriş ekranı: cam kart --- */
+.auth-card{background:linear-gradient(168deg,rgba(255,255,255,.74) 0%,rgba(255,240,251,.54) 100%);
+  -webkit-backdrop-filter:var(--g-blur);backdrop-filter:var(--g-blur);
+  border:1.5px solid var(--g-brd);border-radius:30px;box-shadow:var(--g-shadow),var(--g-hi)}
+.tabs{background:rgba(255,255,255,.42);border:1px solid var(--g-brd-soft);
+  box-shadow:inset 0 1px 4px rgba(122,36,86,.08)}
+.tabs button.on{background:rgba(255,255,255,.88);box-shadow:0 2px 8px rgba(122,36,86,.16)}
+.field input{background:rgba(255,255,255,.62);border:1.5px solid rgba(255,255,255,.85);
+  -webkit-backdrop-filter:var(--g-blur-sm);backdrop-filter:var(--g-blur-sm)}
+/* --- Menü çipleri ailesi: cam --- */
+#profileChip,.res-chip,.qa-btn,#starTotal,#lifeTotal,#lvChip,.boostBtn,.chip,#menuLevelInfo{
+  background:rgba(255,255,255,.52);
+  -webkit-backdrop-filter:var(--g-blur-sm);backdrop-filter:var(--g-blur-sm);
+  border:1.5px solid var(--g-brd-soft);box-shadow:var(--g-chip)}
+#profileChip.tier-silver{box-shadow:var(--g-chip),0 0 10px rgba(198,203,218,.8)}
+#profileChip.tier-gold{box-shadow:var(--g-chip),0 0 12px rgba(255,205,80,.85)}
+#profileChip.tier-diamond{box-shadow:var(--g-chip),0 0 13px rgba(126,232,213,.9),0 0 22px rgba(181,108,232,.55)}
+#menuSub{background:rgba(255,255,255,.4);border:1px solid var(--g-brd-soft);
+  -webkit-backdrop-filter:var(--g-blur-sm);backdrop-filter:var(--g-blur-sm)}
+.qa-btn:active{transform:scale(.92) translateY(1px);box-shadow:0 1px 6px rgba(70,28,92,.2)}
+@media(hover:hover){.qa-btn:hover{transform:translateY(-2px) scale(1.06);
+  box-shadow:0 6px 18px rgba(70,28,92,.22);border-color:var(--g-brd);filter:brightness(1.05)}}
+.boostBtn:active{transform:translateY(2px);box-shadow:0 1px 6px rgba(70,28,92,.2)}
+.boostBtn.active{box-shadow:0 0 0 4px rgba(255,201,61,.35),0 0 20px rgba(255,201,61,.75),var(--g-hi);transform:translateY(-2px)}
+@keyframes boostPulse{50%{box-shadow:0 0 0 7px rgba(255,201,61,.45),0 0 30px rgba(255,201,61,.95),var(--g-hi)}}
+/* --- Oyun üst şeridi: cam haplar --- */
+#topScore{background:rgba(46,18,62,.55);border:1px solid rgba(255,255,255,.25);
+  -webkit-backdrop-filter:var(--g-blur-sm);backdrop-filter:var(--g-blur-sm);
+  box-shadow:0 4px 12px rgba(40,10,60,.3)}
+#topMoves{background:rgba(240,78,126,.88);border:1.5px solid rgba(255,255,255,.42);
+  box-shadow:0 4px 14px rgba(200,30,80,.4),var(--g-hi)}
+#topTime{background:rgba(106,43,184,.88);border:1.5px solid rgba(255,255,255,.42);
+  box-shadow:0 4px 14px rgba(80,30,150,.4),var(--g-hi)}
+#topMoves.warn{background:rgba(255,184,77,.92);box-shadow:0 4px 14px rgba(214,143,31,.4),var(--g-hi)}
+#topMoves.danger,#topTime.urgent{background:rgba(214,31,75,.92);box-shadow:0 4px 14px rgba(142,15,48,.45),var(--g-hi)}
+#autoBadge{background:rgba(46,18,62,.62);border:1px solid rgba(255,255,255,.22);
+  -webkit-backdrop-filter:var(--g-blur-sm);backdrop-filter:var(--g-blur-sm);
+  box-shadow:0 4px 14px rgba(40,10,60,.35)}
+#seasonBadge{background:rgba(92,46,145,.72);border:1px solid rgba(255,255,255,.3);
+  -webkit-backdrop-filter:var(--g-blur-sm);backdrop-filter:var(--g-blur-sm);transition:opacity .25s}
+body:has(.overlay.show) #seasonBadge{opacity:0}
+/* --- Alt bar: koyu cam --- */
+.bottom-bar{background:linear-gradient(180deg,rgba(64,28,82,.6),rgba(44,16,60,.72));
+  -webkit-backdrop-filter:blur(18px) saturate(1.5);backdrop-filter:blur(18px) saturate(1.5);
+  border-top:1.5px solid rgba(255,255,255,.28);box-shadow:0 -8px 24px rgba(40,10,60,.3)}
+/* --- Panel içi kartlar: katmanlı cam --- */
+.p-card{background:rgba(255,255,255,.62);border:1px solid rgba(255,255,255,.72);
+  box-shadow:0 4px 14px rgba(70,28,92,.12)}
+.qrow{background:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.65);
+  box-shadow:0 2px 10px rgba(70,28,92,.1)}
+.arow{background:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.65);
+  box-shadow:0 2px 10px rgba(70,28,92,.1);-webkit-backdrop-filter:var(--g-blur-sm);backdrop-filter:var(--g-blur-sm)}
+.qbar{background:rgba(122,77,140,.14)}
+#questGold,#shopGold,#gardenStars{background:rgba(255,243,214,.75);border:1px solid rgba(255,255,255,.72);
+  box-shadow:0 2px 10px rgba(120,80,10,.12)}
+.pause-stats .ps-cell{background:rgba(255,255,255,.5);border:1px solid var(--g-brd-soft)}
+.pause-stats .ps-goal{background:rgba(224,247,239,.82);border:1px solid rgba(76,201,168,.4)}
+.daily-cell{background:rgba(255,255,255,.5);border:1px solid var(--g-brd-soft)}
+.order-slip{background:repeating-linear-gradient(0deg,rgba(255,255,255,.3) 0 9px,rgba(255,255,255,.04) 9px 18px);
+  border-top:2px dashed rgba(255,255,255,.8)}
+.os-row .os-ic{background:rgba(255,255,255,.88);box-shadow:0 1px 4px rgba(70,28,92,.15)}
+.os-row .os-bar{background:rgba(122,77,140,.16)}
+/* Sipariş fiisi KAŞE — satır tamamlanınca damga vuruşu */
+.os-row.just-done::after{content:attr(data-stamp);position:absolute;right:10px;top:50%;pointer-events:none;
+  font-size:11px;font-weight:900;letter-spacing:1px;color:#1E8A6E;white-space:nowrap;
+  border:2.5px solid #2FA585;border-radius:8px;padding:2px 8px;background:rgba(224,247,239,.9);
+  box-shadow:0 2px 8px rgba(20,100,70,.25);
+  animation:stampFade 1.5s cubic-bezier(.2,1.6,.4,1) both}
+@keyframes stampFade{0%{transform:translateY(-50%) rotate(9deg) scale(2.4);opacity:0}
+  16%{transform:translateY(-50%) rotate(-14deg) scale(.94);opacity:1}
+  30%{transform:translateY(-50%) rotate(-12deg) scale(1)}70%{opacity:1;transform:translateY(-50%) rotate(-12deg)}
+  100%{opacity:0;transform:translateY(-62%) rotate(-12deg) scale(1)}}
+body.reduce-motion .os-row.just-done::after{animation:none;opacity:0}
+/* --- Bölüm başı hedef kartı: cam + rekor satırı --- */
+#ov-prelevel .panel{background:linear-gradient(168deg,rgba(255,255,255,.84) 0%,rgba(255,240,251,.62) 55%,rgba(253,224,246,.58) 100%)}
+.pgr,.pre-stars .ps{background:rgba(255,255,255,.62);border:1px solid rgba(255,255,255,.82);
+  box-shadow:0 2px 8px rgba(70,28,92,.1)}
+.pre-best{display:flex;align-items:center;justify-content:center;gap:6px;width:max-content;max-width:100%;
+  margin:0 auto 10px;padding:5px 14px;border-radius:999px;font-weight:700;font-size:12.5px;color:#8A5C1E;
+  background:rgba(255,240,200,.68);border:1px solid rgba(255,255,255,.85);
+  -webkit-backdrop-filter:var(--g-blur-sm);backdrop-filter:var(--g-blur-sm);
+  box-shadow:0 2px 8px rgba(120,80,10,.15)}
+.pre-meta{background:rgba(74,36,86,.82);border:1px solid rgba(255,255,255,.28);
+  -webkit-backdrop-filter:var(--g-blur-sm);backdrop-filter:var(--g-blur-sm);
+  box-shadow:0 4px 12px rgba(50,16,70,.35)}
+/* --- İntro / balon / popup camları --- */
+#intro{background:rgba(255,255,255,.72);-webkit-backdrop-filter:var(--g-blur);backdrop-filter:var(--g-blur);
+  border:1.5px solid var(--g-brd);box-shadow:var(--g-shadow)}
+#intro .cond{background:rgba(224,247,239,.92)}
+#intro .tut{background:rgba(248,234,251,.78)}
+.gm-bubble{background:rgba(255,255,255,.8);-webkit-backdrop-filter:var(--g-blur-sm);backdrop-filter:var(--g-blur-sm)}
+.gm-bubble::after{background:rgba(255,255,255,.8)}
+.lvlup-pop{background:rgba(106,43,184,.72);border:1px solid rgba(255,255,255,.3);
+  -webkit-backdrop-filter:var(--g-blur-sm);backdrop-filter:var(--g-blur-sm)}
+.comboHudGlass,#comboHud .ch-mult{background:rgba(106,43,184,.62)}
+/* --- Harita: cam düğümler + sıradaki bölüm oku --- */
+.mnode .dot{background-image:linear-gradient(165deg,rgba(255,255,255,.38) 0%,rgba(255,255,255,.06) 45%,rgba(0,0,0,.1) 100%)}
+.mnode.open .dot::after{content:'';position:absolute;left:50%;top:-24px;transform:translateX(-50%);
+  border-left:9px solid transparent;border-right:9px solid transparent;border-top:13px solid var(--gold);
+  filter:drop-shadow(0 2px 3px rgba(150,90,0,.45));animation:nextArrow 1s ease-in-out infinite}
+@keyframes nextArrow{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(7px)}}
+body.reduce-motion .mnode.open .dot::after{animation:none}
+/* --- Splash: cam dokunuşlar --- */
+#splash{background:linear-gradient(180deg,#5E2F8F 0%,#9B5FC9 42%,#C98BE4 68%,#F3D2F8 100%)}
+#splash::before,#splash::after{content:'';position:absolute;border-radius:50%;pointer-events:none}
+#splash::before{width:44vmax;height:44vmax;left:-12vmax;top:-14vmax;
+  background:radial-gradient(circle at 32% 30%,rgba(255,255,255,.32),rgba(255,255,255,.05) 55%,transparent 72%);
+  border:1.5px solid rgba(255,255,255,.2)}
+#splash::after{width:30vmax;height:30vmax;right:-9vmax;bottom:-10vmax;
+  background:radial-gradient(circle at 35% 32%,rgba(255,214,242,.3),rgba(255,214,242,.05) 58%,transparent 74%);
+  border:1.5px solid rgba(255,255,255,.18)}
+#splash .sp-bar{background:rgba(255,255,255,.22);border:1px solid rgba(255,255,255,.35);
+  box-shadow:inset 0 1px 3px rgba(40,10,60,.25)}
+/* --- Tema cam tonları (koyu tema metinlerini bozmadan) --- */
+body.theme-christmas .panel{background:linear-gradient(168deg,rgba(255,255,255,.82) 0%,rgba(236,244,255,.62) 55%,rgba(218,232,250,.58) 100%)}
+body.theme-halloween .panel{background:linear-gradient(168deg,rgba(252,248,255,.8) 0%,rgba(236,224,250,.62) 100%);border-color:rgba(150,100,220,.45)}
+body.theme-valentine .panel{background:linear-gradient(168deg,rgba(255,255,255,.82) 0%,rgba(255,236,244,.64) 55%,rgba(255,222,236,.6) 100%)}
+body.theme-halloween .qa-btn{background:rgba(69,41,110,.55);border-color:rgba(124,79,184,.5);color:#E9D8FF}
+body.theme-valentine .qa-btn{background:rgba(255,220,233,.55);border-color:rgba(240,111,168,.45)}
+body.theme-christmas .boostBtn{background:rgba(255,255,255,.55)}
+body.theme-halloween .boostBtn{background:rgba(74,46,115,.55);border-color:rgba(124,79,184,.5);color:#E9D8FF}
+body.theme-valentine .boostBtn{background:rgba(255,233,242,.6);border-color:rgba(240,111,168,.4)}
 </style>
 </head>
 <body>
 <div id="splash"><div class="sp-logo"><span class="sp-w1">MEYVE</span><br><span class="sp-w2">PATLAT!</span></div><div class="sp-fruit">🍒</div><div class="sp-bar"><i></i></div><div class="sp-txt">Yükleniyor…</div></div>
 <canvas id="bg"></canvas>
+<div id="orbs" aria-hidden="true"><i class="o1"></i><i class="o2"></i><i class="o3"></i></div>
 <div id="tint"></div>
 <div id="burn"></div>
 
@@ -830,23 +996,20 @@ body.reduce-motion #btnWheel.hasdot::after{animation:none!important}
     <button id="langQuick">TR</button>
     <button class="icon-btn" id="btnAuthSettings"></button>
   </div>
-  <div class="auth-stack">
+  <div class="auth-card">
     <h1 class="logo"><span class="w1">MEYVE</span> <span class="w2">PATLAT!</span></h1>
-    <div id="authTag" data-i="tagline">Eşleştir · Zincirle · Yıldızları topla</div>
-    <div class="auth-card">
-      <div class="tabs">
-        <button id="tabLogin" class="on" data-i="login">Giriş Yap</button>
-        <button id="tabReg" data-i="register">Kayıt Ol</button>
-      </div>
-      <div class="field" id="regName"><label data-i="nick">Takma ad</label><input id="inName" maxlength="14" data-ip="nick"></div>
-      <div class="field"><label data-i="email">E-posta</label><input id="inMail" type="email" autocomplete="email"></div>
-      <div class="field"><label data-i="pass">Şifre</label><input id="inPass" type="password"></div>
-      <div id="authStatus"></div>
-      <button class="btn b-green" id="btnAuth" data-i="loginBtn" style="width:100%">Giriş Yap</button>
-      <div class="divider" data-i="or">veya</div>
-      <button class="btn b-orange" id="btnGuest" data-i="guest" style="width:100%;font-size:15px">Misafir olarak oyna</button>
-      <div id="srvDot"><span class="d"></span><span data-i="localSrv">Yerel Demo · çevrimdışı</span></div>
+    <div class="tabs">
+      <button id="tabLogin" class="on" data-i="login">Giriş Yap</button>
+      <button id="tabReg" data-i="register">Kayıt Ol</button>
     </div>
+    <div class="field" id="regName"><label data-i="nick">Takma ad</label><input id="inName" maxlength="14" data-ip="nick"></div>
+    <div class="field"><label data-i="email">E-posta</label><input id="inMail" type="email" autocomplete="email"></div>
+    <div class="field"><label data-i="pass">Şifre</label><input id="inPass" type="password"></div>
+    <div id="authStatus"></div>
+    <button class="btn b-green" id="btnAuth" data-i="loginBtn" style="width:100%">Giriş Yap</button>
+    <div class="divider" data-i="or">veya</div>
+    <button class="btn b-brown" id="btnGuest" data-i="guest" style="width:100%;font-size:15px">Misafir olarak oyna</button>
+    <div id="srvDot"><span class="d"></span><span data-i="localSrv">Yerel Demo · çevrimdışı</span></div>
   </div>
 </section>
 
@@ -1009,6 +1172,7 @@ body.reduce-motion #btnWheel.hasdot::after{animation:none!important}
   <div class="pre-sub" id="preReady">Hazır mısın?</div>
   <div id="preDiff" class="dTag" style="display:none">ZOR BÖLÜM!</div>
   <div id="preGoals" class="pre-goals"></div>
+  <div class="pre-best" id="preBest" style="display:none"><span>🏆</span><span id="preBestVal"></span></div>
   <div class="pre-meta"><span id="preMetaIc">🔁</span><span id="preMetaTxt">30 HAMLE</span></div>
   <div class="btns"><button class="btn b-green big pulse" id="btnBegin">BAŞLA!</button></div>
 </div></div>
@@ -1304,6 +1468,8 @@ const PRELEVEL_I18N={
   it:{start:'VIA!',getReady:'Pronto?',level:'Livello'},
   pt:{start:'JOGAR!',getReady:'Pronto?',level:'Nível'},
   ru:{start:'СТАРТ!',getReady:'Готов?',level:'Уровень'}};
+const STAMP_I18N={
+  tr:'TAMAM!',en:'DONE!',de:'FERTIG!',es:'¡LISTO!',fr:'FINI !',it:'FATTO!',pt:'PRONTO!',ru:'ГОТОВО!'};
 Object.keys(I).forEach(l=>{
   I[l].backMenu=BACK_MENU[l]||BACK_MENU.en;
   Object.assign(I[l],WHEEL_I18N[l]||WHEEL_I18N.en);
@@ -1311,6 +1477,7 @@ Object.keys(I).forEach(l=>{
   Object.assign(I[l],QUEST_I18N[l]||QUEST_I18N.en);
   Object.assign(I[l],PERFECT_I18N[l]||PERFECT_I18N.en);
   Object.assign(I[l],PRELEVEL_I18N[l]||PRELEVEL_I18N.en);
+  I[l].stamp=STAMP_I18N[l]||STAMP_I18N.en;
   Object.assign(I[l],WEEKGOAL_I18N[l]||WEEKGOAL_I18N.en);
   Object.assign(I[l],MOTION_I18N[l]||MOTION_I18N.en);
   Object.assign(I[l],HINT_I18N[l]||HINT_I18N.en);
@@ -2841,6 +3008,9 @@ function showPreLevel(){
   else{
     $('#preMetaIc').textContent='🔁';
     $('#preMetaTxt').textContent=curLevel.moves+' '+t('moves').toLowerCase();}
+  // Rekor satırı — bu bölümde daha önce oynanmışsa göster
+  const pb=$('#preBest'),prevBest=Save.data.best[curLevel.n]||0;
+  if(pb){if(prevBest>0){pb.style.display='flex';$('#preBestVal').textContent=t('best')+': '+fmt(prevBest);}else pb.style.display='none';}
   ov.classList.add('show');
   clearTimeout(showPreLevel._at);
   if(autoPlay)showPreLevel._at=setTimeout(()=>{if(runToken===tok&&$('#ov-prelevel').classList.contains('show'))beginLevel();},900);}
@@ -3648,45 +3818,6 @@ function buildBgScene(){
   c.bezierCurveTo(w*.25,h*.6,w*.55,h*.76,w*.8,h*.68);
   c.bezierCurveTo(w*.92,h*.64,w,h*.7,w,h*.7);
   c.lineTo(w,h);c.lineTo(0,h);c.fill();
-  // Şato silueti (Royal Match esintisi) — tepenin üstünde masal kalesi
-  (function drawCastle(){
-    const cx=w*.5,base=h*.52,sc=Math.min(1,Math.max(.62,w/1280));
-    const wallW=150*sc,wallH=62*sc,towerW=34*sc,towerH=105*sc;
-    // Duvar
-    c.fillStyle='#FFF3FA';
-    c.strokeStyle='rgba(196,120,180,.35)';c.lineWidth=2;
-    c.beginPath();c.roundRect?c.roundRect(cx-wallW/2,base-wallH,wallW,wallH,6*sc):c.rect(cx-wallW/2,base-wallH,wallW,wallH);c.fill();c.stroke();
-    // Mazgallar
-    c.fillStyle='#FFF3FA';
-    for(let i=0;i<5;i++){const mw=14*sc,mx=cx-wallW/2+i*(wallW-14*sc)/4-7*sc;
-      c.fillRect(mx,base-wallH-10*sc,mw,10*sc);c.strokeRect(mx,base-wallH-10*sc,mw,10*sc);}
-    // Orta kule (en yüksek)
-    const midT=(tx,tw,th,roof)=>{
-      c.fillStyle='#FFFBFE';c.strokeStyle='rgba(196,120,180,.35)';
-      c.beginPath();c.roundRect?c.roundRect(tx-tw/2,base-th,tw,th,5*sc):c.rect(tx-tw/2,base-th,tw,th);c.fill();c.stroke();
-      // çatı koni
-      c.fillStyle=roof;
-      c.beginPath();c.moveTo(tx-tw*.72,base-th);c.lineTo(tx,base-th-tw*1.05);c.lineTo(tx+tw*.72,base-th);c.closePath();c.fill();
-      c.strokeStyle='rgba(150,70,140,.3)';c.stroke();
-      // bayrak
-      c.strokeStyle='#8A5A33';c.lineWidth=2*sc;
-      c.beginPath();c.moveTo(tx,base-th-tw*1.05);c.lineTo(tx,base-th-tw*1.38);c.stroke();
-      c.fillStyle='#F26BB5';
-      c.beginPath();c.moveTo(tx,base-th-tw*1.38);c.lineTo(tx+16*sc,base-th-tw*1.29);c.lineTo(tx,base-th-tw*1.2);c.closePath();c.fill();
-      // pencere
-      c.fillStyle='#8A4FC9';
-      c.beginPath();c.arc(tx,base-th+18*sc,6.5*sc,Math.PI,0);c.lineTo(tx+6.5*sc,base-th+30*sc);c.lineTo(tx-6.5*sc,base-th+30*sc);c.closePath();c.fill();};
-    midT(cx,44*sc,towerH+18*sc,'#F04E7E');
-    midT(cx-wallW/2-2*sc,towerW,towerH,'#B56CE8');
-    midT(cx+wallW/2+2*sc,towerW,towerH,'#B56CE8');
-    // kapı
-    c.fillStyle='#9A6637';
-    c.beginPath();c.moveTo(cx-15*sc,base);c.lineTo(cx-15*sc,base-30*sc);c.arc(cx,base-30*sc,15*sc,Math.PI,0);c.lineTo(cx+15*sc,base);c.closePath();c.fill();
-    c.fillStyle='rgba(255,239,159,.85)';c.beginPath();c.arc(cx,base-15*sc,2.5*sc,0,TAU);c.fill();
-    // şato altı yumuşak gölge
-    const shg=c.createRadialGradient(cx,base,4,cx,base,110*sc);
-    shg.addColorStop(0,'rgba(150,70,140,.18)');shg.addColorStop(1,'rgba(150,70,140,0)');
-    c.fillStyle=shg;c.fillRect(cx-120*sc,base-10*sc,240*sc,26*sc);})();
   // Enhanced lollipops with glow
   const lolli=(x,y,s,col,col2)=>{
     // Stick
@@ -5173,6 +5304,10 @@ function renderOrderSlip(container){
   rows.forEach(rw=>{
     const pct=Math.min(100,Math.round(rw.have/rw.need*100));
     const row=document.createElement('div');row.className='os-row'+(rw.done?' done':'');
+    row.style.position='relative';
+    // KAŞE: satır bu render'da yeni tamamlandıysa damga vuruşu (ilk render hariç)
+    const wasTxt=lastChip[rw.key];
+    if(rw.done&&wasTxt!==undefined&&wasTxt!=='✓'){row.classList.add('just-done');row.dataset.stamp=t('stamp');Sfx.sparkle();}
     const icw=document.createElement('span');icw.className='os-ic';icw.appendChild(rw.ic());
     const body=document.createElement('div');body.className='os-body';
     const top=document.createElement('div');top.className='os-top';
