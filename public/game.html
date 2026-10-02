@@ -1314,6 +1314,18 @@ body.reduce-motion #scr-game.active #sidePanel>*{animation:none!important}
 body.reduce-motion #scr-menu::before{animation:none}
 body.reduce-motion #playRing i,body.reduce-motion #playRing b,body.reduce-motion #scr-menu #btnPlay::after,
 body.reduce-motion #scr-menu #menuLogo::after,body.reduce-motion #scr-menu.active #playRing{animation:none!important}
+/* ===== v49 juice pack: combo kenar parlaması + harita kutlaması ===== */
+#comboFx{position:fixed;inset:0;z-index:44;pointer-events:none;opacity:0;
+  box-shadow:inset 0 0 110px 22px rgba(255,206,84,.5),inset 0 0 34px 6px rgba(255,255,255,.42)}
+#comboFx.fire{animation:comboEdge .8s ease-out}
+@keyframes comboEdge{0%{opacity:0;transform:scale(1.05)}16%{opacity:1}100%{opacity:0;transform:scale(1)}}
+body.reduce-motion #comboFx{display:none}
+.mnode.celebrate .dot{animation:celebPop .9s cubic-bezier(.34,1.9,.5,1) both}
+@keyframes celebPop{0%{transform:translateX(-50%) scale(.5)}55%{transform:translateX(-50%) scale(1.26)}100%{transform:translateX(-50%) scale(1)}}
+.mnode.celebrate .dot::after{content:'';position:absolute;inset:-9px;border-radius:50%;
+  border:3px solid rgba(255,210,61,.92);pointer-events:none;animation:celebRing 1.15s ease-out 2}
+@keyframes celebRing{0%{opacity:0;transform:scale(.55)}35%{opacity:1}100%{opacity:0;transform:scale(1.5)}}
+body.reduce-motion .mnode.celebrate .dot,body.reduce-motion .mnode.celebrate .dot::after{animation:none}
 </style>
 </head>
 <body class="boot-wait">
@@ -1327,6 +1339,7 @@ body.reduce-motion #scr-menu #menuLogo::after,body.reduce-motion #scr-menu.activ
 <canvas id="bg"></canvas>
 <div id="orbs" aria-hidden="true"><i class="o1"></i><i class="o2"></i><i class="o3"></i></div>
 <div id="tint"></div>
+<div id="comboFx" aria-hidden="true"></div>
 <div id="burn"></div>
 
 <section id="scr-auth" class="screen">
@@ -2903,12 +2916,14 @@ function wiggleTile(tl){
   (async()=>{for(const rr of[.22,-.15,.1,-.06,0])await tween(tl,{rot:rr},62,easeInOutQuad);})();}
 async function rainbowBlast(a,b){
   const ra=a.special==='rainbow',rb=b.special==='rainbow';
+  const dbl=ra&&rb,rbt=ra?a:b; // v49: efekt çıpaları
+  const fxX=dbl?(a.px+b.px)/2:rbt.px,fxY=dbl?(a.py+b.py)/2:rbt.py;
   const cells=[];
   if(ra&&rb){
     allTiles().forEach(tl=>{if(tl.type!==-2)cells.push({r:tl.r,c:tl.c});});
     shake(9,350);Voice.say('Divine!');
   }else{
-    const rbT=ra?a:b,ot=ra?b:a;
+    const ot=ra?b:a;
     if(ot.special&&ot.type>=0){
       allTiles().forEach(tl=>{
         if(tl.type===ot.type&&tl.locked===0){
@@ -2916,11 +2931,21 @@ async function rainbowBlast(a,b){
           tl.flash=1;}});
       Voice.say('Divine!');shake(6,300);}
     if(ot.type>=0)allTiles().forEach(tl=>{if(tl.type===ot.type)cells.push({r:tl.r,c:tl.c});});
-    cells.push({r:rbT.r,c:rbT.c});
+    cells.push({r:rbt.r,c:rbt.c});
     cells.slice(0,12).forEach(cc=>{
-      parts.push({kind:'arc',x1:rbT.px,y1:rbT.py,x2:cellPx(cc.c),y2:cellPy(cc.r),
+      parts.push({kind:'arc',x1:rbt.px,y1:rbt.py,x2:cellPx(cc.c),y2:cellPy(cc.r),
         color:FRUITS[ot.type]?FRUITS[ot.type].color:'#fff',life:0,max:260});});
     shake(5,220);}
+  // v49: Divine! anında gökkuşağı şok halkası + yıldız sağanağı
+  if(!Save.data.settings.reduceMotion){
+    parts.push({kind:'rburst',x:fxX,y:fxY,life:0,max:dbl?760:560,big:dbl});
+    const rc=['#FF6FB5','#FFD23D','#7CE8D5','#B56CE8','#7B61E8','#FF8A65'];
+    const ns=dbl?22:14;
+    for(let i=0;i<ns;i++){
+      const ang=i*TAU/ns+rand(-.2,.2),sp=rand(.1,.3);
+      parts.push({kind:'star',x:fxX,y:fxY,vx:Math.cos(ang)*sp,vy:Math.sin(ang)*sp-.08,
+        size:rand(4,9),color:rc[irand(rc.length)],rot:rand(0,TAU),vr:rand(-.015,.015),
+        life:0,max:rand(600,1000)});}}
   Sfx.zap();Sfx.sparkle();vibrate(40);
   await explodeCells(cells,2);}
 async function specialFusion(a,b){
@@ -3261,6 +3286,13 @@ async function sugarRush(tok){
       await settleBoard(tok);}
     await sleep(40);}
   await resolveBoard(null,tok);}
+function starBurstAt(el,n){ // v49: kazanılan yıldızdan canvas yıldız patlaması
+  if(!el||Save.data.settings.reduceMotion)return;
+  const r=el.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;
+  const cols=['#FFD23D','#FFE066','#FFB020','#FFFFFF'];
+  for(let i=0;i<n;i++){const a=i*TAU/n+rand(-.3,.3),sp=rand(.12,.28);
+    fxParts.push({x:cx,y:cy,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-.05,
+      rot:rand(0,TAU),vr:rand(-.01,.01),color:cols[irand(cols.length)],star:1,s:rand(4,8)});}}
 async function finishWin(){
   const tok=runToken;
   if(moves>0&&curLevel.mode!=='time'){toast(t('bonusTxt'));await sugarRush(tok);}
@@ -3274,6 +3306,7 @@ async function finishWin(){
   Save.data.unlocked=Math.max(Save.data.unlocked,curLevel.n+1);
   const goldGain=20+stars*15;
   Save.data.gold+=goldGain;
+  Save.data.lastWonN=curLevel.n;Save.data.lastWonTs=Date.now(); // v49: harita kutlaması işareti
   Save.write();
   Api.req('save',{token:Save.data.session,email:Save.data.user&&Save.data.user.email,
     progress:{unlocked:Save.data.unlocked,stars:Save.data.stars,best:Save.data.best,gold:Save.data.gold}});
@@ -3321,7 +3354,7 @@ async function finishWin(){
       confettiBurst();
       Sfx.coin();
       // Reveal stars with stagger
-      for(let i=0;i<stars;i++)setTimeout(function(k){return function(){sv[k].classList.add('earn');Sfx.star(k);confettiBurst();};}(i),200+i*420);
+      for(let i=0;i<stars;i++)setTimeout(function(k){return function(){sv[k].classList.add('earn');Sfx.star(k);starBurstAt(sv[k],10+k*5);confettiBurst();};}(i),200+i*420);
       // 3 yıldız = mükemmel: altın yıldız yağmuru
       if(stars>=3)setTimeout(starRain,1450);
       // Gold popup
@@ -3815,7 +3848,12 @@ function drawTile(tl,now,hintSet){
   const al=clamp(tl.alpha,0,1);
   ctx.globalAlpha=al*.16;ctx.fillStyle='#5A2B7E';
   ctx.beginPath();ctx.ellipse(tl.px,tl.py+S*.34,S*.3,S*.1,0,0,TAU);ctx.fill();
-  if(tl.special==='rainbow')halo(tl.px,tl.py,S*.75,'rgba(255,255,255,.55)',al*.5);
+  if(tl.special==='rainbow'){ // v49: nefes alan halka + dönen kesikli çember
+    const pr=S*(.72+.07*Math.sin(now*.004+tl.id));
+    halo(tl.px,tl.py,pr,'rgba(255,255,255,.55)',al*(.36+.16*Math.sin(now*.004+tl.id)));
+    ctx.save();ctx.globalAlpha=al*.55;ctx.strokeStyle='rgba(150,255,236,.8)';ctx.lineWidth=1.6;
+    ctx.setLineDash([4,7]);ctx.lineDashOffset=-now*.02;
+    ctx.beginPath();ctx.arc(tl.px,tl.py,pr*.8,0,TAU);ctx.stroke();ctx.restore();}
   else if(tl.special==='bomb')halo(tl.px,tl.py,S*.62,'rgba(255,190,60,.6)',al*(.3+.15*Math.sin(now*.007+tl.id)));
   else if(tl.special==='lineH'||tl.special==='lineV')halo(tl.px,tl.py,S*.58,'rgba(255,230,110,.5)',al*.4);
   ctx.globalAlpha=al;
@@ -3986,6 +4024,23 @@ function renderBoard(dt,now){
         ctx.beginPath();
         ctx.moveTo(p.x+Math.cos(ang)*r1,p.y+Math.sin(ang)*r1);
         ctx.lineTo(p.x+Math.cos(ang)*r2,p.y+Math.sin(ang)*r2);ctx.stroke();}
+      ctx.restore();
+    }else if(p.kind==='rburst'){ // v49: Divine! gökkuşağı şok halkası
+      const a=Math.max(0,1-k);
+      ctx.save();ctx.globalCompositeOperation='lighter';
+      const rad=(p.big?1.5:1)*S*(.4+2.6*(1-Math.pow(1-k,3)));
+      ctx.lineCap='round';
+      const seg=22;
+      for(let i=0;i<seg;i++){
+        const hue=(i/seg*360+p.life*.28)%360;
+        ctx.globalAlpha=a*.9;ctx.strokeStyle='hsl('+hue+',95%,64%)';
+        ctx.lineWidth=(p.big?10:7)*(1-k)+2;
+        ctx.beginPath();ctx.arc(p.x,p.y,rad,i*TAU/seg,(i+1)*TAU/seg+.02);ctx.stroke();}
+      ctx.globalAlpha=a*.9;ctx.strokeStyle='#fff';ctx.lineWidth=2.4*(1-k)+.5;
+      ctx.beginPath();ctx.arc(p.x,p.y,rad*.86,0,TAU);ctx.stroke();
+      if(p.big){
+        ctx.globalAlpha=a*.5;ctx.strokeStyle='#FFE9A8';ctx.lineWidth=14*(1-k)+2;
+        ctx.beginPath();ctx.arc(p.x,p.y,rad*1.14,0,TAU);ctx.stroke();}
       ctx.restore();
     }else if(p.kind==='arc'){
       ctx.globalAlpha=(1-k)*.85;ctx.strokeStyle=p.color;ctx.lineWidth=3.5*(1-k)+1;
@@ -5565,7 +5620,8 @@ function showCombo(n){
   el.style.color=WCOLS[k];
   el.classList.remove('pop');void el.offsetWidth;el.classList.add('pop');
   Voice.say(pickWord(k).replace('!',''));
-  questAdd('qCombo',1);}
+  questAdd('qCombo',1);
+  if(n>=4){const f=$('#comboFx');if(f){f.classList.remove('fire');void f.offsetWidth;f.classList.add('fire');}}}
 function updateMoves(){
   const tm=$('#topMoves');
   tm.querySelector('b').textContent=moves;
@@ -5703,6 +5759,7 @@ function renderMap(){
     html+='<span class="mini-stars">'+[0,1,2].map(k=>
       '<svg viewBox="0 0 24 24" fill="currentColor" class="'+(k<stars?'on'+(gained&&k===(stars-1)?' justwon':''):'')+'"><path d="M12 2l2.9 6.2 6.6.8-4.9 4.6 1.3 6.6-5.9-3.3-5.9 3.3 1.3-6.6L2.5 9l6.6-.8z"/></svg>').join('')+'</span>';
     div.innerHTML=html;
+    if(Save.data.lastWonN===i&&Date.now()-(Save.data.lastWonTs||0)<30000)div.classList.add('celebrate'); // v49: yeni kazanılmış bölüm kutlaması (30 sn pencere)
     (function(idx,sts){
       div.addEventListener('click',()=>{
         if(sts==='locked'){toast(t('locked'));Sfx.bad();return;}
