@@ -265,18 +265,7 @@ body.reduce-motion #xpFill::before{animation:none}
   animation:ctaPulse 1.8s ease-in-out infinite;box-shadow:0 3px 0 var(--green-d)}
 body.reduce-motion .rank-clan.cta .btn{animation:none}
 @keyframes ctaPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
-.bottom-bar{position:fixed;bottom:0;left:0;right:0;z-index:10;display:flex;justify-content:space-around;
-  align-items:stretch;background:rgba(74,36,86,.92);backdrop-filter:blur(10px);
-  padding:4px 0 calc(4px + var(--sab));box-shadow:0 -4px 12px rgba(0,0,0,.2)}
-.bb-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
-  background:none;border:none;color:#fff;cursor:pointer;padding:6px 4px;flex:1;max-width:64px;
-  border-radius:12px;transition:background .15s,transform .1s;position:relative}
-.bb-btn:active{transform:scale(.92)}
-@media(hover:hover){.bb-btn:hover{background:rgba(255,255,255,.12)}}
-.bb-btn .bb-ic{font-size:22px;line-height:1}
-.bb-btn .bb-lb{font-size:9px;font-weight:600;color:rgba(255,255,255,.85);letter-spacing:.3px}
-.bb-btn.hasdot::after{content:'';position:absolute;top:2px;right:14px;width:10px;height:10px;
-  border-radius:50%;background:var(--red);border:2px solid #fff;animation:pulseDot2 1s infinite}
+.bottom-bar{display:none}
 #scr-map .map-head{display:flex;align-items:center;gap:7px;padding:calc(10px + var(--sat)) calc(12px + var(--sar)) 8px calc(12px + var(--sal));flex-wrap:wrap}
 #mapTitle{font-size:22px;font-weight:700;text-shadow:0 2px 0 rgba(255,255,255,.7)}
 #mapHeadRight{margin-left:auto;display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end}
@@ -901,10 +890,6 @@ body.theme-valentine #orbs .o2{background:radial-gradient(circle at 35% 32%,rgba
 #seasonBadge{background:rgba(92,46,145,.72);border:1px solid rgba(255,255,255,.3);
   -webkit-backdrop-filter:var(--g-blur-sm);backdrop-filter:var(--g-blur-sm);transition:opacity .25s}
 body:has(.overlay.show) #seasonBadge{opacity:0}
-/* --- Alt bar: koyu cam --- */
-.bottom-bar{background:linear-gradient(180deg,rgba(64,28,82,.6),rgba(44,16,60,.72));
-  -webkit-backdrop-filter:blur(18px) saturate(1.5);backdrop-filter:blur(18px) saturate(1.5);
-  border-top:1.5px solid rgba(255,255,255,.28);box-shadow:0 -8px 24px rgba(40,10,60,.3)}
 /* --- Panel içi kartlar: katmanlı cam --- */
 .p-card{background:rgba(255,255,255,.62);border:1px solid rgba(255,255,255,.72);
   box-shadow:0 4px 14px rgba(70,28,92,.12)}
@@ -983,7 +968,7 @@ body.theme-valentine .boostBtn{background:rgba(255,233,242,.6);border-color:rgba
 /* ================= 📱 MOBİL CILA (≤560px) — dokunma hedefleri, çip dengesi, tahta odak ================= */
 @media (max-width:560px){
   /* Dokunma deneyimi: çift-dokunma zoom gecikmesi + tap highlight yok */
-  button,.btn,.qa-btn,.bb-btn,.boostBtn,.mnode .dot,.panel-x,.icon-btn,.chip{
+  button,.btn,.qa-btn,.boostBtn,.mnode .dot,.panel-x,.icon-btn,.chip{
     touch-action:manipulation;-webkit-tap-highlight-color:transparent}
   /* Üst çip sırası: kırpılma yok, nefes var */
   #menuTopBar{gap:6px}
@@ -1027,11 +1012,6 @@ body.theme-valentine .boostBtn{background:rgba(255,233,242,.6);border-color:rgba
   #hScore{width:fit-content;margin:5px auto calc(6px + var(--sab));font-size:12.5px;padding:4px 14px;
     border-radius:11px;background:rgba(46,18,62,.55);border:1px solid rgba(255,255,255,.25);
     -webkit-backdrop-filter:var(--g-blur-sm);backdrop-filter:var(--g-blur-sm)}
-  /* Alt bar: daha rahat dokunma alanı */
-  .bottom-bar{padding:5px 0 calc(5px + var(--sab))}
-  .bb-btn{padding:7px 4px}
-  .bb-btn .bb-ic{font-size:23px}
-  .bb-btn .bb-lb{font-size:9.5px}
   /* Paneller: mobilde başlık dengesi */
   .panel h2{font-size:23px}
 }
@@ -1182,7 +1162,6 @@ body.boot-wait #scr-map.active .mnode{animation:none!important}
 #scr-menu.active #menuQuickActions .qa-btn:nth-child(6){animation-delay:.64s}
 #scr-menu.active #menuQuickActions .qa-btn:nth-child(7){animation-delay:.68s}
 #scr-menu.active #menuQuickActions .qa-btn:nth-child(8){animation-delay:.72s}
-#scr-menu.active #bottomBar{animation:hudBottomIn .5s .5s cubic-bezier(.2,.8,.3,1.1) both}
 @keyframes menuRow{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 @keyframes playPop{0%{opacity:0;transform:scale(.55) rotate(-4deg)}62%{opacity:1;transform:scale(1.1) rotate(1.5deg)}100%{opacity:1;transform:scale(1) rotate(0)}}
 @keyframes qaPop{0%{opacity:0;transform:scale(.4) translateY(12px)}66%{opacity:1;transform:scale(1.14) translateY(-2px)}100%{opacity:1;transform:scale(1) translateY(0)}}
@@ -1193,7 +1172,6 @@ body.boot-wait #scr-map.active .mnode{animation:none!important}
 @media(hover:hover){
   .mnode:not(.locked):hover .dot{transform:scale(1.09)}
   .qa-btn:hover{transform:translateY(-2px) scale(1.05)}
-  .bb-btn:hover{transform:translateY(-2px)}
 }
 /* --- OYUN: HUD koreografisi — üst şerit, boost bar, yan paneller --- */
 #scr-game.active #gameTop{animation:hudTopIn .45s cubic-bezier(.2,.8,.3,1.12) both}
@@ -1216,9 +1194,126 @@ body.reduce-motion .mnode,body.reduce-motion #scr-menu.active #menuTopBar,
 body.reduce-motion #scr-menu.active #menuLogo,body.reduce-motion #scr-menu.active #menuSub,
 body.reduce-motion #scr-menu.active #menuLevelInfo,body.reduce-motion #scr-menu.active #btnPlay,
 body.reduce-motion #scr-menu.active #menuQuickActions,body.reduce-motion #scr-menu.active #menuQuickActions .qa-btn,
-body.reduce-motion #scr-menu.active #bottomBar,body.reduce-motion #scr-game.active #gameTop,
+body.reduce-motion #scr-game.active #gameTop,
 body.reduce-motion #scr-game.active #boostBar,body.reduce-motion #scr-game.active #topMission,
 body.reduce-motion #scr-game.active #sidePanel>*{animation:none!important}
+/* ============================================================
+   🛰️ KOMUTA KÖPRÜSÜ (v53) — fütüristik ana menü: grid ufuk çizgisi,
+   koyu cam HUD çipleri, enerji halkalı OYNA düğmesi, teknoloji karoları
+   ============================================================ */
+#scr-menu{isolation:isolate}
+/*Perspektif grid zemini — oyuncu komuta köprüsünde duruyor*/
+#scr-menu::before{content:'';position:absolute;left:-45%;right:-45%;bottom:-8%;height:48%;z-index:-1;
+  background-image:linear-gradient(rgba(148,128,255,.15) 1.5px,transparent 1.5px),linear-gradient(90deg,rgba(148,128,255,.15) 1.5px,transparent 1.5px);
+  background-size:46px 46px;
+  transform:perspective(460px) rotateX(62deg);transform-origin:50% 100%;
+  -webkit-mask-image:linear-gradient(180deg,transparent,#000 62%);mask-image:linear-gradient(180deg,transparent,#000 62%);
+  animation:gridFlow 3.2s linear infinite;pointer-events:none}
+@keyframes gridFlow{0%{background-position:0 0,0 0}100%{background-position:0 46px,0 46px}}
+/*Tepe vinyet + oyun güvertesi merkez ışıması*/
+#scr-menu::after{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(ellipse 64% 36% at 50% 64%,rgba(255,110,199,.15),transparent 70%),
+             radial-gradient(ellipse 100% 46% at 50% 0%,rgba(8,3,20,.42),transparent 62%)}
+/*Üst HUD: koyu cam + pahlı köşeler + neon ayraçlar*/
+#scr-menu #profileChip{background:rgba(22,9,40,.66);border:1px solid rgba(255,255,255,.22);color:#fff;
+  box-shadow:0 3px 12px rgba(8,2,20,.42),inset 0 1px 0 rgba(255,255,255,.14);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px)}
+#scr-menu #profileChip.tier-silver{border-color:#DCDEE6}
+#scr-menu #profileChip.tier-gold{border-color:#FFE08A;box-shadow:0 0 15px rgba(255,205,80,.4),inset 0 1px 0 rgba(255,255,255,.14)}
+#scr-menu #profileChip.tier-diamond{border-color:#A5EBDE;box-shadow:0 0 16px rgba(126,232,213,.5),inset 0 1px 0 rgba(255,255,255,.14)}
+@media(hover:hover){#scr-menu #profileChip:hover{transform:translateY(-1px);box-shadow:0 5px 16px rgba(8,2,20,.5),0 0 14px rgba(148,128,255,.35)}}
+#scr-menu .res-chip{background:rgba(22,9,40,.66);border:1px solid rgba(255,255,255,.2);color:#fff;
+  box-shadow:0 3px 12px rgba(8,2,20,.42),inset 0 1px 0 rgba(255,255,255,.14);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);font-variant-numeric:tabular-nums;
+  clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);
+  text-shadow:0 1px 2px rgba(0,0,0,.4)}
+#scr-menu .res-chip.lives{color:#FF8AA6}
+#scr-menu .res-chip.gold{color:#FFD24A}
+#scr-menu .res-chip.stars{color:#FFC46B}
+#scr-menu #menuTopBar .icon-btn{background:rgba(22,9,40,.66);border:1px solid rgba(255,255,255,.2);
+  box-shadow:0 3px 12px rgba(8,2,20,.42),inset 0 1px 0 rgba(255,255,255,.14);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+/*Teknoloji etiketi: yan çentikli seviye göstergesi*/
+#scr-menu #menuLevelInfo{display:flex;align-items:center;gap:8px;position:relative;z-index:1;
+  background:rgba(20,8,38,.68);border:1px solid rgba(148,240,255,.38);border-radius:9px;padding:4px 13px;
+  color:#DFF9FF;font-size:12.5px;font-weight:800;letter-spacing:2.4px;text-transform:uppercase;
+  box-shadow:0 0 16px rgba(94,240,255,.22),inset 0 1px 0 rgba(255,255,255,.12);
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);text-shadow:0 0 8px rgba(94,240,255,.45)}
+#menuLevelInfo .tk{width:15px;height:2px;flex:none;border-radius:1px;
+  background:linear-gradient(90deg,transparent,rgba(94,240,255,.95))}
+#menuLevelInfo .tk:last-child{background:linear-gradient(90deg,rgba(94,240,255,.95),transparent)}
+/*OYNA güvertesi: enerji halkası + çekirdek çizgili mega düğme*/
+#playZone{position:relative;display:flex;flex-direction:column;align-items:center;gap:9px;isolation:isolate}
+#playRing{position:absolute;left:50%;bottom:28px;width:196px;height:196px;transform:translate(-50%,50%);
+  pointer-events:none;z-index:0}
+#playRing i,#playRing b{position:absolute;border-radius:50%}
+#playRing i:nth-child(1){inset:0;border:2.5px solid transparent;
+  background:conic-gradient(from 0deg,transparent 0 58deg,rgba(94,240,255,.95) 118deg,rgba(255,110,199,.95) 205deg,rgba(255,201,61,.9) 285deg,transparent 336deg) border-box;
+  -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 3.5px),#000 calc(100% - 2.5px));
+  mask:radial-gradient(farthest-side,transparent calc(100% - 3.5px),#000 calc(100% - 2.5px));
+  animation:ringSpin 8s linear infinite}
+#playRing i:nth-child(2){inset:11px;border:1.5px dashed rgba(255,255,255,.24);animation:ringSpinRev 17s linear infinite}
+#playRing b{inset:14px;background:radial-gradient(circle,rgba(255,110,199,.3),rgba(94,240,255,.11) 46%,transparent 68%);
+  animation:ringBreath 2.6s ease-in-out infinite}
+@keyframes ringSpin{to{transform:rotate(360deg)}}
+@keyframes ringSpinRev{to{transform:rotate(-360deg)}}
+@keyframes ringBreath{0%,100%{opacity:.6;transform:scale(.94)}50%{opacity:1;transform:scale(1.04)}}
+#scr-menu #btnPlay{position:relative;z-index:1;font-size:24px;letter-spacing:4px;font-weight:800;
+  padding:16px 54px;border-radius:16px;
+  background:linear-gradient(172deg,#FF9AD1 0%,#F26BB5 52%,#D94FA2 100%);
+  box-shadow:0 6px 0 rgba(122,28,84,.55),0 10px 30px rgba(242,107,181,.42),0 0 36px rgba(94,240,255,.26),inset 0 2px 0 rgba(255,255,255,.55),inset 0 -8px 14px rgba(120,20,80,.3);
+  text-shadow:0 2px 0 rgba(140,30,95,.45);overflow:hidden}
+#scr-menu #btnPlay::after{content:'';position:absolute;top:-45%;bottom:-45%;width:32%;left:-70%;
+  transform:rotate(18deg);pointer-events:none;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent);
+  animation:deckSweep 3.4s 2.2s ease-in-out infinite}
+@keyframes deckSweep{0%{left:-70%}55%,100%{left:135%}}
+#scr-menu.active #playRing{animation:menuRow .5s .3s both}
+/*Logo altı holografik çizgi*/
+#scr-menu #menuLogo::after{content:'';display:block;width:128px;height:2px;margin:0 auto;border-radius:2px;
+  background:linear-gradient(90deg,transparent,rgba(94,240,255,.9),rgba(255,110,199,.9),transparent);
+  box-shadow:0 0 10px rgba(94,240,255,.5);animation:holoLine 3.2s ease-in-out infinite}
+@keyframes holoLine{0%,100%{opacity:.5;transform:scaleX(.68)}50%{opacity:1;transform:scaleX(1)}}
+/*Slogan: HUD veri satırı*/
+#scr-menu #menuSub{position:relative;z-index:2;background:rgba(20,8,38,.6);border:1px solid rgba(255,255,255,.17);color:#E9DBFF;
+  font-size:10px;font-weight:700;letter-spacing:2.4px;text-transform:uppercase;padding:5px 16px;border-radius:8px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.1);text-shadow:0 1px 2px rgba(0,0,0,.35)}
+/*Özellik karoları: pahlı koyu cam + ikon + teknoloji etiketi*/
+#scr-menu #menuQuickActions{display:grid;grid-template-columns:repeat(4,minmax(66px,76px));gap:9px;max-width:none}
+#scr-menu .qa-btn{flex-direction:column;gap:3px;width:auto;height:60px;border-radius:0;padding:7px 3px 5px;
+  background:linear-gradient(165deg,rgba(30,14,52,.74),rgba(15,6,30,.8));
+  border:1px solid rgba(255,255,255,.18);
+  box-shadow:0 4px 12px rgba(8,2,20,.45),inset 0 1px 0 rgba(255,255,255,.12);
+  -webkit-backdrop-filter:blur(9px);backdrop-filter:blur(9px);
+  clip-path:polygon(11px 0,100% 0,100% calc(100% - 11px),calc(100% - 11px) 100%,0 100%,0 11px)}
+#scr-menu .qa-btn::before{content:'';position:absolute;top:0;left:0;width:26px;height:2px;z-index:1;
+  background:linear-gradient(90deg,rgba(94,240,255,.85),transparent);opacity:.75;transition:opacity .15s,width .15s}
+#scr-menu .qa-btn .qa-ic{font-size:20px;filter:drop-shadow(0 0 7px rgba(255,150,220,.4))}
+#scr-menu .qa-btn .qa-lb{font-size:8.5px;font-weight:800;letter-spacing:1.1px;text-transform:uppercase;
+  color:rgba(255,224,250,.8);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1}
+#scr-menu .qa-btn.hasdot::after{top:4px;right:5px;width:9px;height:9px;border-width:1.5px}
+@media(hover:hover){
+  #scr-menu .qa-btn:hover{transform:translateY(-2px) scale(1.05);border-color:rgba(148,240,255,.5);
+    box-shadow:0 6px 16px rgba(8,2,20,.5),0 0 16px rgba(94,240,255,.3),inset 0 1px 0 rgba(255,255,255,.16)}
+  #scr-menu .qa-btn:hover::before{width:44px;opacity:1}
+  #scr-menu .qa-btn:hover .qa-lb{color:#7DF0FF}
+  #scr-menu .qa-btn:hover .qa-ic{filter:drop-shadow(0 0 10px rgba(125,240,255,.65))}}
+#scr-menu .qa-btn:active{transform:scale(.93) translateY(1px);box-shadow:0 1px 5px rgba(8,2,20,.5)}
+/*Karo etiketleri dil değişince applyI18n güvenli — data-i span'de*/
+/* 📱 mobil güverte ayarı */
+@media (max-width:560px){
+  #scr-menu::before{height:42%;background-size:38px 38px}
+  #scr-menu .qa-btn{height:54px}
+  #scr-menu .qa-btn .qa-ic{font-size:18px}
+  #scr-menu .qa-btn .qa-lb{font-size:7.5px;letter-spacing:.8px}
+  #scr-menu #menuQuickActions{grid-template-columns:repeat(4,minmax(60px,1fr));gap:7px;width:100%;max-width:330px}
+  #playRing{width:158px;height:158px;bottom:25px}
+  #scr-menu #btnPlay{font-size:21px;padding:14px 42px;letter-spacing:3.5px}}
+/* ♿ reduce-motion: v53 güverte hareketleri kapalı */
+body.reduce-motion #scr-menu::before{animation:none}
+body.reduce-motion #playRing i,body.reduce-motion #playRing b,body.reduce-motion #scr-menu #btnPlay::after,
+body.reduce-motion #scr-menu #menuLogo::after,body.reduce-motion #scr-menu.active #playRing{animation:none!important}
 </style>
 </head>
 <body class="boot-wait">
@@ -1276,24 +1371,21 @@ body.reduce-motion #scr-game.active #sidePanel>*{animation:none!important}
     <span class="w1">MEYVE</span><br><span class="w2">PATLAT!</span>
   </div>
   <div id="menuSub" data-i="tagline">Eşleştir · Zincirle · Yıldızları topla</div>
-  <div id="menuLevelInfo"><span id="menuLevelNum">Bölüm 1</span></div>
-  <button class="btn b-green big pulse" id="btnPlay" data-i="play">OYNA</button>
-  <div id="menuQuickActions">
-    <button class="qa-btn" id="btnDaily" title="Günlük Bonus"><span class="qa-ic">🎁</span></button>
-    <button class="qa-btn" id="btnWheel" title="Çark"><span class="qa-ic">🎡</span></button>
-    <button class="qa-btn" id="btnQuests" title="Görevler"><span class="qa-ic">📋</span></button>
-    <button class="qa-btn" id="btnGarden" title="Bahçe"><span class="qa-ic">🌳</span></button>
-    <button class="qa-btn" id="btnClan" title="Klan"><span class="qa-ic">👥</span></button>
-    <button class="qa-btn" id="btnRanks" title="Liderlik"><span class="qa-ic">🏆</span></button>
-    <button class="qa-btn" id="btnAchievements" title="Başarımlar"><span class="qa-ic">🏅</span></button>
-    <button class="qa-btn" id="btnShop" title="Market"><span class="qa-ic">🛒</span></button>
+  <div id="playZone">
+    <div id="playRing" aria-hidden="true"><i></i><i></i><b></b></div>
+    <div id="menuLevelInfo"><i class="tk"></i><span id="menuLevelNum">Bölüm 1</span><i class="tk"></i></div>
+    <button class="btn b-green big pulse" id="btnPlay" data-i="play">OYNA</button>
   </div>
-  <nav id="bottomBar" class="bottom-bar">
-    <button class="bb-btn" id="bbHome" title="Ana Menü"><span class="bb-ic">🏠</span><span class="bb-lb">Menü</span></button>
-    <button class="bb-btn" id="bbPlay2" title="Oyna"><span class="bb-ic">▶️</span><span class="bb-lb">Oyna</span></button>
-    <button class="bb-btn" id="bbShop2" title="Market"><span class="bb-ic">🛒</span><span class="bb-lb">Market</span></button>
-    <button class="bb-btn" id="bbAch2" title="Profil"><span class="bb-ic">🏅</span><span class="bb-lb">Profil</span></button>
-  </nav>
+  <div id="menuQuickActions">
+    <button class="qa-btn" id="btnDaily"><span class="qa-ic">🎁</span><span class="qa-lb" data-i="qDaily">Bonus</span></button>
+    <button class="qa-btn" id="btnWheel"><span class="qa-ic">🎡</span><span class="qa-lb" data-i="qWheel">Çark</span></button>
+    <button class="qa-btn" id="btnQuests"><span class="qa-ic">📋</span><span class="qa-lb" data-i="qQuests">Görev</span></button>
+    <button class="qa-btn" id="btnGarden"><span class="qa-ic">🌳</span><span class="qa-lb" data-i="qGarden">Bahçe</span></button>
+    <button class="qa-btn" id="btnClan"><span class="qa-ic">👥</span><span class="qa-lb" data-i="qClan">Klan</span></button>
+    <button class="qa-btn" id="btnRanks"><span class="qa-ic">🏆</span><span class="qa-lb" data-i="qRanks">Lider</span></button>
+    <button class="qa-btn" id="btnAchievements"><span class="qa-ic">🏅</span><span class="qa-lb" data-i="qAch">Rozet</span></button>
+    <button class="qa-btn" id="btnShop"><span class="qa-ic">🛒</span><span class="qa-lb" data-i="qShop">Market</span></button>
+  </div>
 </section>
 
 <section id="scr-map" class="screen">
@@ -1768,6 +1860,18 @@ const AUTHX_I18N={
   ru:{authHi:'🎯 Добро пожаловать в головоломное королевство!'}};
 Object.keys(I).forEach(l=>{
   Object.assign(I[l],AUTHX_I18N[l]||AUTHX_I18N.en);});
+/* Ana menü teknoloji karo etiketleri (v53) — 8 dilde kısa etiketler */
+const MENUX_I18N={
+  tr:{qDaily:'Bonus',qWheel:'Çark',qQuests:'Görev',qGarden:'Bahçe',qClan:'Klan',qRanks:'Lider',qAch:'Rozet',qShop:'Market'},
+  en:{qDaily:'Bonus',qWheel:'Wheel',qQuests:'Quests',qGarden:'Garden',qClan:'Clan',qRanks:'Ranks',qAch:'Badges',qShop:'Shop'},
+  de:{qDaily:'Bonus',qWheel:'Rad',qQuests:'Mission',qGarden:'Garten',qClan:'Clan',qRanks:'Rang',qAch:'Orden',qShop:'Shop'},
+  es:{qDaily:'Bono',qWheel:'Ruleta',qQuests:'Misión',qGarden:'Jardín',qClan:'Clan',qRanks:'Rangos',qAch:'Medalla',qShop:'Tienda'},
+  fr:{qDaily:'Bonus',qWheel:'Roue',qQuests:'Quêtes',qGarden:'Jardin',qClan:'Clan',qRanks:'Rangs',qAch:'Badges',qShop:'Boutique'},
+  it:{qDaily:'Bonus',qWheel:'Ruota',qQuests:'Missioni',qGarden:'Giardino',qClan:'Clan',qRanks:'Punti',qAch:'Badges',qShop:'Negozio'},
+  pt:{qDaily:'Bônus',qWheel:'Roleta',qQuests:'Missões',qGarden:'Jardim',qClan:'Clã',qRanks:'Ranques',qAch:'Medalhas',qShop:'Loja'},
+  ru:{qDaily:'Бонус',qWheel:'Колесо',qQuests:'Задачи',qGarden:'Сад',qClan:'Клан',qRanks:'Рейтинг',qAch:'Награды',qShop:'Магазин'}};
+Object.keys(I).forEach(l=>{
+  Object.assign(I[l],MENUX_I18N[l]||MENUX_I18N.en);});
 /* Kazanma başlığı (v52) — "OK!" placeholder'ı yerine 8 dil */
 const WINX_I18N={
   tr:{winDone:'Tamamlandı!'},
@@ -3142,6 +3246,7 @@ async function finishWin(){
   const tok=runToken;
   if(moves>0&&curLevel.mode!=='time'){toast(t('bonusTxt'));await sugarRush(tok);}
   if(tok!==runToken)return;
+  if(state!=='play')return; // Oyuncu sugar rush sırasında haritaya/menüye döndüyse paneli geri açma (v53)
   const stars=score>=curLevel.t3?3:score>=curLevel.t2?2:1;
   const prev=Save.data.best[curLevel.n]||0;
   const newRec=score>prev;
@@ -3211,6 +3316,7 @@ async function finishWin(){
   $('#menuStarNum').textContent=totalStars();
   busy=false;}
 function finishLose(){
+  if(state!=='play')return; // Ekran değiştiyse kaybet panelini açma (v53)
   livesTick();
   const hadShield=Save.data.shields>0;
   if(!autoPlay&&Save.data.lives>0&&!hadShield){
@@ -5835,11 +5941,6 @@ function wireUI(){
   $('#btnDaily').addEventListener('click',()=>{Sfx.click();renderDailyBonus();$('#ov-daily').classList.add('show');});
   $('#btnClaimDaily').addEventListener('click',()=>{Sfx.click();claimDailyBonus();});
   $('#btnSpin').addEventListener('click',()=>{Sfx.click();spinWheel();});
-  // Bottom bar shortcuts
-  $('#bbHome').addEventListener('click',()=>{Sfx.click();showScreen('scr-menu');});
-  $('#bbPlay2').addEventListener('click',()=>{Sfx.ensure();Sfx.click();showScreen('scr-map');});
-  $('#bbShop2').addEventListener('click',()=>{Sfx.click();updateGold();renderShop();$('#ov-shop').classList.add('show');});
-  $('#bbAch2').addEventListener('click',()=>{Sfx.click();openSettings('menu');});
   $('#btnClan').addEventListener('click',()=>{Sfx.click();renderClan();$('#ov-clan').classList.add('show');});
   // Lives click from top bar resource chip
   document.querySelector('.res-chip.lives')?.addEventListener('click',()=>{
