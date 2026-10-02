@@ -301,6 +301,11 @@ body.reduce-motion .rank-clan.cta .btn{animation:none}
   transition:transform .18s cubic-bezier(.34,1.6,.64,1)}
 .mnode.done .dot{background:#4CC9A8;box-shadow:0 6px 0 #2FA585}
 .mnode.open .dot{background:#F26BB5;box-shadow:0 6px 0 #C24488,0 0 0 4px rgba(255,255,255,.5),0 0 22px rgba(242,107,181,.6);animation:pulseDot 1.6s ease-in-out infinite}
+/* Sıradaki bölüm: dışa yayılan beyaz halka */
+.mnode.open .dot::before{content:'';position:absolute;inset:-8px;border-radius:50%;
+  border:3px solid rgba(255,255,255,.85);opacity:0;animation:nodeRing 1.7s ease-out infinite;pointer-events:none}
+@keyframes nodeRing{0%{transform:scale(.7);opacity:.85}75%{transform:scale(1.16);opacity:0}100%{transform:scale(1.16);opacity:0}}
+body.reduce-motion .mnode.open .dot::before{display:none}
 @keyframes pulseDot{0%,100%{transform:translateX(-50%) scale(1)}50%{transform:translateX(-50%) scale(1.09)}}
 .mnode.locked .dot{background:#D5C4E0;box-shadow:0 6px 0 #B09BC2}
 .mnode.hard .dot{box-shadow:0 6px 0 var(--red-d),0 0 0 3px #fff,0 0 0 6px var(--red)}
@@ -376,6 +381,8 @@ body.reduce-motion .rank-clan.cta .btn{animation:none}
 .chip canvas{width:22px;height:22px}
 .chip.done{background:#E0F7EF;color:#1E8A6E}
 .chip.bump{animation:chipBump .35s ease}
+#topScore.bump{animation:chipBump .35s ease}
+body.reduce-motion #topScore.bump,body.reduce-motion .chip.bump{animation:none}
 @keyframes chipBump{40%{transform:scale(1.2)}100%{transform:scale(1)}}
 #topMission{padding:2px 8px 4px}
 /* Sipariş fişi — collect/jöle görevleri için makbuz görünümlü ilerleme paneli */
@@ -508,6 +515,14 @@ body.reduce-motion .pre-emoji{animation:none}
 .pre-sub{color:#A678B8;font-weight:600;font-size:13px;margin:2px 0 10px}
 .pre-goals{display:flex;flex-direction:column;gap:7px;margin-bottom:10px}
 .pgr{display:flex;align-items:center;gap:10px;background:#fff;border-radius:14px;padding:7px 12px;box-shadow:0 3px 0 #F0DCEC;font-weight:700;color:var(--ink);font-size:15.5px;text-align:left}
+/* Hedef satırları sırayla belirir */
+.pre-goals>*{animation:cardIn .42s cubic-bezier(.2,1.4,.4,1) both}
+.pre-goals>*:nth-child(1){animation-delay:.16s}
+.pre-goals>*:nth-child(2){animation-delay:.26s}
+.pre-goals>*:nth-child(3){animation-delay:.36s}
+.pre-meta{animation:cardIn .42s cubic-bezier(.2,1.4,.4,1) .46s both}
+.pre-best{animation:cardIn .42s cubic-bezier(.2,1.4,.4,1) .52s both}
+body.reduce-motion .pre-goals>*,body.reduce-motion .pre-meta,body.reduce-motion .pre-best{animation:none}
 .pgr canvas,.pgr svg{width:34px;height:34px;flex:none}
 .pgr .pgx{margin-left:auto;color:#B56CE8;font-weight:800;font-size:17px;font-variant-numeric:tabular-nums}
 .pre-stars{display:flex;gap:8px;justify-content:center}
@@ -537,8 +552,8 @@ body.reduce-motion .pre-emoji{animation:none}
 .panel{background:var(--cream);border-radius:26px;padding:24px 20px 20px;width:min(92vw,380px);
   max-height:calc(100dvh - var(--sat) - var(--sab) - 24px);overflow-y:auto;
   box-shadow:0 12px 0 rgba(90,45,110,.45);position:relative;
-  transform:scale(.8);transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
-.overlay.show .panel{transform:scale(1)}
+  transform:translateY(18px) scale(.86);transition:transform .34s cubic-bezier(.34,1.56,.64,1)}
+.overlay.show .panel{transform:translateY(0) scale(1)}
 .panel h2{font-size:26px;font-weight:700;margin-bottom:4px;text-align:center}
 .panel .sub{color:#A678B8;font-size:14px;font-weight:500;margin-bottom:12px;text-align:center}
 .panel-x{position:absolute;top:10px;right:10px;width:44px;height:44px;border-radius:14px;
@@ -1339,6 +1354,9 @@ const irand=n=>Math.floor(Math.random()*n);
 const easeOutQuad=t=>1-(1-t)*(1-t);
 const easeInQuad=t=>t*t;
 const easeOutBack=t=>{const c=1.70158;return 1+(c+1)*Math.pow(t-1,3)+c*Math.pow(t-1,2);};
+const easeOutCubic=t=>1-Math.pow(1-t,3);
+const easeInOutQuad=t=>t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
+const easeOutElastic=t=>{if(t<=0)return 0;if(t>=1)return 1;const c4=TAU/3;return Math.pow(2,-10*t)*Math.sin((t*10-.75)*c4)+1;};
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const fmt=n=>Math.round(n).toLocaleString('tr-TR');
 function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
@@ -2108,7 +2126,7 @@ const tweens=[],parts=[],floaters=[],fxParts=[];
 let bgClouds=[],bgParts=[],bgTimer=0;
 let lastChip={};
 function newTile(type,special){
-  return{id:++tileId,type:type,special:special||null,locked:0,hp:0,bonus:0,r:0,c:0,px:0,py:0,scale:1,alpha:1,flash:0,squash:0};}
+  return{id:++tileId,type:type,special:special||null,locked:0,hp:0,bonus:0,r:0,c:0,px:0,py:0,scale:1,alpha:1,flash:0,squash:0,rot:0};}
 const cellPx=c=>ox+c*S+S/2,cellPy=r=>oy+r*S+S/2;
 function allTiles(){const o=[];for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++)if(board[r]&&board[r][c])o.push(board[r][c]);return o;}
 function snapAll(){allTiles().forEach(tl=>{tl.px=cellPx(tl.c);tl.py=cellPy(tl.r);});}
@@ -2345,7 +2363,8 @@ async function explodeCells(seedCells,combo,exclude,fast){
       levelTime+=tl.bonus*1000;lastTimeSec=-1;renderTimeUI();
       floatText(tl.px,tl.py-14,tl.bonus+'s');Sfx.sparkle();
       parts.push({kind:'shock',x:tl.px,y:tl.py,life:0,max:300});}
-    pops.push(tween(tl,{scale:1.35,alpha:0},fast?110:200,easeInQuad,fast?0:irand(50)));});
+    if(!fast&&!Save.data.settings.reduceMotion){tl.rot=rand(-.55,.55);}
+    pops.push(tween(tl,{scale:fast?1.3:1.45,alpha:0,rot:0},fast?110:235,fast?easeInQuad:easeOutQuad,fast?0:irand(50)));});
   fx.forEach(f=>parts.push(Object.assign({life:0,max:340},f)));
   if(pops.length){Sfx.pop(combo,pops.length);if(pops.length>=6)shake(4,200);}
   // Big Match celebration: 5+ tiles in one explosion
@@ -2386,7 +2405,7 @@ async function settleBoard(tok){
           if(write!==r){
             board[write][c]=tl;board[r][c]=null;tl.r=write;
             const dist=cellPy(write)-tl.py;
-            anims.push(tween(tl,{py:cellPy(write)},110+dist*.34,easeInQuad).then(()=>{tl.squash=1;}));}
+            anims.push(tween(tl,{py:cellPy(write)},110+dist*.34,easeInQuad).then(()=>{tl.squash=1;tween(tl,{squash:0},380,easeOutElastic);}));}
           write--;}}
       for(let r=write;r>top;r--){
         const tl=newTile(irand(curLevel.kinds));
@@ -2395,7 +2414,7 @@ async function settleBoard(tok){
         tl.py=baseY-(write-r)*S;
         board[r][c]=tl;
         const dist=cellPy(r)-tl.py;
-        anims.push(tween(tl,{py:cellPy(r)},150+dist*.34,easeInQuad).then(()=>{tl.squash=1;}));}
+        anims.push(tween(tl,{py:cellPy(r)},150+dist*.34,easeInQuad).then(()=>{tl.squash=1;tween(tl,{squash:0},380,easeOutElastic);}));}
       bottom=top-1;}}
   if(anims.length)await Promise.all(anims);
   if(tok!==undefined&&tok!==runToken)throw{stale:true};}
@@ -2445,7 +2464,12 @@ async function resolveBoard(swapCells,tok){
       tl.special=cr.special;
       if(cr.special==='rainbow')tl.type=-1;
       tl.flash=1;tl.scale=.55;
-      tween(tl,{scale:1},240,easeOutBack);
+      tween(tl,{scale:1},300,easeOutBack);
+      if(!Save.data.settings.reduceMotion){
+        parts.push({kind:'shock',x:tl.px,y:tl.py,life:0,max:360});
+        for(let i=0;i<6;i++){const an=i*TAU/6;
+          parts.push({kind:'star',x:tl.px,y:tl.py,vx:Math.cos(an)*.2,vy:Math.sin(an)*.2,
+            size:rand(4,7),color:'#FFE066',rot:0,vr:rand(-.02,.02),life:0,max:rand(450,700)});}}
       Sfx.special();vibrate(15);
       questAdd('qSpecial',1);
       Save.data.stats.specials=(Save.data.stats.specials||0)+1;}
@@ -2453,10 +2477,20 @@ async function resolveBoard(swapCells,tok){
     maybeRespawnBonus();}}
 function commitSwap(a,b,r1,c1,r2,c2){board[r2][c2]=a;board[r1][c1]=b;a.r=r2;a.c=c2;b.r=r1;b.c=c1;}
 async function animateSwap(a,b,r1,c1,r2,c2){
-  await Promise.all([
-    tween(a,{px:cellPx(c2),py:cellPy(r2),scale:1.12},140,easeOutQuad),
-    tween(b,{px:cellPx(c1),py:cellPy(r1),scale:1.12},140,easeOutQuad)]);
+  if(!Save.data.settings.reduceMotion){
+    // Hafif dönerek takas — iki şeker mikro gecikmeyle, daha organik
+    a.rot=rand(-.18,.18);b.rot=rand(-.18,.18);
+    await Promise.all([
+      tween(a,{px:cellPx(c2),py:cellPy(r2),scale:1.14,rot:0},165,easeOutQuad),
+      tween(b,{px:cellPx(c1),py:cellPy(r1),scale:1.14,rot:0},185,easeOutQuad,28)]);
+  }else{
+    await Promise.all([
+      tween(a,{px:cellPx(c2),py:cellPy(r2)},140,easeOutQuad),
+      tween(b,{px:cellPx(c1),py:cellPy(r1)},140,easeOutQuad)]);}
   tween(a,{scale:1},120);tween(b,{scale:1},120);}
+function wiggleTile(tl){
+  if(Save.data.settings.reduceMotion)return;
+  (async()=>{for(const rr of[.22,-.15,.1,-.06,0])await tween(tl,{rot:rr},62,easeInOutQuad);})();}
 async function rainbowBlast(a,b){
   const ra=a.special==='rainbow',rb=b.special==='rainbow';
   const cells=[];
@@ -2544,6 +2578,7 @@ async function trySwap(r1,c1,r2,c2){
       await sleep(60);
       commitSwap(a,b,r2,c2,r1,c1);
       await animateSwap(a,b,r2,c2,r1,c1);
+      wiggleTile(a);wiggleTile(b);
       shake(3,160);
       busy=false;}
   }catch(e){if(!(e&&e.stale))throw e;}}
@@ -2738,6 +2773,8 @@ function maybeRespawnBonus(){
 function addScore(v){
   if(v>0){
     score+=v;
+    // Büyük kazançta skor çipini coştur
+    if(v>=250){const sc=$('#topScore');if(sc){sc.classList.remove('bump');void sc.offsetWidth;sc.classList.add('bump');}}
     // XP trickle: her 120 puanda 1 XP
     Save.data.xpAcc=(Save.data.xpAcc||0)+v;
     let xpPts=0;
@@ -2868,6 +2905,8 @@ async function finishWin(){
       Sfx.coin();
       // Reveal stars with stagger
       for(let i=0;i<stars;i++)setTimeout(function(k){return function(){sv[k].classList.add('earn');Sfx.star(k);confettiBurst();};}(i),200+i*420);
+      // 3 yıldız = mükemmel: altın yıldız yağmuru
+      if(stars>=3)setTimeout(starRain,1450);
       // Gold popup
       setTimeout(()=>{floatGoldPopup(goldGain);},300);}
   }
@@ -3361,8 +3400,9 @@ function drawTile(tl,now,hintSet){
   ctx.globalAlpha=al;
   ctx.save();
   ctx.translate(tl.px,tl.py);
+  if(tl.special==='rainbow')ctx.rotate(now*.0012+(tl.rot||0));
+  else if(tl.rot)ctx.rotate(tl.rot);
   ctx.scale(sc*(1+.16*sq),sc*(1-.16*sq));
-  if(tl.special==='rainbow')ctx.rotate(now*.0012);
   let img;
   if(tl.type===-2)img=STONE_SPR[Math.min(1,Math.max(0,tl.hp-1))];
   else if(tl.type===-3)img=CHOCO_SPR;
@@ -3455,7 +3495,6 @@ function renderBoard(dt,now){
     if(t1)hintSet.add(t1.id);if(t2)hintSet.add(t2.id);}
   for(const tl of allTiles()){
     if(tl.flash>0)tl.flash=Math.max(0,tl.flash-dt*.0032);
-    if(tl.squash>0)tl.squash=Math.max(0,tl.squash-dt*.008);
     drawTile(tl,now,hintSet);}
   for(const p of parts){
     const k=p.life/p.max;
@@ -4252,6 +4291,13 @@ function confettiBurst(cols){
   for(let i=0;i<110;i++)fxParts.push({x:rand(0,innerWidth),y:rand(-180,-10),
     vx:rand(-.05,.05),vy:rand(.07,.18),w:rand(6,11),h:rand(9,16),
     rot:rand(0,TAU),vr:rand(-.006,.006),color:palette[irand(palette.length)]});}
+function starRain(){
+  if(Save.data.settings.reduceMotion)return;
+  const cols=['#FFD23D','#FFE066','#FFB020','#FFF3B0'];
+  for(let i=0;i<26;i++)
+    fxParts.push({x:rand(0,innerWidth),y:rand(-280,-20),
+      vx:0,vy:rand(.09,.2),rot:rand(0,TAU),vr:rand(-.004,.004),
+      color:cols[irand(cols.length)],star:1,s:rand(7,13),sway:rand(0,TAU)});}
 function updateBg(dt,now){
   bctx.clearRect(0,0,innerWidth,innerHeight);
   if(!sceneCv)return;
@@ -4292,9 +4338,21 @@ function updateFx(dt){
   for(let i=fxParts.length-1;i>=0;i--){
     const p=fxParts[i];
     p.vy+=.00045*dt;p.y+=p.vy*dt;p.x+=p.vx*dt;p.rot+=p.vr*dt;
+    if(p.star){p.sway=(p.sway||0)+.0028*dt;p.x+=Math.sin(p.sway)*.45;}
     if(p.y>innerHeight+40){fxParts.splice(i,1);continue;}
     fctx.save();fctx.translate(p.x,p.y);fctx.rotate(p.rot);
-    fctx.fillStyle=p.color;fctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);
+    fctx.fillStyle=p.color;
+    if(p.star){
+      fctx.beginPath();
+      for(let k2=0;k2<5;k2++){
+        const ang=k2*TAU/5-Math.PI/2,r1=p.s,r2=p.s*.44;
+        fctx.lineTo(Math.cos(ang)*r1,Math.sin(ang)*r1);
+        const ang2=ang+TAU/10;
+        fctx.lineTo(Math.cos(ang2)*r2,Math.sin(ang2)*r2);}
+      fctx.closePath();fctx.fill();
+      fctx.globalAlpha=.35;fctx.fillStyle='#fff';
+      fctx.beginPath();fctx.arc(0,0,p.s*.3,0,TAU);fctx.fill();fctx.globalAlpha=1;
+    }else fctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);
     fctx.restore();}}
 
 /* ============ GÖREVLER ============ */
