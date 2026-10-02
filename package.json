@@ -1,6 +1,6 @@
 {
-  "name": "tatli-firtina",
-  "version": "5.0.0",
+  "name": "fruit-storm",
+  "version": "5.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev -p 3000 2>&1 | tee dev.log",
@@ -91,5 +91,5 @@
     "tw-animate-css": "^1.3.5",
     "typescript": "^5"
   },
-  "description": "Tatlı Fırtına! — Sweet Storm Match 3: 8-dilli meyve eşleştirme oyunu (Next.js 16 + tek dosya oyun motoru + Prisma bulut backend)"
+  "description": "Fruit Storm! — Sweet Match 3: 8-dilli meyve eşleştirme oyunu (Next.js 16 + tek dosya oyun motoru + Prisma bulut backend)"
 }

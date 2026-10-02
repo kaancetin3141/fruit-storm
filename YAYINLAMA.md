@@ -1,4 +1,4 @@
-# 🌪️ Tatlı Fırtına! — Oyun Yayınlama Rehberi
+# 🌪️ Fruit Storm! — Oyun Yayınlama Rehberi
 
 Bu dosya, oyunu internete nasıl çıkaracağını (yayınlayacağını) adım adım anlatır.
 Oyun tek dosyalık statik bir web oyunudur (`public/game.html`) — sunucu gerektirmez,
@@ -103,7 +103,7 @@ Gerekenler:
 
 ```bash
 npm i @capacitor/core @capacitor/cli
-npx cap init "Tatlı Fırtına" com.oyunadin.tatlifirtina --web-dir=public
+npx cap init "Fruit Storm" com.oyunadin.fruitstorm --web-dir=public
 npx cap add ios
 npx cap open ios        # Xcode açılır → Signing Team seç → Archive → Upload
 ```
@@ -132,8 +132,8 @@ Mağaza yerine hemen para kazanmak / kitleye ulaşmak için:
 
 ```json
 {
-  "name": "Tatlı Fırtına! — Sweet Storm Match 3",
-  "short_name": "Tatlı Fırtına",
+  "name": "Fruit Storm! — Sweet Match 3",
+  "short_name": "Fruit Storm",
   "start_url": "/game.html",
   "display": "fullscreen",
   "orientation": "any",

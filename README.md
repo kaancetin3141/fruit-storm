@@ -1,6 +1,6 @@
-# 🌪️ Tatlı Fırtına! — Sweet Storm Match 3
+# 🌪️ Fruit Storm! — Sweet Match 3
 
-Türkçe odaklı, **8 dilli** (tr · en · de · es · fr · it · pt · ru), tek dosyalık meyve eşleştirme (match-3) oyunu.
+**Fruit Storm!** — 8 dilli (tr · en · de · es · fr · it · pt · ru), tek dosyalık meyve eşleştirme (match-3) oyunu.
 Komuta köprüsü temalı fütüristik ana menü, kaskad kombolar, gökkuşağı şekerleri, bulut kayıt ve gerçek global liderlik tablosu.
 
 ![stack](https://img.shields.io/badge/Next.js%2016-App%20Router-purple) ![db](https://img.shields.io/badge/Prisma-SQLite-orange) ![i18n](https://img.shields.io/badge/8-dil%20desteği-teal)

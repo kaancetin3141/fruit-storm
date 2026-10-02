@@ -34,7 +34,7 @@ export default function Home() {
       <iframe
         ref={frameRef}
         src="/game.html"
-        title="Tatlı Fırtına!"
+        title="Fruit Storm!"
         allow="autoplay; fullscreen; gamepad; vibration; clipboard-write"
         style={{
           position: 'absolute',
