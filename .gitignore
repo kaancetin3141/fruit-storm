@@ -60,3 +60,8 @@ download/
 /tmp/
 tool-results/
 agent-ctx/
+
+# local runtime data (public release)
+db/
+worklog.md
+agent-ctx/

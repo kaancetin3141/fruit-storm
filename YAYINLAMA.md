@@ -1,4 +1,4 @@
-# 🍓 Meyve Patlat! — Oyun Yayınlama Rehberi
+# 🌪️ Tatlı Fırtına! — Oyun Yayınlama Rehberi
 
 Bu dosya, oyunu internete nasıl çıkaracağını (yayınlayacağını) adım adım anlatır.
 Oyun tek dosyalık statik bir web oyunudur (`public/game.html`) — sunucu gerektirmez,
@@ -103,7 +103,7 @@ Gerekenler:
 
 ```bash
 npm i @capacitor/core @capacitor/cli
-npx cap init "Meyve Patlat" com.oyunadin.meyvepatlat --web-dir=public
+npx cap init "Tatlı Fırtına" com.oyunadin.tatlifirtina --web-dir=public
 npx cap add ios
 npx cap open ios        # Xcode açılır → Signing Team seç → Archive → Upload
 ```
@@ -132,8 +132,8 @@ Mağaza yerine hemen para kazanmak / kitleye ulaşmak için:
 
 ```json
 {
-  "name": "Meyve Patlat! — Sweet Match 3",
-  "short_name": "Meyve Patlat",
+  "name": "Tatlı Fırtına! — Sweet Storm Match 3",
+  "short_name": "Tatlı Fırtına",
   "start_url": "/game.html",
   "display": "fullscreen",
   "orientation": "any",

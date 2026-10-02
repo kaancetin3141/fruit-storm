@@ -34,7 +34,7 @@ export default function Home() {
       <iframe
         ref={frameRef}
         src="/game.html"
-        title="Meyve Patlat!"
+        title="Tatlı Fırtına!"
         allow="autoplay; fullscreen; gamepad; vibration; clipboard-write"
         style={{
           position: 'absolute',
