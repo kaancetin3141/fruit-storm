@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import crypto from "crypto";
 import { db } from "@/lib/db";
 
-/* Meyve Patlat! — bulut backend (cloud save + liderlik + klan)
+/* Fruit Storm! — bulut backend (cloud save + liderlik + klan)
    Oyun client'ı POST {base}/{ep} çağırır; ep = register|login|guest|save|load|scores|clan|ping
    Yanıt sözleşmeleri game.html içindeki Api.mock ile birebir uyumludur. */
 
@@ -303,5 +303,5 @@ export async function POST(
 }
 
 export async function GET() {
-  return NextResponse.json({ ok: true, srv: "meyve-patlat" });
+  return NextResponse.json({ ok: true, srv: "fruit-storm" });
 }
