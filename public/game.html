@@ -1872,6 +1872,18 @@ const MENUX_I18N={
   ru:{qDaily:'Бонус',qWheel:'Колесо',qQuests:'Задачи',qGarden:'Сад',qClan:'Клан',qRanks:'Рейтинг',qAch:'Награды',qShop:'Магазин'}};
 Object.keys(I).forEach(l=>{
   Object.assign(I[l],MENUX_I18N[l]||MENUX_I18N.en);});
+/* Gökkuşağı şekerini kullanma ipucu (v53) — ilk oluşumda bir kez */
+const RAINBOWX_I18N={
+  tr:{rainbowTip:'🍭 Gökkuşağı şekerini bir meyveyle takas et!'},
+  en:{rainbowTip:'🍭 Swap the rainbow candy with a fruit!'},
+  de:{rainbowTip:'🍭 Tausche das Regenbogenbonbon mit einer Frucht!'},
+  es:{rainbowTip:'🍭 ¡Cambia el caramelo arcoíris por una fruta!'},
+  fr:{rainbowTip:'🍭 Échange le bonbon arc-en-ciel avec un fruit !'},
+  it:{rainbowTip:'🍭 Scambia la caramella arcobaleno con un frutto!'},
+  pt:{rainbowTip:'🍭 Troque a bala arco-íris por uma fruta!'},
+  ru:{rainbowTip:'🍭 Поменяй радужную карамель с фруктом!'}};
+Object.keys(I).forEach(l=>{
+  Object.assign(I[l],RAINBOWX_I18N[l]||RAINBOWX_I18N.en);});
 /* Kazanma başlığı (v52) — "OK!" placeholder'ı yerine 8 dil */
 const WINX_I18N={
   tr:{winDone:'Tamamlandı!'},
@@ -2526,7 +2538,7 @@ function newTile(type,special){
 const cellPx=c=>ox+c*S+S/2,cellPy=r=>oy+r*S+S/2;
 function allTiles(){const o=[];for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++)if(board[r]&&board[r][c])o.push(board[r][c]);return o;}
 function snapAll(){allTiles().forEach(tl=>{tl.px=cellPx(tl.c);tl.py=cellPy(tl.r);});}
-function isBlocked(tl){return!tl||tl.type<0||tl.locked>0;}
+function isBlocked(tl){return!tl||(tl.type<0&&tl.special!=='rainbow')||tl.locked>0;}
 function tween(obj,to,dur,ease,delay){
   return new Promise(res=>tweens.push({obj:obj,to:to,from:null,dur:Math.max(1,dur),t:-(delay||0),ease:ease||easeOutQuad,res:res}));}
 function updateTweens(dt){
@@ -2858,7 +2870,9 @@ async function resolveBoard(swapCells,tok){
     for(const cr of creations){
       const tl=board[cr.r][cr.c];if(!tl)continue;
       tl.special=cr.special;
-      if(cr.special==='rainbow')tl.type=-1;
+      if(cr.special==='rainbow'){
+        tl.type=-1;
+        if(!Save.data.rainbowTip){Save.data.rainbowTip=1;Save.write();toast(t('rainbowTip'),3400);}}
       tl.flash=1;tl.scale=.55;
       tween(tl,{scale:1},300,easeOutBack);
       if(!Save.data.settings.reduceMotion){
@@ -2938,7 +2952,9 @@ async function trySwap(r1,c1,r2,c2){
   if(performance.now()<inputLockUntil)return;
   const a=board[r1][c1],b=board[r2][c2];
   if(!a||!b)return;
-  if(a.type<0||b.type<0){Sfx.bad();shake(2,120);return;}
+  // Gökkuşağı şekeri (type=-1) takas edilebilir — engel taşları (taş/çikolata/sandık) hariç (v53 fix)
+  const swappable=t=>t.special==='rainbow'||t.type>=0;
+  if(!swappable(a)||!swappable(b)){Sfx.bad();shake(2,120);return;}
   if(a.locked>0||b.locked>0){Sfx.bad();shake(2,120);return;}
   busy=true;sel=null;hintMove=null;idleT=0;
   const tok=runToken;
@@ -2998,8 +3014,9 @@ async function detonateSpecial(r,c){
 function findAnyMove(){
   const test=(r1,c1,r2,c2)=>{
     const a=board[r1][c1],b=board[r2][c2];
-    if(!a||!b||isBlocked(a)||isBlocked(b)||a.type<0||b.type<0)return false;
+    if(!a||!b||isBlocked(a)||isBlocked(b))return false;
     if(a.special==='rainbow'||b.special==='rainbow')return true;
+    if(a.type<0||b.type<0)return false;
     // Özel şeker + aynı renk meyve takası artık geçerli hamle (renk uyuşması patlaması)
     if((a.special||b.special)&&a.type===b.type)return true;
     board[r1][c1]=b;board[r2][c2]=a;
@@ -3017,10 +3034,12 @@ function bestMove(){
   if(curLevel&&curLevel.collect)curLevel.collect.forEach(cl=>collectMap.set(cl.type,cl));
   const tryP=(r1,c1,r2,c2)=>{
     const a=board[r1][c1],b=board[r2][c2];
-    if(!a||!b||isBlocked(a)||isBlocked(b)||a.type<0||b.type<0)return;
+    if(!a||!b||isBlocked(a)||isBlocked(b))return;
     if(a.special==='rainbow'||b.special==='rainbow'){
-      const v=(a.special==='rainbow'&&b.special==='rainbow')?90:60;
+      // Gökkuşağı takası en güçlü hamle — tüm ipuçları/oto oyunda öncelikli (v53)
+      const v=(a.special==='rainbow'&&b.special==='rainbow')?150:135;
       if(v>bs){bs=v;best={r1:r1,c1:c1,r2:r2,c2:c2};}return;}
+    if(a.type<0||b.type<0)return;
     if(a.special&&b.special){if(80>bs){bs=80;best={r1:r1,c1:c1,r2:r2,c2:c2};}return;}
     // Renk uyuşması: özel şeker + aynı renk meyve — patlama garantili, öncelikli
     if((a.special||b.special)&&a.type===b.type){
@@ -5856,7 +5875,7 @@ function wireInput(){
     if(busy||finished)return;
     if(performance.now()<inputLockUntil)return;
     const tl=board[rc.r][rc.c];
-    if(!tl||tl.type<0||tl.locked>0)return;
+    if(!tl||(tl.type<0&&tl.special!=='rainbow')||tl.locked>0)return;
     // Double-tap to detonate a special candy
     const now=performance.now();
     if(tl.special&&now-lastTapTime<320&&lastTapR===rc.r&&lastTapC===rc.c){
