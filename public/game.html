@@ -570,6 +570,19 @@ body.reduce-motion .pre-goals>*,body.reduce-motion .pre-meta,body.reduce-motion 
 .confirm-ic{font-size:48px;margin-bottom:6px;animation:confirmPulse 1.2s ease-in-out infinite}
 @keyframes confirmPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
 .confirm-panel .btns{margin-top:14px}
+/* Reklam placeholder paneli — gerçek ağ bağlandığında da aynı overlay kullanılır */
+.ad-panel{width:min(92vw,330px);text-align:center;overflow:hidden}
+.ad-tag{position:absolute;top:12px;left:12px;background:rgba(20,8,40,.6);color:#fff;
+  font-size:10px;font-weight:800;letter-spacing:1.5px;padding:4px 9px;border-radius:8px;z-index:3}
+.ad-creative{background:linear-gradient(160deg,#2A1740 0%,#4A2E73 100%);border-radius:18px;
+  padding:24px 16px 20px;color:#fff;margin:4px 0 12px;border:2px solid rgba(255,255,255,.16);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.2)}
+.ad-ic{font-size:42px;line-height:1;animation:spBob 2.4s ease-in-out infinite}
+.ad-creative b{display:block;font-size:18px;margin:7px 0 5px}
+.ad-creative small{opacity:.78;font-size:12px;line-height:1.5;display:block}
+.ad-bar{height:8px;background:rgba(90,45,110,.25);border-radius:5px;overflow:hidden;margin-bottom:12px}
+.ad-bar i{display:block;height:100%;width:0%;background:linear-gradient(90deg,#FFB020,#FFE066);border-radius:5px}
+body.reduce-motion .ad-ic{animation:none}
 .daily-panel{width:min(92vw,360px)}
 .daily-row{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin:8px 0}
 .daily-cell{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
@@ -1174,6 +1187,7 @@ body.theme-valentine .boostBtn{background:rgba(255,233,242,.6);border-color:rgba
     <button class="btn b-green big" id="btnNext" style="font-size:19px" data-i="next">SONRAKİ</button>
     <div class="row"><button class="btn b-orange" id="btnRetryW" data-i="retry">Tekrar</button>
     <button class="btn b-brown" id="btnMapW" data-i="toMap">Harita</button></div>
+    <button class="btn b-blue" id="btnAdGold" style="font-size:15px;display:none">📺 <span data-i="adGold">REKLAM İZLE · 2× ALTIN</span></button>
   </div>
 </div></div>
 
@@ -1187,9 +1201,21 @@ body.theme-valentine .boostBtn{background:rgba(255,233,242,.6);border-color:rgba
   <div class="btns">
     <button class="btn b-green big" id="btnContinue" style="font-size:18px">💛 <span id="contLbl">DEVAM · 250</span></button>
     <button class="btn b-blue" id="btnShield" style="font-size:15px;display:none">🛡️ <span id="shieldLbl">KALKAN KULLAN</span></button>
+    <button class="btn b-orange" id="btnAdContinue" style="font-size:15px;display:none">📺 <span data-i="adMoves">REKLAM İZLE · +5 HAMLE</span></button>
     <button class="btn b-orange" id="btnRetryL" data-i="tryAgain">TEKRAR DENE</button>
     <button class="btn b-brown" id="btnMapL" data-i="toMap">Harita</button>
   </div>
+</div></div>
+
+<div class="overlay" id="ov-ad"><div class="panel ad-panel">
+  <div class="ad-tag">REKLAM</div>
+  <div class="ad-creative">
+    <div class="ad-ic">🎮</div>
+    <b data-i="adTitle">Reklam Alanı</b>
+    <small data-i="adDesc">AdMob / AdSense bağlandığında gerçek reklam burada gösterilir</small>
+  </div>
+  <div class="ad-bar"><i id="adBarFill"></i></div>
+  <button class="btn b-brown" id="btnAdClose" style="visibility:hidden"><span data-i="adClose">KAPAT ✕</span></button>
 </div></div>
 
 <div class="overlay" id="ov-pause"><div class="panel">
@@ -1513,6 +1539,15 @@ const PRELEVEL_I18N={
   ru:{start:'СТАРТ!',getReady:'Готов?',level:'Уровень'}};
 const STAMP_I18N={
   tr:'TAMAM!',en:'DONE!',de:'FERTIG!',es:'¡LISTO!',fr:'FINI !',it:'FATTO!',pt:'PRONTO!',ru:'ГОТОВО!'};
+const AD_I18N={
+  tr:{adMoves:'REKLAM İZLE · +5 HAMLE',adGold:'REKLAM İZLE · 2× ALTIN',adClose:'KAPAT ✕',adTitle:'Reklam Alanı',adDesc:'AdMob / AdSense bağlandığında gerçek reklam burada gösterilir',adTag:'REKLAM',srvCloud:'☁️ Bulut açık — bu sunucuyla senkron'},
+  en:{adMoves:'WATCH AD · +5 MOVES',adGold:'WATCH AD · 2× GOLD',adClose:'CLOSE ✕',adTitle:'Ad Slot',adDesc:'Real ads appear here once AdMob / AdSense is connected',adTag:'AD',srvCloud:'☁️ Cloud on — syncing with this server'},
+  de:{adMoves:'WERBUNG ANSEHEN · +5 ZÜGE',adGold:'WERBUNG ANSEHEN · 2× GOLD',adClose:'SCHLIESSEN ✕',adTitle:'Werbefläche',adDesc:'Echte Werbung erscheint hier, sobald AdMob / AdSense verbunden ist',adTag:'WERBUNG',srvCloud:'☁️ Cloud aktiv — Synchronisierung mit diesem Server'},
+  es:{adMoves:'VER ANUNCIO · +5 MOVIMIENTOS',adGold:'VER ANUNCIO · 2× ORO',adClose:'CERRAR ✕',adTitle:'Espacio de anuncio',adDesc:'Los anuncios reales aparecerán aquí al conectar AdMob / AdSense',adTag:'ANUNCIO',srvCloud:'☁️ Nube activa — sincroniza con este servidor'},
+  fr:{adMoves:'REGARDER PUB · +5 COUPS',adGold:'REGARDER PUB · 2× OR',adClose:'FERMER ✕',adTitle:'Emplacement pub',adDesc:'Les vraies pubs apparaîtront ici une fois AdMob / AdSense connecté',adTag:'PUB',srvCloud:'☁️ Cloud actif — synchronisation avec ce serveur'},
+  it:{adMoves:'GUARDA ADV · +5 MOSSE',adGold:'GUARDA ADV · 2× ORO',adClose:'CHIUDI ✕',adTitle:'Spazio pubblicitario',adDesc:'Le vere pubblicità appariranno qui una volta collegato AdMob / AdSense',adTag:'ADV',srvCloud:'☁️ Cloud attivo — sincronizza con questo server'},
+  pt:{adMoves:'VER ANÚNCIO · +5 JOGADAS',adGold:'VER ANÚNCIO · 2× OURO',adClose:'FECHAR ✕',adTitle:'Espaço de anúncio',adDesc:'Anúncios reais aparecerão aqui ao conectar AdMob / AdSense',adTag:'ANÚNCIO',srvCloud:'☁️ Nuvem ativa — sincroniza com este servidor'},
+  ru:{adMoves:'СМОТРЕТЬ РЕКЛАМУ · +5 ХОДОВ',adGold:'СМОТРЕТЬ РЕКЛАМУ · 2× ЗОЛОТО',adClose:'ЗАКРЫТЬ ✕',adTitle:'Рекламное место',adDesc:'Настоящая реклама появится здесь после подключения AdMob / AdSense',adTag:'РЕКЛАМА',srvCloud:'☁️ Облако активно — синхронизация с этим сервером'}};
 Object.keys(I).forEach(l=>{
   I[l].backMenu=BACK_MENU[l]||BACK_MENU.en;
   Object.assign(I[l],WHEEL_I18N[l]||WHEEL_I18N.en);
@@ -1527,7 +1562,8 @@ Object.keys(I).forEach(l=>{
   Object.assign(I[l],SEASON_I18N[l]||SEASON_I18N.en);
   Object.assign(I[l],SHIELD_I18N[l]||SHIELD_I18N.en);
   Object.assign(I[l],ACH_I18N[l]||ACH_I18N.en);
-  Object.assign(I[l],CLANCTA_I18N[l]||CLANCTA_I18N.en);});
+  Object.assign(I[l],CLANCTA_I18N[l]||CLANCTA_I18N.en);
+  Object.assign(I[l],AD_I18N[l]||AD_I18N.en);});
 const t=k=>(I[Save.data.settings.lang]&&I[Save.data.settings.lang][k])||I.en[k]||I.tr[k]||k;
 function applyI18n(){
   document.documentElement.lang=Save.data.settings.lang;
@@ -1717,7 +1753,7 @@ document.addEventListener('visibilitychange',()=>{
 
 /* ============ SUNUCU KATMANI ============ */
 const Api={
-  get base(){return(Save.data.settings.serverUrl||'').trim();},
+  get base(){return(Save.data.settings.serverUrl||'/api');},
   async req(ep,body){
     body=body||{};
     if(this.base){
@@ -1764,6 +1800,46 @@ const Api={
       const r=await fetch(this.base.replace(/\/+$/,'')+'/ping',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}',signal:ctrl.signal});
       clearTimeout(to);return{ok:r.ok};
     }catch(e){clearTimeout(to);return{ok:false};}}
+};
+
+/* ============ REKLAM KATMANI ============ */
+/* Gerçek reklam ağı bağlarken sadece Ads._play() içindeki stub'u değiştir:
+   AdMob (Capacitor), AppLovin MAX, AdSense H5 Games Ads vb.
+   Yerleşimler: 'revive_moves' (+5 hamle), 'double_gold' (2× altın), 'interstitial' (bölüm arası) */
+const Ads={
+  cfg:{enabled:true,interstitialEvery:4,rewardSecs:5,interstitialSecs:4},
+  finished:0,lastWinGold:0,_cb:null,_t1:0,_wasPaused:false,
+  on(){return this.cfg.enabled;},
+  rewarded(placement,cb){
+    Sfx.ensure();Sfx.click();
+    this._play(placement,cb);},
+  maybeInterstitial(){
+    if(autoPlay||!this.on())return;
+    this.finished++;
+    if(this.finished%this.cfg.interstitialEvery!==0)return;
+    this._play('interstitial',null);},
+  _play(placement,cb){
+    const ov=$('#ov-ad');if(!ov){if(cb)cb();return;}
+    ov.dataset.reward=cb?'1':'';
+    this._cb=cb||null;
+    this._wasPaused=pausedFlag;
+    if(state==='play')pausedFlag=true;
+    $('#btnAdClose').style.visibility='hidden';
+    const fill=$('#adBarFill');
+    fill.style.transition='none';fill.style.width='0%';
+    void fill.offsetWidth;
+    const dur=(cb?this.cfg.rewardSecs:this.cfg.interstitialSecs)*1000;
+    fill.style.transition='width '+dur+'ms linear';fill.style.width='100%';
+    clearTimeout(this._t1);
+    this._t1=setTimeout(()=>{$('#btnAdClose').style.visibility='visible';},dur);
+    ov.classList.add('show');},
+  close(){
+    const ov=$('#ov-ad');
+    if(!ov||!ov.classList.contains('show'))return;
+    ov.classList.remove('show');
+    if(state==='play'){pausedFlag=this._wasPaused;inputLockUntil=performance.now()+300;}
+    const cb=this._cb;this._cb=null;ov.dataset.reward='';
+    if(cb){vibrate(30);Sfx.coin();cb();}}
 };
 
 /* ============ ASSET'LER ============ */
@@ -2881,6 +2957,7 @@ async function finishWin(){
   $('#newRec').style.display=newRec?'block':'none';
   const sv=$$('#ov-win .wstar');
   sv.forEach(s=>s.classList.remove('earn'));
+  Ads.lastWinGold=0;const ag=$('#btnAdGold');if(ag)ag.style.display='none';
   // Reset score display, then show overlay
   const wsEl=$('#winScore');
   wsEl.textContent='0';
@@ -2908,7 +2985,9 @@ async function finishWin(){
       // 3 yıldız = mükemmel: altın yıldız yağmuru
       if(stars>=3)setTimeout(starRain,1450);
       // Gold popup
-      setTimeout(()=>{floatGoldPopup(goldGain);},300);}
+      setTimeout(()=>{floatGoldPopup(goldGain);},300);
+      // 2× altın reklam yerleşimi
+      Ads.lastWinGold=goldGain;if($('#btnAdGold'))$('#btnAdGold').style.display='flex';}
   }
   // Slight delay so overlay shows first
   setTimeout(()=>requestAnimationFrame(countUp),350);
@@ -2932,6 +3011,7 @@ function finishLose(){
     ll.insertAdjacentHTML('beforeend','<svg viewBox="0 0 24 24" fill="currentColor" style="width:22px;height:22px;color:'+(i<Save.data.lives?'var(--red)':'#EFD9F2')+'"><path d="M12 21s-7.5-4.7-10-9.3C.4 8.6 2.4 5 5.9 5c2 0 3.6 1.1 4.4 2.7C11 6.1 12.6 5 14.6 5 18.1 5 20.1 8.6 22 11.7 19.5 16.3 12 21 12 21z"/></svg>');
   $('#contLbl').textContent=t('continue')+' · 250 · '+(curLevel.mode==='time'?t('contTime'):t('contMoves'));
   $('#btnContinue').style.display=autoPlay?'none':'flex';
+  const bac=$('#btnAdContinue');if(bac)bac.style.display=autoPlay?'none':'flex';
   // Shield: show if available and not autoplay and life was NOT already lost
   const bs=$('#btnShield');
   if(hadShield&&!autoPlay){
@@ -5382,7 +5462,7 @@ function openSettings(from){
   $('#swMusic').checked=s.music;$('#swVib').checked=s.vib;$('#swMotion').checked=s.reduceMotion;$('#swDemo').checked=autoPlay;
   const ts=$('#themeSel');if(ts)ts.value=s.activeTheme||'default';
   $('#srvInput').value=s.serverUrl||'';
-  $('#srvStatus').textContent=s.serverUrl?'':t('srvLocal');
+  $('#srvStatus').textContent=s.serverUrl?'':t('srvCloud');
   updateXpUI();
   $('#ov-set').classList.add('show');}
 function renderPauseStats(){
@@ -5568,7 +5648,7 @@ function wireUI(){
   $('#ov-lose .panel-x').addEventListener('click',()=>{
     pausedFlag=false;finished=true;
     Music.setTension(0);$('#burn').className='';
-    showScreen('scr-map');});
+    showScreen('scr-map');Ads.maybeInterstitial();});
   $('#ov-win .panel-x').addEventListener('click',()=>{
     Music.setTension(0);$('#burn').className='';});
   $('#btnContinue').addEventListener('click',()=>{
@@ -5594,6 +5674,27 @@ function wireUI(){
     hideOverlays();
     inputLockUntil=performance.now()+350;
     toast(t('shieldUsed'));});
+  $('#btnAdClose').addEventListener('click',()=>{Sfx.ensure();Sfx.click();Ads.close();});
+  $('#btnAdContinue').addEventListener('click',()=>{
+    Sfx.click();
+    Ads.rewarded('revive_moves',()=>{
+      if(!curLevel)return;
+      if(curLevel.mode==='time'){
+        levelTime+=15000;timeOver=false;lastTimeSec=-1;renderTimeUI();
+      }else{moves+=5;updateMoves();}
+      finished=false;
+      hideOverlays();
+      inputLockUntil=performance.now()+350;
+      toast(t('continueOk'));});});
+  $('#btnAdGold').addEventListener('click',()=>{
+    Sfx.click();
+    if(!Ads.lastWinGold)return;
+    Ads.rewarded('double_gold',()=>{
+      Save.data.gold+=Ads.lastWinGold;Save.write();updateGold();
+      floatGoldPopup(Ads.lastWinGold);confettiBurst();
+      Ads.lastWinGold=0;
+      $('#btnAdGold').style.display='none';
+      toast('2× '+t('gold')+' ✓');});});
   $('#btnSettings').addEventListener('click',()=>{Sfx.click();openSettings('menu');});
   $('#btnAuthSettings').addEventListener('click',()=>{Sfx.click();openSettings('auth');});
   $('#profileChip').addEventListener('click',()=>{Sfx.click();openSettings('menu');});
@@ -5680,11 +5781,11 @@ function wireUI(){
   $('#btnRestart').addEventListener('click',()=>{Sfx.click();startLevel(curLevel.n);});
   $('#btnQuit').addEventListener('click',()=>{Sfx.click();pausedFlag=false;showScreen('scr-map');});
   $('#btnPauseHome').addEventListener('click',()=>{Sfx.click();pausedFlag=true;$('#ov-pause').classList.remove('show');toast(t('backMenu'));showScreen(Save.data.user?'scr-menu':'scr-auth');});
-  $('#btnNext').addEventListener('click',()=>{Sfx.click();startLevel(curLevel.n+1);});
-  $('#btnRetryW').addEventListener('click',()=>{Sfx.click();startLevel(curLevel.n);});
-  $('#btnMapW').addEventListener('click',()=>{Sfx.click();showScreen('scr-map');});
-  $('#btnRetryL').addEventListener('click',()=>{Sfx.click();startLevel(curLevel.n);});
-  $('#btnMapL').addEventListener('click',()=>{Sfx.click();showScreen('scr-map');});
+  $('#btnNext').addEventListener('click',()=>{Sfx.click();Ads.maybeInterstitial();startLevel(curLevel.n+1);});
+  $('#btnRetryW').addEventListener('click',()=>{Sfx.click();Ads.maybeInterstitial();startLevel(curLevel.n);});
+  $('#btnMapW').addEventListener('click',()=>{Sfx.click();showScreen('scr-map');Ads.maybeInterstitial();});
+  $('#btnRetryL').addEventListener('click',()=>{Sfx.click();Ads.maybeInterstitial();startLevel(curLevel.n);});
+  $('#btnMapL').addEventListener('click',()=>{Sfx.click();showScreen('scr-map');Ads.maybeInterstitial();});
   $('#bHammer').addEventListener('click',useHammerMode);
   $('#bFish').addEventListener('click',useFishMode);
   $('#bShuffle').addEventListener('click',useShuffle);

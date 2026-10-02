@@ -180,7 +180,8 @@ self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r
 - [ ] Alan adı + HTTPS aktif mi? (TWA ve PWA için şart)
 - [ ] manifest + ikonlar ekli mi?
 - [ ] Google Analytics / Plausible gibi basit analiz eklemeyi düşün
-- [ ] Reklam istiyorsan: AdMob (uygulama) veya portal SDK'sı (itch/CrazyGames)
+- [ ] Reklam yerleşimleri test edildi (devam/2x altın/ara reklam)
+- [ ] Bulut özellikler test edildi: kayıt → farklı cihazdan giriş → ilerleme geldi mi?
 
 ---
 
@@ -191,6 +192,42 @@ self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r
 3. **2. hafta:** itch.io'ya yükle, geri bildirim topla
 4. **1. ay:** Google Play TWA paketini hazırla ve yayınla (25$ kayıt)
 5. **Sonra:** iOS (99$/yıl) veya CrazyGames/Poki başvurusu
+
+---
+
+## 8. Bulut Özellikler: Cloud Save + Liderlik + Klan (HAZIR ✅)
+
+Oyunda gerçek backend var: `src/app/api/[ep]/route.ts` (Next.js API) + SQLite (`db/custom.db`, Prisma).
+
+**Çalışan özellikler:**
+- ☁️ **Cloud save** — kayıt/giriş/misafir yapan oyuncuların ilerlemesi (bölüm, yıldız, rekor, altın) veritabanına yazılır; başka cihazdan aynı hesapla girince geri gelir
+- 🏆 **Global liderlik tablosu** — tüm oyuncular gerçek yıldız sıralamasına girer
+- 👥 **Klan sistemi** — klan kurma/ayrılma sunucuda saklanır, üyeler gerçek oyunculardan oluşur
+
+**Dikkat — veritabanı kalıcılığı:**
+- **VDS / Railway / Render / kendi sunucun:** SQLite dosyası diskte kalıcıdır → ekstra iş yok, `bun run build && bun start` (veya `node .next/standalone/server.js`)
+- **Vercel (serverless):** dosya sistemi geçicidir → kayıtlar silinebilir. Çözüm: `prisma/schema.prisma` içinde `provider = "sqlite"` yerine `"postgresql"` yazıp ücretsiz Neon/Supabase bağla (`DATABASE_URL` değişir), `npx prisma db push` — kod değişikliği gerekmez
+
+**Test:** `curl -X POST http://localhost:3000/api/ping` → `{"ok":true}` görmelisin.
+
+---
+
+## 9. Reklamlar (Para Kazanma) — Yerleşimler HAZIR ✅
+
+`game.html` içindeki `Ads` objesi 3 yerleşimle hazır (şu an placeholder gösterir):
+
+| Yerleşim | Tetik | Ödül |
+|---|---|---|
+| `revive_moves` | Bölüm kaybedince "📺 REKLAM İZLE · +5 HAMLE" | +5 hamle |
+| `double_gold` | Bölüm kazanında "📺 REKLAM İZLE · 2× ALTIN" | Altını 2 katı |
+| `interstitial` | Her 4 bölüm bitişinde (4 sn, kapatılabilir) | — |
+
+**Gerçek reklam ağı bağlama (tek nokta):** `Ads._play()` fonksiyonunun içindeki stub'u değiştir:
+- **Web (AdSense H5 Games Ads):** `adBreak({type:'reward', beforeReward:..., adDismissed:..., adViewed:...})` — Google'ın H5 Games Ads kılavuzundaki gibi; ödülü `adViewed` içinde ver
+- **Uygulama (Google Play TWA değil, Capacitor ile paketlersen):** `@capacitor-community/admob` → `AdMob.showRewardVideoAd()`
+- **Ayar:** `Ads.cfg` içinde `interstitialEvery` (ara reklam sıklığı) ve `rewardSecs` (test süresi) var; yayına alırken gerçek SDK süreyi kendisi yönetir
+
+**Gelir tahmini önerisi:** interstitial sıklığını 4'ten 3-5 arası A/B test et; rewarded'da 2× altın en yüksek dönüşümü veren yerleşimdir.
 
 ---
 
