@@ -84,3 +84,13 @@
 - **v5.3** = Faz A + B + C (boss + zaman saldırısı + bal)
 - **v5.4** = Faz D + E (klan savaşları + hazine avı)
 - **v6.0** = Faz F + G (evcil hayvanlar + offline/editör)
+
+---
+
+## 📌 Sürüm Notları Güncellemesi (Ekim 2025 — Task 59-62)
+- **v5.3** ✅ = Faz A+B+C (Boss Savaşları + Zaman Saldırısı + Bal Engeli) — commit 51cb0ae, d342a84, ee6d2fe
+- **v5.4** ✅ = Yeni Faz H — **Tema & Cila paketi**:
+  - H1: Sezonsal isim uyumu (hedef kartı/özet metinleri artık temaya göre isimlendirir; halloween/christmas/valentine × 8 dil) — 7bdeefa
+  - H2: Asset devrimi: 30MB→3.7MB (1024→256px) + Noel seti ve cupcake AI ile Candy Crush kalitesinde yeniden üretildi (sticker stili, chroma-key) — 150d176
+  - H3: Hız turu 2: tahta dirty-flag render skip (idle'da ~%60-100 kare atlanır), tek-blit cam hücre katmanı, çevik pacing — 769a8bd
+- **Sırada (Faz D-E)**: Klan Savaşları + Hazine Avı etkinliği

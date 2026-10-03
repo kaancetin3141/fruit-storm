@@ -175,7 +175,7 @@ export default function Home() {
 
             <div className="fs-chip">
               <span className="fs-dot" aria-hidden="true" />
-              Fruit Storm! v5.3 · 8 Dil · Çevrimiçi Skor
+              Fruit Storm! v5.4 · 8 Dil · Çevrimiçi Skor
             </div>
           </div>
         </div>
