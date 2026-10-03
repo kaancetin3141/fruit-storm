@@ -2337,6 +2337,7 @@ const FRUITS=[
   {name:'Muz',color:'#F0C419',draw:drawLemon}];
 const EXT_FRUITS=[null,null,null,null,null,null,null,null];
 let THEME_LIST=[{id:'default',name:'Klasik'}]; // populated from config.json
+let THEME_NAMES={}; // themeId -> {lang:[8 seasonal names]} — from config.json themes[].names
 /* Sezonluk otomatik tema: tarih aralıkları (AA-GG) — window sarmalı destekli */
 const SEASON_WINDOWS={halloween:['09-20','11-10'],christmas:['12-01','01-06'],valentine:['02-01','02-20']};
 const SEASON_EMOJI={halloween:'🎃',christmas:'🎄',valentine:'💝'};
@@ -2353,6 +2354,10 @@ function resolveThemeId(){
   const raw=Save.data.settings.activeTheme||'default';
   if(raw==='seasonal')return seasonalThemeId()||'default';
   return raw;}
+function fruitName(type){
+  const nm=THEME_NAMES[resolveThemeId()];
+  const lg=Save.data.settings.lang||'tr';
+  return (nm&&nm[lg]&&nm[lg][type])||FRUITS[type].name;}
 function getThemePath(i){
   const theme=resolveThemeId();
   return 'themes/'+theme+'/fr'+i+'.png';}
@@ -2360,6 +2365,7 @@ function loadThemeList(){
   fetch('themes/config.json').then(r=>r.json()).then(cfg=>{
     const before=resolveThemeId();
     THEME_LIST=Object.entries(cfg.themes).map(([id,v])=>({id:id,name:v.name||id}));
+    for(const id in cfg.themes)if(cfg.themes[id].names)THEME_NAMES[id]=cfg.themes[id].names;
     // Populate settings select if it exists
     const sel=$('#themeSel');
     if(sel){
@@ -3847,7 +3853,7 @@ function showPreLevel(){
   }else if(curLevel.mode==='jelly'){
     pg.appendChild(preGoalRow(jellyIcon(44),t('condJelly')));
   }else if(curLevel.collect.length){
-    curLevel.collect.forEach(cl=>pg.appendChild(preGoalRow(iconEl(cl.type,44),FRUITS[cl.type].name,'×'+cl.need)));
+    curLevel.collect.forEach(cl=>pg.appendChild(preGoalRow(iconEl(cl.type,44),fruitName(cl.type),'×'+cl.need)));
   }else{
     const row=document.createElement('div');row.className='pre-stars';
     [curLevel.target,curLevel.t2,curLevel.t3].forEach((tv,i)=>{
@@ -6083,7 +6089,7 @@ function condText(){
   if(curLevel.mode==='boss')return '👑 '+t('condBoss');
   if(curLevel.mode==='jelly')return t('condJelly')+' ('+jellyLeft+')';
   if(curLevel.mode==='collect1'||curLevel.mode==='collect2')
-    return curLevel.collect.map(cl=>FRUITS[cl.type].name+' ×'+cl.need).join(' · ');
+    return curLevel.collect.map(cl=>fruitName(cl.type)+' ×'+cl.need).join(' · ');
   if(curLevel.mode==='time')return fmt(curLevel.target)+' '+t('condTime')+' ('+Math.ceil(curLevel.time)+'s)';
   return fmt(curLevel.target)+' '+t('condScore');}
 function showIntro(){

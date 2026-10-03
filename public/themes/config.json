@@ -16,19 +16,49 @@
       "name": "Cadılar Bayramı",
       "folder": "halloween",
       "fruits": ["fr0.png", "fr1.png", "fr2.png", "fr3.png", "fr4.png", "fr5.png", "fr6.png", "fr7.png"],
-      "specials": ["sp_h.png", "sp_b.png", "sp_r.png"]
+      "specials": ["sp_h.png", "sp_b.png", "sp_r.png"],
+      "names": {
+        "tr": ["Bal Kabağı", "Şeker Mısırı", "Zehir İksiri", "Canavar", "Yarasa", "Cadı Şapkası", "Şeker Yaratık", "Hayalet"],
+        "en": ["Pumpkin", "Candy Corn", "Potion", "Monster", "Bat", "Witch Hat", "Candy Critter", "Ghost"],
+        "de": ["Kürbis", "Maisbonbon", "Zaubertrank", "Monster", "Fledermaus", "Hexenhut", "Zuckerwesen", "Geist"],
+        "es": ["Calabaza", "Caramelo de Maíz", "Poción", "Monstruo", "Murciélago", "Sombrero de Bruja", "Monstruito", "Fantasma"],
+        "fr": ["Citrouille", "Maïs Sucré", "Potion", "Monstre", "Chauve-Souris", "Chapeau de Sorcière", "Petit Monstre", "Fantôme"],
+        "it": ["Zucca", "Caramella di Mais", "Pozione", "Mostro", "Pipistrello", "Cappello da Strega", "Mostriciattolo", "Fantasma"],
+        "pt": ["Abóbora", "Milho Doce", "Poção", "Monstro", "Morcego", "Chapéu de Bruxa", "Docinho", "Fantasma"],
+        "ru": ["Тыква", "Леденец", "Зелье", "Монстр", "Летучая Мышь", "Шляпа Ведьмы", "Сладкий Монстрик", "Призрак"]
+      }
     },
     "christmas": {
       "name": "Noel 🎄",
       "folder": "christmas",
       "fruits": ["fr0.png", "fr1.png", "fr2.png", "fr3.png", "fr4.png", "fr5.png", "fr6.png", "fr7.png"],
-      "specials": ["sp_h.png", "sp_b.png", "sp_r.png"]
+      "specials": ["sp_h.png", "sp_b.png", "sp_r.png"],
+      "names": {
+        "tr": ["Şeker Elma", "Lolipop", "Zencefil Kurabiye", "Çobanpüskülü", "Karlı Portakal", "Yılbaşı Ağacı", "Süs Topu", "Şekerleme"],
+        "en": ["Candy Apple", "Lollipop", "Gingerbread", "Holly", "Snowy Orange", "Christmas Tree", "Ornament", "Wrapped Candy"],
+        "de": ["Schneeapfel", "Lolli", "Lebkuchen", "Stechpalme", "Schnee-Orange", "Weihnachtsbaum", "Christbaumkugel", "Bonbon"],
+        "es": ["Manzana Dulce", "Paleta", "Galleta de Jengibre", "Acebo", "Naranja Nevada", "Árbol de Navidad", "Adorno", "Caramelo"],
+        "fr": ["Pomme Douce", "Sucette", "Pain d'Épice", "Houx", "Orange Enneigée", "Sapin de Noël", "Boule de Noël", "Bonbon"],
+        "it": ["Mela Dolce", "Lecca-Lecca", "Biscotto di Zenzero", "Agrifoglio", "Arancia Innevata", "Albero di Natale", "Pallina di Natale", "Caramella"],
+        "pt": ["Maçã Doce", "Pirulito", "Biscoito de Gengibre", "Azevinho", "Laranja Nevada", "Árvore de Natal", "Bola de Natal", "Bala"],
+        "ru": ["Карамельное Яблоко", "Леденец", "Пряник", "Остролист", "Апельсин", "Ёлка", "Шар", "Конфета"]
+      }
     },
     "valentine": {
       "name": "Sevgililer 💝",
       "folder": "valentine",
       "fruits": ["fr0.png", "fr1.png", "fr2.png", "fr3.png", "fr4.png", "fr5.png", "fr6.png", "fr7.png"],
-      "specials": ["sp_h.png", "sp_b.png", "sp_r.png"]
+      "specials": ["sp_h.png", "sp_b.png", "sp_r.png"],
+      "names": {
+        "tr": ["Çilek", "Lolipop", "Çikolata Kalp", "Ahududu", "Kiraz", "Kapkek", "Kalp Şeker", "Gül"],
+        "en": ["Strawberry", "Lollipop", "Chocolate Heart", "Raspberry", "Cherry", "Cupcake", "Sweet Heart", "Rose"],
+        "de": ["Erdbeere", "Lolli", "Schokoherz", "Himbeere", "Kirsche", "Cupcake", "Herzbonbon", "Rose"],
+        "es": ["Fresa", "Paleta", "Corazón de Chocolate", "Frambuesa", "Cereza", "Cupcake", "Corazón Dulce", "Rosa"],
+        "fr": ["Fraise", "Sucette", "Cœur en Chocolat", "Framboise", "Cerise", "Cupcake", "Bonbon Cœur", "Rose"],
+        "it": ["Fragola", "Lecca-Lecca", "Cuore di Cioccolato", "Lampone", "Ciliegia", "Cupcake", "Cuore di Zucchero", "Rosa"],
+        "pt": ["Morango", "Pirulito", "Coração de Chocolate", "Framboesa", "Cereja", "Cupcake", "Doce Coração", "Rosa"],
+        "ru": ["Клубника", "Леденец", "Шоколадное Сердце", "Малина", "Вишня", "Капкейк", "Сладкое Сердце", "Роза"]
+      }
     }
   }
 }
