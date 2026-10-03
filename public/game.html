@@ -458,7 +458,7 @@ body.reduce-motion #hFill::before{animation:none}
   margin:0 10px calc(6px + var(--sab))}
 #boardArea{flex:1;display:flex;align-items:center;justify-content:center;min-width:0;min-height:200px;
   padding:4px max(8px,var(--sar)) 10px max(8px,var(--sal))}
-#boardWrap{position:relative}
+#boardWrap{position:relative;box-shadow:0 12px 28px rgba(58,18,92,.38),0 3px 8px rgba(58,18,92,.25);border-radius:22px}
 #board{touch-action:none;border-radius:20px}
 #comboBanner{position:fixed;top:30%;left:50%;font-size:clamp(32px,9vw,50px);font-weight:700;color:#fff;
   opacity:0;z-index:26;pointer-events:none;white-space:nowrap;
@@ -3023,7 +3023,7 @@ async function explodeCells(seedCells,combo,exclude,fast){
       floatText(tl.px,tl.py-14,tl.bonus+'s');Sfx.sparkle();
       parts.push({kind:'shock',x:tl.px,y:tl.py,life:0,max:300});}
     if(!fast&&!Save.data.settings.reduceMotion){tl.rot=rand(-.55,.55);}
-    pops.push(tween(tl,{scale:fast?1.3:1.45,alpha:0,rot:0},fast?110:235,fast?easeInQuad:easeOutQuad,fast?0:irand(50)));});
+    pops.push(tween(tl,{scale:fast?1.3:1.45,alpha:0,rot:0},fast?100:200,fast?easeInQuad:easeOutQuad,fast?0:irand(40)));});
   fx.forEach(f=>parts.push(Object.assign({life:0,max:340},f)));
   if(pops.length){Sfx.pop(combo,pops.length);if(pops.length>=6)shake(4,200);}
   // Big Match celebration: 5+ tiles in one explosion
@@ -3067,7 +3067,7 @@ async function settleBoard(tok){
           if(write!==r){
             board[write][c]=tl;board[r][c]=null;tl.r=write;
             const dist=cellPy(write)-tl.py;
-            anims.push(tween(tl,{py:cellPy(write)},110+dist*.34,easeInQuad).then(()=>{tl.squash=1;tween(tl,{squash:0},380,easeOutElastic);}));}
+            anims.push(tween(tl,{py:cellPy(write)},94+dist*.29,easeInQuad).then(()=>{tl.squash=1;tween(tl,{squash:0},320,easeOutElastic);}));}
           write--;}}
       for(let r=write;r>top;r--){
         const tl=newTile(irand(curLevel.kinds));
@@ -3076,7 +3076,7 @@ async function settleBoard(tok){
         tl.py=baseY-(write-r)*S;
         board[r][c]=tl;
         const dist=cellPy(r)-tl.py;
-        anims.push(tween(tl,{py:cellPy(r)},150+dist*.34,easeInQuad).then(()=>{tl.squash=1;tween(tl,{squash:0},380,easeOutElastic);}));}
+        anims.push(tween(tl,{py:cellPy(r)},128+dist*.29,easeInQuad).then(()=>{tl.squash=1;tween(tl,{squash:0},320,easeOutElastic);}));}
       bottom=top-1;}}
   if(anims.length)await Promise.all(anims);
   if(tok!==undefined&&tok!==runToken)throw{stale:true};}
@@ -3128,7 +3128,7 @@ async function resolveBoard(swapCells,tok){
         tl.type=-1;
         if(!Save.data.rainbowTip){Save.data.rainbowTip=1;Save.write();toast(t('rainbowTip'),3400);}}
       tl.flash=1;tl.scale=.55;
-      tween(tl,{scale:1},300,easeOutBack);
+      tween(tl,{scale:1},260,easeOutBack);
       if(!Save.data.settings.reduceMotion){
         parts.push({kind:'shock',x:tl.px,y:tl.py,life:0,max:360});
         for(let i=0;i<6;i++){const an=i*TAU/6;
@@ -3144,17 +3144,18 @@ async function animateSwap(a,b,r1,c1,r2,c2){
   if(!Save.data.settings.reduceMotion){
     // Hafif dönerek takas — iki şeker mikro gecikmeyle, daha organik
     a.rot=rand(-.18,.18);b.rot=rand(-.18,.18);
+    // v61: takas −%20 (165/185+28 → 132/148+22) — daha çevik his, mantık aynı
     await Promise.all([
-      tween(a,{px:cellPx(c2),py:cellPy(r2),scale:1.14,rot:0},165,easeOutQuad),
-      tween(b,{px:cellPx(c1),py:cellPy(r1),scale:1.14,rot:0},185,easeOutQuad,28)]);
+      tween(a,{px:cellPx(c2),py:cellPy(r2),scale:1.14,rot:0},132,easeOutQuad),
+      tween(b,{px:cellPx(c1),py:cellPy(r1),scale:1.14,rot:0},148,easeOutQuad,22)]);
   }else{
     await Promise.all([
-      tween(a,{px:cellPx(c2),py:cellPy(r2)},140,easeOutQuad),
-      tween(b,{px:cellPx(c1),py:cellPy(r1)},140,easeOutQuad)]);}
-  tween(a,{scale:1},120);tween(b,{scale:1},120);}
+      tween(a,{px:cellPx(c2),py:cellPy(r2)},112,easeOutQuad),
+      tween(b,{px:cellPx(c1),py:cellPy(r1)},112,easeOutQuad)]);}
+  tween(a,{scale:1},96);tween(b,{scale:1},96);}
 function wiggleTile(tl){
   if(Save.data.settings.reduceMotion)return;
-  (async()=>{for(const rr of[.22,-.15,.1,-.06,0])await tween(tl,{rot:rr},62,easeInOutQuad);})();}
+  (async()=>{for(const rr of[.22,-.15,.1,-.06,0])await tween(tl,{rot:rr},52,easeInOutQuad);})();}
 async function rainbowBlast(a,b){
   const ra=a.special==='rainbow',rb=b.special==='rainbow';
   const dbl=ra&&rb,rbt=ra?a:b; // v49: efekt çıpaları
@@ -4101,7 +4102,7 @@ function playChestOpen(x,y){
     a.onfinish=()=>sp.remove();a.oncancel=()=>sp.remove();}}
 
 /* ============ ÇİZİM ============ */
-let cellA=null,cellB=null;
+let cellA=null,cellB=null,cellLayerCv=null;
 function buildCellSprites(){
   const mk=col=>{
     const cn=document.createElement('canvas');
@@ -4109,24 +4110,119 @@ function buildCellSprites(){
     const c=cn.getContext('2d');c.scale(dpr,dpr);
     // Base gradient
     const g=c.createLinearGradient(0,0,0,S);
-    g.addColorStop(0,col);g.addColorStop(1,shade(col,-.1));
+    g.addColorStop(0,col);g.addColorStop(1,shade(col,-.12));
     rr(c,1,1,S-2,S-2,S*.24);c.fillStyle=g;c.fill();
-    // Inner shadow (recessed look)
+    // v61 Candy-Crush cam dokusu: alt iç gölge + üst girinti + 1px bevel + parlama yayı
     c.save();
-    c.beginPath();rr(c,1,1,S-2,S-2,S*.24);c.clip();
+    rr(c,1,1,S-2,S-2,S*.24);c.clip();
+    // Soft inner shadow (bottom) — basuk cam hissi
+    const bs=c.createLinearGradient(0,S*.5,0,S);
+    bs.addColorStop(0,'rgba(74,36,86,0)');bs.addColorStop(1,'rgba(74,36,86,.22)');
+    c.fillStyle=bs;c.fillRect(0,S*.5,S,S*.5);
+    // Recessed top inner shadow
     const is=c.createLinearGradient(0,0,0,S*.3);
-    is.addColorStop(0,'rgba(74,36,86,.18)');
-    is.addColorStop(1,'rgba(74,36,86,0)');
+    is.addColorStop(0,'rgba(74,36,86,.16)');is.addColorStop(1,'rgba(74,36,86,0)');
     c.fillStyle=is;c.fillRect(0,0,S,S*.3);
+    // 1px top bevel highlight
+    c.strokeStyle='rgba(255,255,255,.5)';c.lineWidth=1;
+    c.beginPath();c.moveTo(S*.18,2.5);c.lineTo(S*.82,2.5);c.stroke();
+    // 1px bottom bevel shade
+    c.strokeStyle='rgba(74,36,86,.25)';
+    c.beginPath();c.moveTo(S*.2,S-2.5);c.lineTo(S*.8,S-2.5);c.stroke();
+    // Gloss arc — üst-sol hilal parlaması
+    c.strokeStyle='rgba(255,255,255,.36)';c.lineWidth=Math.max(2,S*.07);c.lineCap='round';
+    c.beginPath();c.arc(S*.5,S*.58,S*.36,Math.PI*1.06,Math.PI*1.55);c.stroke();
     c.restore();
     // Top highlight
     c.fillStyle='rgba(255,255,255,.2)';
     rr(c,3,3,S-6,(S-6)*.3,S*.18);c.fill();
     // Subtle border
-    c.strokeStyle='rgba(255,255,255,.25)';c.lineWidth=1;
+    c.strokeStyle='rgba(255,255,255,.28)';c.lineWidth=1;
     rr(c,2,2,S-4,S-4,S*.22);c.stroke();
     return cn;};
-  cellA=mk('#E8D0F0');cellB=mk('#D9BFE8');}
+  cellA=mk('#EBD6F3');cellB=mk('#D5BAE8');}
+/* v61: tahta statik katmanı — çerçeve + damalı hücreler TEK offscreen canvas'a
+   bir kez çizilir (layout/resize'da yeniden kurulur), renderBoard her karede
+   1 drawImage basar. Eskiden: kare başına 3 gradient + 64 hücre blit'i. */
+function buildCellLayer(){
+  const w=cvW;if(!w||!S)return;
+  cellLayerCv=document.createElement('canvas');
+  cellLayerCv.width=Math.round(w*dpr);cellLayerCv.height=Math.round(w*dpr);
+  const c=cellLayerCv.getContext('2d');c.setTransform(dpr,0,0,dpr,0,0);
+  // Board frame with glassmorphism effect
+  const fg=c.createLinearGradient(0,0,0,w);
+  fg.addColorStop(0,'rgba(232,197,245,.95)');fg.addColorStop(.3,'rgba(212,160,234,.9)');
+  fg.addColorStop(.7,'rgba(194,133,221,.9)');fg.addColorStop(1,'rgba(168,101,208,.95)');
+  rr(c,0,0,w,w,22);c.fillStyle=fg;c.fill();
+  // Glass highlight (top)
+  const gh=c.createLinearGradient(0,0,0,w*.4);
+  gh.addColorStop(0,'rgba(255,255,255,.25)');gh.addColorStop(1,'rgba(255,255,255,0)');
+  c.save();rr(c,0,0,w,w,22);c.clip();c.fillStyle=gh;c.fillRect(0,0,w,w*.4);c.restore();
+  // Outer highlight rim
+  c.strokeStyle='rgba(255,255,255,.5)';c.lineWidth=2;
+  rr(c,3,3,w-6,w-6,20);c.stroke();
+  // Inner board area: gölge geçişi (iç tahta çerçeveye yumuşak gölge düşürür)
+  c.save();
+  c.shadowColor='rgba(58,18,92,.5)';c.shadowBlur=Math.max(6,w*.018);c.shadowOffsetY=Math.max(2,w*.008);
+  rr(c,ox-6,oy-6,COLS*S+12,ROWS*S+12,15);c.fillStyle='#A05EC8';c.fill();
+  c.restore();
+  rr(c,ox-6,oy-6,COLS*S+12,ROWS*S+12,15);
+  const ig=c.createLinearGradient(0,oy-6,0,oy+ROWS*S+6);
+  ig.addColorStop(0,'#B578D8');ig.addColorStop(.5,'#A05EC8');ig.addColorStop(1,'#8A4DB5');
+  c.fillStyle=ig;c.fill();
+  // İç rim ışığı (üst) + alt/üst girinti gölgesi — iç board derinliği
+  c.save();rr(c,ox-6,oy-6,COLS*S+12,ROWS*S+12,15);c.clip();
+  const rim=c.createLinearGradient(0,oy-6,0,oy+12);
+  rim.addColorStop(0,'rgba(255,255,255,.32)');rim.addColorStop(1,'rgba(255,255,255,0)');
+  c.fillStyle=rim;c.fillRect(ox-6,oy-6,COLS*S+12,18);
+  const isd=c.createLinearGradient(0,oy-6,0,oy+ROWS*S+6);
+  isd.addColorStop(0,'rgba(74,20,110,.16)');isd.addColorStop(.14,'rgba(74,20,110,0)');
+  isd.addColorStop(.88,'rgba(58,12,90,0)');isd.addColorStop(1,'rgba(58,12,90,.2)');
+  c.fillStyle=isd;c.fillRect(ox-6,oy-6,COLS*S+12,ROWS*S+12);
+  c.restore();
+  // Inner board glow
+  c.strokeStyle='rgba(255,255,255,.15)';c.lineWidth=3;
+  rr(c,ox-4,oy-4,COLS*S+8,ROWS*S+8,13);c.stroke();
+  // Damalı cam hücreler
+  for(let r=0;r<ROWS;r++)for(let cc=0;cc<COLS;cc++)
+    c.drawImage((r+cc)%2?cellB:cellA,ox+cc*S,oy+r*S,S,S);
+  boardDirty=true;}
+/* v61: dirty-flag board skip — statik tahtada tam çizim atlanır.
+   boardAnimated(): zamanla değişen görseller (seçim/ipucu nabzı, partikül,
+   tween, jöle salınımı, bomba/gökkuşağı/bonus nefesi…).
+   boardSig(): tahtanın yapısal parmak izi (tile id/tip/alpha/px/py/jöle/bal…)
+   — herhangi bir state değişimi imzayı değiştirir → kare tazelenir. */
+let boardDirty=true,boardSigLast=0;
+window.__skipStats={skips:0,frames:0};
+function boardAnimated(){
+  if(sel||hintMove||shakeT>0||tweens.length||parts.length||floaters.length)return true;
+  if(hammerHover||fishHover||tutorial.active)return true;
+  for(let r=0;r<ROWS;r++){const br=board[r],jr=jelly[r];
+    for(let c=0;c<COLS;c++){
+      if(jr&&jr[c]>0)return true;
+      const tl=br&&br[c];if(!tl)continue;
+      if(tl.alpha<1||tl.scale!==1||tl.squash!==0||tl.rot||tl.flash>0)return true;
+      if(tl.px!==cellPx(tl.c)||tl.py!==cellPy(tl.r))return true;
+      if(tl.bonus||tl.special==='bomb'||tl.special==='rainbow')return true;}}
+  return false;}
+function boardSig(){
+  let h=2166136261;
+  const mix=v=>{h=(h^v)>>>0;h=Math.imul(h,16777619);};
+  mix(sel?sel.r*8+sel.c+2:1);
+  mix(hintMove?5+hintMove.r1*8+hintMove.c1+(hintMove.r2*8+hintMove.c2)*64:3);
+  if(shakeT>0)mix(977);
+  mix(parts.length*2+floaters.length*524288+(tweens.length?17:0)+(hammerHover?19:0)+(fishHover?23:0)+(tutorial.active?29:0));
+  for(let r=0;r<ROWS;r++){const br=board[r],jr=jelly[r];
+    for(let c=0;c<COLS;c++){
+      const k=r*8+c,hn=honeyMap[k]||0,jl=jr?jr[c]:0,tl=br?br[c]:null;
+      if(!tl){mix(k*4+hn*3+jl*5+1);continue;}
+      mix(k*4+hn*3+jl*5+2);
+      mix(tl.id*13+7);
+      mix((tl.type+9)*131+(tl.special?tl.special.charCodeAt(0):0)*17+(tl.bonus?11:0));
+      mix(tl.locked*37+tl.hp*41+((tl.flash*64)|0)*3);
+      mix(((tl.px*4)|0)*7+((tl.py*4)|0)*13+((tl.alpha*128)|0)*3+((tl.scale*128)|0));
+      mix(((tl.squash*64)|0)*5+((tl.rot*512)|0)*11);}}
+  return h;}
 /* ============ v53 MOBILE BOOST — telefon performans paketi ============
   Sorun: telefonlarda (DPR 2-3) tam ekran bg+fx canvas'lar her karede DPR2 çözünürlükte
   yeniden çiziliyor + halo her çağrıda yeni radial gradient + frame içinde DOM sorguları.
@@ -4159,6 +4255,7 @@ function layout(){
   S=(size-pad*2)/COLS;ox=pad;oy=pad;
   buildFruitSprites(Math.max(18,Math.floor(S*.94)));
   buildCellSprites();
+  buildCellLayer(); // v61: statik tahta katmanı (çerçeve+hücreler) — boardDirty=true set eder
   if(busy)needSnap=true;else snapAll();
   buildBgScene();}
 const haloCache=new Map();
@@ -4248,35 +4345,19 @@ function drawTile(tl,now,hintSet){
   ctx.restore();
   ctx.globalAlpha=1;}
 function renderBoard(dt,now){
+  // v61: dirty-flag skip — statik tahtada tam çizim atlanır (rAF canlı kalır)
+  const _st=window.__skipStats;_st.frames++;
+  if(!(boardDirty||boardAnimated()||boardSig()!==boardSigLast)){_st.skips++;return;}
+  boardDirty=false;
   const w=cvW;
   ctx.clearRect(0,0,w,w);
   let shx=0,shy=0;
   if(shakeT>0){shakeT-=dt;const a=shakeAmp*Math.max(0,shakeT/shakeDur);shx=rand(-a,a);shy=rand(-a,a);}
   ctx.save();ctx.translate(shx,shy);
-  // Board frame with glassmorphism effect
-  const fg=ctx.createLinearGradient(0,0,0,w);
-  fg.addColorStop(0,'rgba(232,197,245,.95)');fg.addColorStop(.3,'rgba(212,160,234,.9)');
-  fg.addColorStop(.7,'rgba(194,133,221,.9)');fg.addColorStop(1,'rgba(168,101,208,.95)');
-  rr(ctx,0,0,w,w,22);ctx.fillStyle=fg;ctx.fill();
-  // Glass highlight (top)
-  const gh=ctx.createLinearGradient(0,0,0,w*.4);
-  gh.addColorStop(0,'rgba(255,255,255,.25)');gh.addColorStop(1,'rgba(255,255,255,0)');
-  ctx.save();rr(ctx,0,0,w,w,22);ctx.clip();ctx.fillStyle=gh;ctx.fillRect(0,0,w,w*.4);ctx.restore();
-  // Outer highlight rim
-  ctx.strokeStyle='rgba(255,255,255,.5)';ctx.lineWidth=2;
-  rr(ctx,3,3,w-6,w-6,20);ctx.stroke();
-  // Inner board area with deeper gradient
-  rr(ctx,ox-6,oy-6,COLS*S+12,ROWS*S+12,15);
-  const ig=ctx.createLinearGradient(0,oy-6,0,oy+ROWS*S+6);
-  ig.addColorStop(0,'#B578D8');ig.addColorStop(.5,'#A05EC8');ig.addColorStop(1,'#8A4DB5');
-  ctx.fillStyle=ig;ctx.fill();
-  // Inner board glow
-  ctx.strokeStyle='rgba(255,255,255,.15)';ctx.lineWidth=3;
-  rr(ctx,ox-4,oy-4,COLS*S+8,ROWS*S+8,13);ctx.stroke();
+  // v61: statik tahta katmanı (çerçeve + damalı cam hücreler) tek blit
+  if(cellLayerCv)ctx.drawImage(cellLayerCv,0,0,w,w);
   ctx.save();
   rr(ctx,ox,oy,COLS*S,ROWS*S,11);ctx.clip();
-  for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++)
-    ctx.drawImage((r+c)%2?cellB:cellA,ox+c*S,oy+r*S,S,S);
   if(jelly.length){
     for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++)
       if(jelly[r]&&jelly[r][c]>0)drawJellyCell(r,c,now);}
@@ -4458,7 +4539,9 @@ function renderBoard(dt,now){
     ctx.globalAlpha=1;}
   ctx.restore();ctx.restore();
   // Tutorial finger overlay
-  drawTutorialFinger(now);}
+  drawTutorialFinger(now);
+  // v61: çizim sonrası imzayı güncelle (çizim flash/shake'i azaltabilir)
+  boardSigLast=boardSig();}
 // ============ EĞİTİM SİSTEMİ ============
 let tutorial={active:false,step:0,steps:[],fingerX:0,fingerY:0,fingerT:0};
 const TUT_I18N_TEMP={
