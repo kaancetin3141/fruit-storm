@@ -19,8 +19,8 @@ Komuta köprüsü temalı fütüristik ana menü, kaskad kombolar, gökkuşağı
 
 ```bash
 bun install            # veya npm install
-bun run db:push        # Prisma şemasını SQLite'a bas
-bun run dev            # http://localhost:3000
+bun run db:push        # Prisma şemasını PostgreSQL'e bas
+bun run dev            # http://localhost:3004
 ```
 
 Oyun `/game.html` dosyasında tek başına da çalışır (statik hosting'e atılabilir);

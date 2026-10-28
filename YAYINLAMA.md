@@ -208,7 +208,7 @@ Oyunda gerçek backend var: `src/app/api/[ep]/route.ts` (Next.js API) + SQLite (
 - **VDS / Railway / Render / kendi sunucun:** SQLite dosyası diskte kalıcıdır → ekstra iş yok, `bun run build && bun start` (veya `node .next/standalone/server.js`)
 - **Vercel (serverless):** dosya sistemi geçicidir → kayıtlar silinebilir. Çözüm: `prisma/schema.prisma` içinde `provider = "sqlite"` yerine `"postgresql"` yazıp ücretsiz Neon/Supabase bağla (`DATABASE_URL` değişir), `npx prisma db push` — kod değişikliği gerekmez
 
-**Test:** `curl -X POST http://localhost:3000/api/ping` → `{"ok":true}` görmelisin.
+**Test:** `curl -X POST http://localhost:3004/api/ping` → `{"ok":true}` görmelisin.
 
 ---
 
